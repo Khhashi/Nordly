@@ -2,6 +2,8 @@
 
 OrderManager is a .NET 8 C# order management application with a layered architecture, JSON persistence, automated tests, and a Razor Pages web interface.
 
+**Live demo:** https://ordermanager-8ym2.onrender.com/Orders
+
 ## Project structure
 
 - `OrderManager` - Console application entry point
@@ -19,8 +21,6 @@ OrderManager is a .NET 8 C# order management application with a layered architec
 ```bash
 dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
 ```
-
-Live demo: https://ordermanager-8ym2.onrender.com/Orders
 
 To stop the local server, press `Ctrl+C` in the terminal.
 
