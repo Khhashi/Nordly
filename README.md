@@ -1,19 +1,36 @@
 # OrderManager
 
-This project is a C# console application for managing orders.
+OrderManager is a .NET 8 C# order management application with a layered architecture, JSON persistence, automated tests, and a Razor Pages web interface.
 
 ## Project structure
 
 - `OrderManager` - Console application entry point
-- `PG3302.Domain` - Domain model and business logic
-- `PG3302.Infrastructure` - Repository implementation
-- `PG3302.Tests` - Unit tests
+- `OrderManager.Web` - Browser-based Razor Pages interface
+- `PG3302.Domain` - Domain entities, repository contracts, and business logic
+- `PG3302.Infrastructure` - JSON-backed repository implementation
+- `PG3302.Tests` - NUnit unit and integration tests
 
 ## Requirements
 
 - .NET 8 SDK
 
-## Run the application
+## Run the web application
+
+```bash
+dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
+```
+
+Open http://localhost:5055 in a browser.
+
+The web interface supports:
+
+- Creating orders
+- Viewing all orders
+- Opening a separate order details page
+- Updating order information
+- Deleting orders
+
+## Run the console application
 
 ```bash
 dotnet run --project "OrderManager/OrderManager.csproj"
@@ -32,7 +49,9 @@ dotnet test "OrderManager.sln" --nologo
 - List all orders
 - Update orders
 - Delete orders
+- Validate products, prices, quantities, and empty orders
+- Persist orders to a local JSON file
 
 ## Notes
 
-The application stores order data in a local JSON file generated at runtime.
+The application stores order data in a local `orders.json` file generated and updated at runtime. The domain and service layers are shared by both the console application and the web application.
