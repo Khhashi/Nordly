@@ -3,4 +3,4 @@ services:
     name: ordermanager
     runtime: docker
     plan: free
-    healthCheckPath: /Orders
+    healthCheckPath: /health
