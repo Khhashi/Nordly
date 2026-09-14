@@ -20,8 +20,6 @@ OrderManager is a .NET 8 C# order management application with a layered architec
 dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
 ```
 
-Open http://localhost:5055 in a browser.
-
 Live demo: https://ordermanager-8ym2.onrender.com/Orders
 
 To stop the local server, press `Ctrl+C` in the terminal.
