@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.Infrastructure", "PG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.Tests", "PG3302.Tests\PG3302.Tests.csproj", "{478F96AB-F4FC-4950-9A6C-4E2BBB4BD58C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderManager.Web", "OrderManager.Web\OrderManager.Web.csproj", "{F2C167D8-E060-47D4-BC09-3685F4E89830}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +33,9 @@ Global
 		{478F96AB-F4FC-4950-9A6C-4E2BBB4BD58C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{478F96AB-F4FC-4950-9A6C-4E2BBB4BD58C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{478F96AB-F4FC-4950-9A6C-4E2BBB4BD58C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2C167D8-E060-47D4-BC09-3685F4E89830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C167D8-E060-47D4-BC09-3685F4E89830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C167D8-E060-47D4-BC09-3685F4E89830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C167D8-E060-47D4-BC09-3685F4E89830}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
