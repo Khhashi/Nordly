@@ -25,9 +25,9 @@ public class IndexModel : PageModel
 
     public List<Order> Orders { get; set; } = new();
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
-        Orders = _service.GetAllOrders();
+        return RedirectToPage("/Orders");
     }
 
     public IActionResult OnPostCreate()
