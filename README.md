@@ -1,10 +1,10 @@
-# PG3302 Software Design
+# PG3302 Order Manager
 
 This project is a C# console application for managing orders.
 
 ## Project structure
 
-- `PG3302 Software design` - Console application entry point
+- `PG3302.OrderManager` - Console application entry point
 - `PG3302.Domain` - Domain model and business logic
 - `PG3302.Infrastructure` - Repository implementation
 - `PG3302.Tests` - Unit tests
@@ -16,7 +16,7 @@ This project is a C# console application for managing orders.
 ## Run the application
 
 ```bash
-dotnet run --project "PG3302 Software design/PG3302 Software design.csproj"
+dotnet run --project "PG3302.OrderManager/PG3302.OrderManager.csproj"
 ```
 
 ## Run tests
