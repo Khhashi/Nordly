@@ -22,6 +22,8 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
+app.MapGet("/", () => Results.Redirect("/Orders"));
+app.MapGet("/health", () => Results.Ok("healthy"));
 app.MapRazorPages();
 
 app.Run();
