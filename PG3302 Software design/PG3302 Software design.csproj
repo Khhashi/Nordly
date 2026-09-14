@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\PG3302.Domain\PG3302.Domain.csproj" />
+      <ProjectReference Include="..\PG3302.Infrastructure\PG3302.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>PG3302_Software_design</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+</Project>

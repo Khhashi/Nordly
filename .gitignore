@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.idea/
+.DS_Store
+**/.DS_Store
+*.user
+*.suo
+*.zip
+*.log
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+orders.json
+**/orders.json
