@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: ordermanager
+    runtime: docker
+    plan: free
+    healthCheckPath: /Orders
