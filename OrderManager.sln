@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.OrderManager", "PG3302.OrderManager\PG3302.OrderManager.csproj", "{AFF5221F-99D6-4D86-AD80-72352C786040}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderManager", "OrderManager\OrderManager.csproj", "{AFF5221F-99D6-4D86-AD80-72352C786040}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.Domain", "PG3302.Domain\PG3302.Domain.csproj", "{04420265-7A09-434E-A99B-AFF499089CE9}"
 EndProject
