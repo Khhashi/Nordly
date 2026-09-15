@@ -4,6 +4,7 @@
 (() => {
 	const cards = [...document.querySelectorAll('.product-card')];
 	const tabs = [...document.querySelectorAll('.category-tab')];
+	const categoryLinks = [...document.querySelectorAll('[data-category-link]')];
 	const search = document.querySelector('#product-search');
 	const emptyState = document.querySelector('.no-results');
 
@@ -33,4 +34,15 @@
 	}));
 
 	search?.addEventListener('input', updateProducts);
+
+	categoryLinks.forEach(link => link.addEventListener('click', () => {
+		const tab = tabs.find(item => item.dataset.category === link.dataset.categoryLink);
+		tab?.click();
+	}));
+
+	document.querySelector('.newsletter-form')?.addEventListener('submit', event => {
+		event.preventDefault();
+		const button = event.currentTarget.querySelector('button');
+		if (button) button.textContent = 'Takk!';
+	});
 })();
