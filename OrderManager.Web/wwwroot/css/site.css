@@ -860,6 +860,21 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .checkout-coming-soon strong, .checkout-coming-soon small { display: block; }
 .checkout-coming-soon strong { color: var(--ink); font-size: 0.8rem; }
 .checkout-coming-soon small { color: var(--muted); font-size: 0.7rem; line-height: 1.3; margin-top: 0.2rem; }
+.quantity-stepper { align-items: center; border: 1px solid var(--line); border-radius: 6px; display: flex; height: 34px; }
+.quantity-stepper form { display: flex; height: 100%; }
+.quantity-stepper button { background: transparent; border: 0; color: var(--ink); cursor: pointer; font-size: 1rem; height: 100%; width: 30px; }
+.quantity-stepper button:hover { background: var(--soft-blue); }
+.quantity-stepper > span { color: var(--ink); font-size: 0.82rem; min-width: 24px; text-align: center; }
+.remove-item { background: transparent; border: 0; color: var(--muted); cursor: pointer; font-size: 0.72rem; padding: 0.25rem; text-decoration: underline; }
+.remove-item:hover { color: var(--coral); }
+.site-footer { align-items: start; border-top: 1px solid var(--line); color: var(--muted); display: grid; gap: 2rem; grid-template-columns: 1.2fr 1fr 1fr; margin-top: 2rem; padding: 2.5rem max(1.25rem, calc((100% - 1160px) / 2)); }
+.footer-brand strong { color: var(--ink); display: block; font-size: 1rem; letter-spacing: 0.1em; }
+.footer-brand span, .footer-payment span { display: block; font-size: 0.78rem; margin-top: 0.35rem; }
+.footer-links { display: flex; flex-direction: column; gap: 0.45rem; }
+.footer-links a { color: var(--muted); font-size: 0.8rem; text-decoration: none; }
+.footer-links a:hover { color: var(--blue); }
+.footer-payment { font-size: 0.78rem; }
+.footer-payment strong { color: var(--ink); display: block; font-size: 0.78rem; margin-top: 0.35rem; }
 
 @media (max-width: 800px) {
   .category-tiles, .service-grid, .newsletter-panel { grid-template-columns: 1fr; }
@@ -867,4 +882,8 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
   .service-card { border-bottom: 1px solid var(--line); padding: 0 0 1rem; }
   .service-card:last-child { border-bottom: 0; }
   .newsletter-panel { gap: 1.5rem; padding: 2rem 1.5rem; }
+  .cart-item { align-items: start; flex-wrap: wrap; }
+  .cart-item-copy { min-width: calc(100% - 100px); }
+  .quantity-stepper { margin-left: 100px; }
+  .site-footer { grid-template-columns: 1fr; gap: 1.25rem; padding: 2rem 1.25rem; }
 }
