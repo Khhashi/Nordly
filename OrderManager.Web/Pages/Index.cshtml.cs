@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 using PG3302.Domain.Entities;
 using PG3302.Domain.Services;
 
@@ -14,37 +15,56 @@ public class IndexModel : PageModel
         _service = service;
     }
 
-    [BindProperty]
-    public string ProductName { get; set; } = string.Empty;
+    public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
+    public int CartCount { get; private set; }
 
-    [BindProperty]
-    public decimal Price { get; set; }
-
-    [BindProperty]
-    public int Quantity { get; set; }
-
-    public List<Order> Orders { get; set; } = new();
-
-    public IActionResult OnGet()
+    public void OnGet()
     {
-        return RedirectToPage("/Orders");
+        CartCount = GetCart().Sum(item => item.Quantity);
     }
 
-    public IActionResult OnPostCreate()
+    public IActionResult OnPostAddToCart(Guid productId)
     {
-        if (string.IsNullOrWhiteSpace(ProductName) || Price <= 0 || Quantity <= 0)
+        if (!StorefrontCatalog.Products.Any(product => product.Id == productId))
         {
-            TempData["Error"] = "Please enter a valid product name, price and quantity.";
-            return RedirectToPage();
+            return NotFound();
         }
 
-        var order = new Order();
-        var product = new Product(ProductName.Trim(), Price);
-        order.AddProduct(product, Quantity);
+        var cart = GetCart();
+        var item = cart.FirstOrDefault(cartItem => cartItem.ProductId == productId);
 
-        _service.CreateOrder(order);
-        TempData["Success"] = "Order created successfully.";
+        if (item == null)
+            cart.Add(new CartItem(productId, 1));
+        else
+            item.Quantity++;
 
+        SaveCart(cart);
+        TempData["Success"] = "Produktet er lagt i handlekurven.";
         return RedirectToPage();
     }
+
+    private List<CartItem> GetCart()
+    {
+        var json = HttpContext.Session.GetString("cart");
+        return string.IsNullOrWhiteSpace(json)
+            ? new List<CartItem>()
+            : JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>();
+    }
+
+    private void SaveCart(List<CartItem> cart)
+    {
+        HttpContext.Session.SetString("cart", JsonSerializer.Serialize(cart));
+    }
+}
+
+public sealed class CartItem
+{
+    public CartItem(Guid productId, int quantity)
+    {
+        ProductId = productId;
+        Quantity = quantity;
+    }
+
+    public Guid ProductId { get; set; }
+    public int Quantity { get; set; }
 }
