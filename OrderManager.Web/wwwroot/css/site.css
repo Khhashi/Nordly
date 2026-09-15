@@ -855,6 +855,12 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .newsletter-form input::placeholder { color: #c4d0ff; }
 .newsletter-form button { background: transparent; border: 0; color: #fff; cursor: pointer; font-weight: 800; padding: 0.8rem 0; }
 .newsletter-panel small { color: #c4d0ff; display: block; font-size: 0.72rem; margin-top: 0.8rem; }
+.hero-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
+.hero-primary, .hero-secondary { font-size: 0.82rem; font-weight: 800; text-decoration: none; }
+.hero-primary { background: var(--ink); border-radius: 999px; color: #fff; padding: 0.8rem 1rem; }
+.hero-primary:hover { color: #fff; opacity: 0.88; }
+.hero-secondary { border-bottom: 1px solid var(--ink); color: var(--ink); padding: 0.45rem 0; }
+.hero-secondary:hover { color: var(--blue); }
 .checkout-coming-soon { align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: flex; gap: 0.7rem; padding: 0.8rem; }
 .checkout-status-dot { background: var(--coral); border-radius: 50%; flex: 0 0 auto; height: 9px; width: 9px; }
 .checkout-coming-soon strong, .checkout-coming-soon small { display: block; }
@@ -886,4 +892,5 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
   .cart-item-copy { min-width: calc(100% - 100px); }
   .quantity-stepper { margin-left: 100px; }
   .site-footer { grid-template-columns: 1fr; gap: 1.25rem; padding: 2rem 1.25rem; }
+  .nav-optional { display: none; }
 }
