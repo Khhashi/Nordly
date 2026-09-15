@@ -38,9 +38,15 @@
                         <div class="cart-item-copy">
                             <span class="section-kicker">@item.Product.Category</span>
                             <h2>@item.Product.Name</h2>
-                            <p>@item.Quantity × @item.Product.Price.ToString("N0") kr</p>
+                            <p>@item.Product.Price.ToString("N0") kr per stykk</p>
+                        </div>
+                        <div class="quantity-stepper" aria-label="Antall @item.Product.Name">
+                            <form method="post" asp-page-handler="Decrease"><input type="hidden" name="productId" value="@item.Product.Id" /><button type="submit" aria-label="Mink antall">−</button></form>
+                            <span>@item.Quantity</span>
+                            <form method="post" asp-page-handler="Increase"><input type="hidden" name="productId" value="@item.Product.Id" /><button type="submit" aria-label="Øk antall">+</button></form>
                         </div>
                         <div class="cart-item-total">@((item.Product.Price * item.Quantity).ToString("N0")) kr</div>
+                        <form method="post" asp-page-handler="Remove"><input type="hidden" name="productId" value="@item.Product.Id" /><button class="remove-item" type="submit">Fjern</button></form>
                     </article>
                 }
             </section>

@@ -25,6 +25,26 @@ public class CartModel : PageModel
 
     public void OnGet() => LoadCart();
 
+    public IActionResult OnPostIncrease(Guid productId)
+    {
+        UpdateQuantity(productId, 1);
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostDecrease(Guid productId)
+    {
+        UpdateQuantity(productId, -1);
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostRemove(Guid productId)
+    {
+        var cart = ReadCart();
+        cart.RemoveAll(item => item.ProductId == productId);
+        SaveCart(cart);
+        return RedirectToPage();
+    }
+
     public async Task<IActionResult> OnPostCheckout()
     {
         LoadCart();
@@ -83,10 +103,7 @@ public class CartModel : PageModel
 
     private void LoadCart()
     {
-        var json = HttpContext.Session.GetString("cart");
-        var cart = string.IsNullOrWhiteSpace(json)
-            ? new List<CartItem>()
-            : JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>();
+        var cart = ReadCart();
 
         Items = cart
             .Select(item =>
@@ -97,6 +114,33 @@ public class CartModel : PageModel
             .Where(item => item != null)
             .Cast<CartViewItem>()
             .ToList();
+    }
+
+    private void UpdateQuantity(Guid productId, int change)
+    {
+        var cart = ReadCart();
+        var item = cart.FirstOrDefault(cartItem => cartItem.ProductId == productId);
+        if (item == null)
+            return;
+
+        item.Quantity += change;
+        if (item.Quantity <= 0)
+            cart.Remove(item);
+
+        SaveCart(cart);
+    }
+
+    private List<CartItem> ReadCart()
+    {
+        var json = HttpContext.Session.GetString("cart");
+        return string.IsNullOrWhiteSpace(json)
+            ? new List<CartItem>()
+            : JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>();
+    }
+
+    private void SaveCart(List<CartItem> cart)
+    {
+        HttpContext.Session.SetString("cart", JsonSerializer.Serialize(cart));
     }
 }
 
