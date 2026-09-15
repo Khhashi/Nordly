@@ -6,7 +6,6 @@ OrderManager is a .NET 10 C# order management application with a layered archite
 
 ## Project structure
 
-- `OrderManager` - Console application entry point
 - `OrderManager.Web` - Browser-based Razor Pages interface
 - `PG3302.Domain` - Domain entities, repository contracts, and business logic
 - `PG3302.Infrastructure` - JSON-backed repository implementation
@@ -47,12 +46,6 @@ dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
 ```
 
 For Render, add `Stripe__SecretKey` as a private environment variable. Stripe redirects customers back to `/Checkout/Success` only after the Checkout Session reports `paid`.
-
-## Run the console application
-
-```bash
-dotnet run --project "OrderManager/OrderManager.csproj"
-```
 
 ## Run tests
 
