@@ -20,6 +20,19 @@
 		<div><strong>03</strong><span>Pakker som<br />føles personlige</span></div>
 	</div>
 
+	<section class="category-showcase" aria-label="Handle etter kategori">
+		<div class="section-intro">
+			<span class="section-kicker">Find your everyday</span>
+			<h2>Start med det du trenger.</h2>
+			<p>Små ting med en tydelig plass i hverdagen.</p>
+		</div>
+		<div class="category-tiles">
+			<a class="category-tile category-tile-light" href="#collection" data-category-link="Kitchen"><span>Kitchen</span><strong>For rolige morgener <span aria-hidden="true">↗</span></strong></a>
+			<a class="category-tile category-tile-dark" href="#collection" data-category-link="Workspace"><span>Workspace</span><strong>Plass til gode ideer <span aria-hidden="true">↗</span></strong></a>
+			<a class="category-tile category-tile-coral" href="#collection" data-category-link="Home"><span>Home</span><strong>Gjør rommet ditt <span aria-hidden="true">↗</span></strong></a>
+		</div>
+	</section>
+
 	@if (TempData["Success"] is string success)
 	{
 		<div class="alert alert-success">@success <a asp-page="/Cart">Se handlekurv →</a></div>
@@ -50,6 +63,10 @@
 				<div class="product-image-wrap">
 					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" /></a>
 					<span class="product-category">@product.Category</span>
+					@if (product.Badge is not null)
+					{
+						<span class="product-badge">@product.Badge</span>
+					}
 				</div>
 				<div class="product-info">
 					<div>
@@ -57,7 +74,7 @@
 						<p>@product.Description</p>
 					</div>
 					<div class="product-buy-row">
-						<strong>@product.Price.ToString("N0") kr</strong>
+						<div class="price-stack"><strong>@product.Price.ToString("N0") kr</strong>@if (product.OriginalPrice is not null) { <del>@product.OriginalPrice.Value.ToString("N0") kr</del> }</div>
 						<form method="post" asp-page-handler="AddToCart">
 							<input type="hidden" name="productId" value="@product.Id" />
 							<button class="add-btn" type="submit" aria-label="Legg @product.Name i handlekurven">+</button>
@@ -69,6 +86,12 @@
 	</section>
 	<p class="no-results" hidden>Vi fant ingen produkter. Prøv et annet søk.</p>
 
+	<section class="service-grid" aria-label="NORDLY tjenester">
+		<div class="service-card"><span class="service-icon">✦</span><h3>Gratis frakt over 800 kr</h3><p>Vi pakker ordren din med omtanke og sender den raskt.</p></div>
+		<div class="service-card"><span class="service-icon">↺</span><h3>14 dagers retur</h3><p>Prøv produktet hjemme. Retur skal være enkelt.</p></div>
+		<div class="service-card"><span class="service-icon">♡</span><h3>Alltid menneskelig hjelp</h3><p>Spør oss om produkter, gaver eller hva som passer deg.</p></div>
+	</section>
+
 	<section class="editorial-panel">
 		<div class="editorial-image"></div>
 		<div class="editorial-copy">
@@ -77,5 +100,10 @@
 			<p>Vi velger objekter med en rolig funksjon: de skal brukes ofte, eldes pent og gjøre litt mer ut av det hverdagslige.</p>
 			<a class="text-link" href="#collection">Les historien vår <span aria-hidden="true">→</span></a>
 		</div>
+	</section>
+
+	<section class="newsletter-panel">
+		<div><span class="section-kicker">NORDLY notes</span><h2>Gode ting, sendt<br />sjelden.</h2></div>
+		<div><p>Få nye lanseringer, små historier og utvalgte favoritter i innboksen.</p><form class="newsletter-form"><input type="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" /><button type="submit">Meld meg på <span aria-hidden="true">→</span></button></form><small>Ingen støy. Bare det vi selv ville lest.</small></div>
 	</section>
 </div>
