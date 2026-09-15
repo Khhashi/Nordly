@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OrderManager</title>
+    <title>@ViewData["Title"] - NORDLY</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OrderManager.Web.styles.css" asp-append-version="true" />
@@ -17,7 +17,7 @@
             : System.Text.Json.JsonSerializer.Deserialize<List<OrderManager.Web.Pages.CartItem>>(cartJson)?.Sum(item => item.Quantity) ?? 0;
     }
     <header class="topbar">
-        <a class="brand" asp-page="/Index">OrderManager <span>STUDIO</span></a>
+        <a class="brand" asp-page="/Index">NORDLY <span>STUDIO</span></a>
         <nav class="nav-links" aria-label="Main navigation">
             <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">Shop</a>
             <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Cart <span class="nav-badge">@cartCount</span></a>
@@ -27,11 +27,6 @@
     <main role="main">
         @RenderBody()
     </main>
-
-    <footer class="footer">
-        <span>OrderManager</span>
-        <span>Objects for everyday living</span>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
