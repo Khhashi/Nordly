@@ -800,6 +800,29 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .success-mark { background: var(--coral); color: #fff; }
 .confirmation-code { color: #2948ae; }
 
+/* Modern light navigation */
+.topbar {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid rgba(23, 23, 23, 0.08);
+  box-shadow: 0 6px 24px rgba(23, 23, 23, 0.06);
+  margin-bottom: 0;
+  position: relative;
+  z-index: 5;
+}
+.brand { color: var(--ink); font-size: 1.05rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.brand span { color: var(--blue); }
+.nav-links { gap: 0.25rem; }
+.nav-links a { color: #65666a; font-size: 0.86rem; padding: 0.55rem 0.8rem; }
+.nav-links a:hover { background: #f0f2f8; color: var(--ink); }
+.nav-links a.active { background: var(--soft-blue); color: #2948ae; }
+.nav-badge { background: var(--blue); color: #fff; height: 18px; width: 18px; }
+
+@media (max-width: 480px) {
+  .topbar { align-items: center; }
+  .brand { font-size: 0.9rem; }
+  .nav-links a { padding: 0.5rem 0.55rem; }
+}
+
 .category-showcase { margin: 5rem 0 4rem; }
 .section-intro { margin-bottom: 1.25rem; }
 .section-intro h2 { color: var(--ink); font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; margin: 0.35rem 0; }
