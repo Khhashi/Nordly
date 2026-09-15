@@ -20,7 +20,7 @@
 
     @if (TempData["Success"] is string success)
     {
-        <div class="alert alert-success" role="status"><span class="feedback-icon" aria-hidden="true">✓</span>@success</div>
+        <div class="alert alert-success action-toast" role="status"><span class="feedback-icon" aria-hidden="true">✓</span><span>@success</span><button class="toast-close" type="button" aria-label="Lukk melding">×</button></div>
     }
 
     @if (!Model.Items.Any())
