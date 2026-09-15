@@ -730,6 +730,9 @@ h1 {
   --blue: #3158d8;
   --coral: #e36b50;
   --soft-blue: #e9edf9;
+  --sun: #f4c94d;
+  --mint: #b9e5d1;
+  --lilac: #d8d0ff;
 }
 
 body { background: var(--paper); color: var(--ink); }
@@ -765,7 +768,7 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .alert-success { background: #edf1ff; border-color: #c8d2fa; color: #2948ae; }
 .alert-danger { background: #fff0ed; border-color: #f2c5ba; color: #a8422d; }
 .footer { background: var(--ink); border-top-color: #303030; color: #bcbcbc; }
-.store-hero { background: #e9edf9; }
+.store-hero { background: #fff0d6; }
 .store-hero::after { background: var(--blue); }
 .store-hero h1 em { color: var(--blue); }
 .hero-note { color: #2948ae; }
@@ -833,12 +836,15 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .category-tile > span { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .category-tile strong { font-size: 1.4rem; letter-spacing: -0.02em; max-width: 180px; }
 .category-tile strong span { font-size: 1rem; margin-left: 0.25rem; }
-.category-tile-light { background: #f1dfbb; }
-.category-tile-dark { background: var(--ink); color: #fff; }
+.category-tile-light { background: var(--sun); }
+.category-tile-dark { background: #6c4fd6; color: #fff; }
 .category-tile-dark:hover { color: #fff; }
 .category-tile-coral { background: var(--coral); color: #fff; }
 .category-tile-coral:hover { color: #fff; }
 .product-badge { background: var(--coral); border-radius: 999px; color: #fff; font-size: 0.64rem; font-weight: 800; left: 0.75rem; letter-spacing: 0.05em; padding: 0.35rem 0.55rem; position: absolute; text-transform: uppercase; top: 2.9rem; }
+.product-card:nth-child(3n + 1) .product-badge { background: var(--blue); }
+.product-card:nth-child(3n + 2) .product-badge { background: #6c4fd6; }
+.product-card:nth-child(3n) .product-badge { background: var(--coral); }
 .price-stack { align-items: baseline; display: flex; gap: 0.45rem; }
 .price-stack del { color: #9a9a97; font-size: 0.75rem; }
 .service-grid { border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); display: grid; gap: 1.5rem; grid-template-columns: repeat(3, 1fr); margin-top: 5rem; padding: 2rem 0; }
@@ -846,6 +852,9 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .service-icon { color: var(--coral); display: block; font-size: 1.4rem; margin-bottom: 0.8rem; }
 .service-card h3 { color: var(--ink); font-size: 1rem; margin: 0 0 0.45rem; }
 .service-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.5; margin: 0; max-width: 240px; }
+.service-card:nth-child(1) .service-icon { color: var(--blue); }
+.service-card:nth-child(2) .service-icon { color: #6c4fd6; }
+.service-card:nth-child(3) .service-icon { color: var(--coral); }
 .newsletter-panel { align-items: center; background: var(--blue); color: #fff; display: grid; gap: 3rem; grid-template-columns: 0.9fr 1.1fr; margin-top: 5rem; padding: 3rem; }
 .newsletter-panel .section-kicker { color: #b9c8ff; }
 .newsletter-panel h2 { font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.95; margin: 0.5rem 0 0; }
