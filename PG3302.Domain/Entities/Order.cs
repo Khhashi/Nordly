@@ -5,6 +5,7 @@ public class Order
     public Guid Id { get; set; }
 
     public List<OrderLine> OrderLines { get; set; } = new();
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Order()
     {

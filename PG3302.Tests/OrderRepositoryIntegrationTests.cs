@@ -1,31 +1,27 @@
 using NUnit.Framework;
 using PG3302.Domain.Entities;
 using PG3302.Infrastructure.Repositories;
-using System.IO;
+using Microsoft.EntityFrameworkCore;
+using PG3302.Infrastructure.Data;
 
 namespace PG3302.Tests;
 
 public class OrderRepositoryIntegrationTests
 {
-    private string _filePath = Path.Combine(AppContext.BaseDirectory, "orders.json");
-
-    [SetUp]
-    public void Setup()
-    {
-       
-        if (File.Exists(_filePath))
-        {
-            File.Delete(_filePath);
-        }
-    }
-
     [Test]
-    public void Repository_Should_Save_And_Load_Order_From_Json_File()
+    public void Repository_Should_Save_And_Load_Order_From_Database()
     {
-        var repository = new OrderRepository();
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        using var db = new OrderDbContext(options);
+        var repository = new OrderRepository(db);
 
         var order = new Order();
-        order.AddProduct(new Product("IntegrationTestProduct", 100), 2);
+        var product = new Product("IntegrationTestProduct", 100);
+        db.Products.Add(product);
+        db.SaveChanges();
+        order.AddProduct(product, 2);
         
         repository.Add(order);
 

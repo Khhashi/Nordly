@@ -47,6 +47,25 @@ dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
 
 For Render, add `Stripe__SecretKey` as a private environment variable. Stripe redirects customers back to `/Checkout/Success` only after the Checkout Session reports `paid`.
 
+## Database and REST API
+
+The application uses PostgreSQL through Entity Framework Core. Start a local database with Docker:
+
+```bash
+docker compose up -d postgres
+dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
+```
+
+The default local connection is `Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres`. In Render, configure `ConnectionStrings__DefaultConnection` as a private environment variable.
+
+Available endpoints:
+
+- `GET /api/products` - list products
+- `GET /api/orders/{id}` - read an order
+- `POST /api/orders` - create an order from product IDs and quantities
+- `POST /api/stripe/webhook` - verify Stripe webhook signatures
+- `GET /health` - health check
+
 ## Run tests
 
 ```bash

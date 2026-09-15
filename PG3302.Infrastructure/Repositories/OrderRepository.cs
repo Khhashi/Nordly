@@ -1,38 +1,17 @@
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using PG3302.Domain.Entities;
 using PG3302.Domain.Interfaces;
+using PG3302.Infrastructure.Data;
 
 namespace PG3302.Infrastructure.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
-    private readonly string _filePath;
-    private List<Order> _orders;
+    private readonly OrderDbContext _db;
 
-    public OrderRepository()
+    public OrderRepository(OrderDbContext db)
     {
-        var runtimeDirectory = AppContext.BaseDirectory;
-        var directory = new DirectoryInfo(runtimeDirectory);
-
-        _filePath = Path.Combine(runtimeDirectory, "orders.json");
-
-        if (!Directory.Exists(runtimeDirectory))
-        {
-            Directory.CreateDirectory(runtimeDirectory);
-        }
-
-        if (File.Exists(_filePath))
-        {
-            var json = File.ReadAllText(_filePath);
-
-            _orders = JsonSerializer.Deserialize<List<Order>>(json)
-                      ?? new List<Order>();
-        }
-        else
-        {
-            _orders = new List<Order>();
-            SaveToFile();
-        }
+        _db = db ?? throw new ArgumentNullException(nameof(db));
     }
 
     public void Add(Order order)
@@ -40,53 +19,37 @@ public class OrderRepository : IOrderRepository
         if (order == null)
             throw new ArgumentNullException(nameof(order));
 
-        _orders.Add(order);
-        SaveToFile();
+        _db.Orders.Add(order);
+        _db.SaveChanges();
     }
 
     public Order? GetById(Guid id)
     {
-        return _orders.FirstOrDefault(o => o.Id == id);
+        return _db.Orders
+            .Include(order => order.OrderLines)
+            .ThenInclude(line => line.Product)
+            .SingleOrDefault(order => order.Id == id);
     }
 
     public List<Order> GetAll()
     {
-        return _orders;
+        return _db.Orders
+            .Include(order => order.OrderLines)
+            .ThenInclude(line => line.Product)
+            .OrderByDescending(order => order.CreatedAt)
+            .ToList();
     }
 
     public void Update(Order order)
     {
-        var existing = GetById(order.Id);
-
-        if (existing == null)
-            throw new InvalidOperationException("Order not found.");
-
-        _orders.Remove(existing);
-        _orders.Add(order);
-
-        SaveToFile();
+        _db.Orders.Update(order);
+        _db.SaveChanges();
     }
 
     public void Delete(Guid id)
     {
-        var order = GetById(id);
-
-        if (order == null)
-            throw new InvalidOperationException("Order not found.");
-
-        _orders.Remove(order);
-
-        SaveToFile();
-    }
-
-    private void SaveToFile()
-    {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-
-        var json = JsonSerializer.Serialize(_orders, options);
-        File.WriteAllText(_filePath, json);
+        var order = _db.Orders.Find(id) ?? throw new InvalidOperationException("Order not found.");
+        _db.Orders.Remove(order);
+        _db.SaveChanges();
     }
 }
