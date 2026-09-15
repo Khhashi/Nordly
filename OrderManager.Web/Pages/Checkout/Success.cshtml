@@ -1,0 +1,17 @@
+@page
+@model SuccessModel
+@{
+    ViewData["Title"] = "Order confirmed";
+}
+
+<div class="success-shell">
+    <div class="success-mark">✓</div>
+    <span class="eyebrow">Payment complete</span>
+    <h1>Takk for bestillingen.</h1>
+    <p>Betalingen er bekreftet, og vi gjør pakken klar med en gang.</p>
+    @if (Model.OrderId is Guid orderId)
+    {
+        <span class="confirmation-code">Ordre @orderId.ToString()[..8].ToUpperInvariant()</span>
+    }
+    <a class="primary-btn" asp-page="/Index">Tilbake til butikken <span aria-hidden="true">→</span></a>
+</div>

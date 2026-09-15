@@ -1,0 +1,56 @@
+@page "{id:guid}"
+@model DetailsModel
+@{
+    ViewData["Title"] = Model.Product?.Name ?? "Product";
+}
+
+@if (Model.Product is not null)
+{
+    <div class="product-detail-shell">
+        <nav class="breadcrumb" aria-label="Brødsmulesti">
+            <a asp-page="/Index">Shop</a><span>/</span><span>@Model.Product.Category</span><span>/</span><strong>@Model.Product.Name</strong>
+        </nav>
+
+        @if (TempData["Success"] is string success)
+        {
+            <div class="alert alert-success">@success <a asp-page="/Cart">Se handlekurv →</a></div>
+        }
+
+        <section class="product-detail-grid">
+            <div class="detail-image-panel">
+                <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" />
+                <span class="detail-image-label">Studio collection / @Model.Product.Category</span>
+            </div>
+            <div class="product-detail-copy">
+                <span class="eyebrow">@Model.Product.Category · Studio collection</span>
+                <h1>@Model.Product.Name</h1>
+                <div class="detail-rating"><span>★★★★★</span> <span>4.9 · 18 anmeldelser</span></div>
+                <p class="detail-price">@Model.Product.Price.ToString("N0") kr</p>
+                <p class="detail-description">@Model.Product.Description Et gjennomtenkt objekt med en taktil finish og funksjon som holder over tid.</p>
+
+                <form method="post" asp-page-handler="AddToCart" class="detail-buy-form">
+                    <div class="quantity-control">
+                        <label for="quantity">Antall</label>
+                        <input id="quantity" name="quantity" type="number" min="1" max="10" value="1" />
+                    </div>
+                    <button class="primary-btn" type="submit">Legg i handlekurv <span aria-hidden="true">→</span></button>
+                </form>
+
+                <div class="detail-promises">
+                    <div><span>↗</span><p><strong>Sendes raskt</strong><br />På lager · 2–4 virkedager</p></div>
+                    <div><span>↺</span><p><strong>Enkel retur</strong><br />14 dager åpent kjøp</p></div>
+                    <div><span>✦</span><p><strong>Trygg betaling</strong><br />Sikkert via Stripe</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-story">
+            <div><span class="section-kicker">Why it belongs</span><h2>Designet for å bli brukt.</h2></div>
+            <p>Vi tror gode produkter skal gjøre hverdagen litt bedre uten å kreve oppmerksomhet. Derfor velger vi materialer, former og detaljer som tåler å brukes igjen og igjen.</p>
+        </section>
+    </div>
+}
+else
+{
+    <div class="product-detail-shell"><div class="empty-cart"><h2>Produktet finnes ikke</h2><a class="primary-btn" asp-page="/Index">Tilbake til butikken</a></div></div>
+}

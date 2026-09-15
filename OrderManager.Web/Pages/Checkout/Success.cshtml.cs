@@ -1,0 +1,52 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using PG3302.Domain.Entities;
+using PG3302.Domain.Services;
+using Stripe;
+using Stripe.Checkout;
+using DomainProduct = PG3302.Domain.Entities.Product;
+
+namespace OrderManager.Web.Pages.Checkout;
+
+public class SuccessModel : PageModel
+{
+    private readonly OrderService _service;
+    private readonly IConfiguration _configuration;
+
+    public SuccessModel(OrderService service, IConfiguration configuration)
+    {
+        _service = service;
+        _configuration = configuration;
+    }
+
+    public Guid? OrderId { get; private set; }
+
+    public async Task<IActionResult> OnGetAsync(string? session_id)
+    {
+        if (string.IsNullOrWhiteSpace(session_id) || string.IsNullOrWhiteSpace(_configuration["Stripe:SecretKey"]))
+            return RedirectToPage("/Cart");
+
+        StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
+        var session = await new SessionService().GetAsync(session_id);
+        if (session.PaymentStatus != "paid")
+            return RedirectToPage("/Cart");
+
+        var productIds = session.Metadata["product_ids"].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse).ToList();
+        var quantities = session.Metadata["quantities"].Split(',').Select(int.Parse).ToList();
+        var order = new Order();
+        for (var index = 0; index < productIds.Count; index++)
+        {
+            var product = StorefrontCatalog.Products.FirstOrDefault(item => item.Id == productIds[index]);
+            if (product != null)
+                order.AddProduct(new DomainProduct(product.Name, product.Price), quantities[index]);
+        }
+
+        if (!order.HasProducts())
+            return RedirectToPage("/Cart");
+
+        _service.CreateOrder(order);
+        HttpContext.Session.Remove("cart");
+        OrderId = order.Id;
+        return Page();
+    }
+}
