@@ -21,6 +21,7 @@ public class CartModel : PageModel
 
     public List<CartViewItem> Items { get; private set; } = new();
     public decimal Total => Items.Sum(item => item.Product.Price * item.Quantity);
+    public bool StripeConfigured => !string.IsNullOrWhiteSpace(_configuration["Stripe:SecretKey"]);
 
     public void OnGet() => LoadCart();
 
@@ -37,7 +38,7 @@ public class CartModel : PageModel
         var secretKey = _configuration["Stripe:SecretKey"];
         if (string.IsNullOrWhiteSpace(secretKey))
         {
-            TempData["Error"] = "Stripe er ikke konfigurert ennå. Legg inn Stripe:SecretKey for å aktivere betaling.";
+            TempData["CheckoutNotice"] = "Stripe-betaling er ikke aktivert ennå.";
             return RedirectToPage();
         }
 
@@ -75,7 +76,7 @@ public class CartModel : PageModel
         }
         catch (StripeException)
         {
-            TempData["Error"] = "Stripe kunne ikke starte betalingen. Kontroller testnøkkelen og prøv igjen.";
+            TempData["CheckoutNotice"] = "Stripe-betaling kunne ikke startes akkurat nå.";
             return RedirectToPage();
         }
     }
