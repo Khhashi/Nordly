@@ -2,15 +2,20 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 (() => {
+	document.querySelectorAll('.action-toast').forEach(toast => {
+		const dismiss = () => toast.remove();
+		toast.querySelector('.toast-close')?.addEventListener('click', dismiss);
+		window.setTimeout(dismiss, 5000);
+	});
+
 	const cards = [...document.querySelectorAll('.product-card')];
 	const tabs = [...document.querySelectorAll('.category-tab')];
 	const categoryLinks = [...document.querySelectorAll('[data-category-link]')];
 	const search = document.querySelector('#product-search');
 	const emptyState = document.querySelector('.no-results');
 
-	if (!cards.length) return;
-
 	let selectedCategory = 'all';
+	if (!cards.length) return;
 
 	const updateProducts = () => {
 		const term = (search?.value || '').trim().toLowerCase();

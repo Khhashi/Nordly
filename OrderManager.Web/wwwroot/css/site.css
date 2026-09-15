@@ -768,6 +768,9 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .alert-success { align-items: center; background: #e8f7ef; border-color: #a9dfc2; color: #176541; display: flex; gap: 0.55rem; }
 .alert-success a { color: #176541; }
 .feedback-icon { align-items: center; background: #2a9b68; border-radius: 50%; color: #fff; display: inline-flex; flex: 0 0 auto; font-size: 0.72rem; height: 20px; justify-content: center; width: 20px; }
+.action-toast { animation: toast-in 0.25s ease-out; box-shadow: 0 14px 34px rgba(23, 101, 65, 0.18); max-width: min(420px, calc(100vw - 2rem)); position: fixed; right: 1rem; top: 5.5rem; z-index: 20; }
+.toast-close { background: transparent; border: 0; color: #176541; cursor: pointer; font-size: 1.2rem; line-height: 1; margin-left: auto; padding: 0 0.1rem; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 .alert-danger { background: #fff0ed; border-color: #f2c5ba; color: #a8422d; }
 .footer { background: var(--ink); border-top-color: #303030; color: #bcbcbc; }
 .store-hero { background: #fff0d6; }

@@ -32,7 +32,7 @@ public class DetailsModel : PageModel
             item.Quantity = Math.Clamp(item.Quantity + quantity, 1, 10);
 
         HttpContext.Session.SetString("cart", JsonSerializer.Serialize(cart));
-        TempData["Success"] = $"{Product.Name} er lagt i handlekurven.";
+        TempData["Success"] = $"{Product.Name} lagt til i handlekurv";
         return RedirectToPage(new { id });
     }
 }

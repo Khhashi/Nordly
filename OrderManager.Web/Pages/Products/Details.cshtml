@@ -13,7 +13,7 @@
 
         @if (TempData["Success"] is string success)
         {
-            <div class="alert alert-success" role="status"><span class="feedback-icon" aria-hidden="true">✓</span>@success <a asp-page="/Cart">Se handlekurv →</a></div>
+            <div class="alert alert-success action-toast" role="status"><span class="feedback-icon" aria-hidden="true">✓</span><span>@success</span><a asp-page="/Cart">Se handlekurv →</a><button class="toast-close" type="button" aria-label="Lukk melding">×</button></div>
         }
 
         <section class="product-detail-grid">
