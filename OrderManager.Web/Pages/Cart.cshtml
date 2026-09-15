@@ -1,0 +1,59 @@
+@page
+@model CartModel
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<div class="store-shell">
+    <div class="store-heading compact-heading">
+        <div>
+            <span class="eyebrow">Your selection</span>
+            <h1>Handlekurv</h1>
+        </div>
+        <a class="text-link" asp-page="/Index">Fortsett å handle <span aria-hidden="true">→</span></a>
+    </div>
+
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    @if (!Model.Items.Any())
+    {
+        <section class="empty-cart">
+            <span class="empty-mark">＋</span>
+            <h2>Handlekurven er tom</h2>
+            <p>Finn noe du liker og legg det til her.</p>
+            <a class="primary-btn" asp-page="/Index">Se produkter <span aria-hidden="true">→</span></a>
+        </section>
+    }
+    else
+    {
+        <div class="cart-layout">
+            <section class="cart-items">
+                @foreach (var item in Model.Items)
+                {
+                    <article class="cart-item">
+                        <img src="@item.Product.ImageUrl" alt="@item.Product.Name" />
+                        <div class="cart-item-copy">
+                            <span class="section-kicker">@item.Product.Category</span>
+                            <h2>@item.Product.Name</h2>
+                            <p>@item.Quantity × @item.Product.Price.ToString("N0") kr</p>
+                        </div>
+                        <div class="cart-item-total">@((item.Product.Price * item.Quantity).ToString("N0")) kr</div>
+                    </article>
+                }
+            </section>
+            <aside class="checkout-panel">
+                <span class="section-kicker">Summary</span>
+                <h2>Din ordre</h2>
+                <div class="summary-row"><span>Produkter</span><span>@Model.Items.Sum(item => item.Quantity)</span></div>
+                <div class="summary-row"><span>Levering</span><span>Gratis</span></div>
+                <div class="summary-total"><span>Totalt</span><strong>@Model.Total.ToString("N0") kr</strong></div>
+                <form method="post" asp-page-handler="Checkout">
+                    <button class="primary-btn" type="submit">Gå til checkout <span aria-hidden="true">→</span></button>
+                </form>
+            </aside>
+        </div>
+    }
+</div>

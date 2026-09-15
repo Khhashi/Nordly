@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,9 +10,11 @@
 </head>
 <body>
     <header class="topbar">
-        <a class="brand" asp-page="/Orders">OrderManager</a>
+        <a class="brand" asp-page="/Index">OrderManager <span>STUDIO</span></a>
         <nav class="nav-links" aria-label="Main navigation">
-            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Orders" ? "active" : "")" asp-page="/Orders">Orders</a>
+            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">Shop</a>
+            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Cart</a>
+            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Orders" ? "active" : "")" asp-page="/Orders">Admin</a>
             @if (ViewData["OrderId"] is Guid orderId)
             {
                 <a class="active" asp-page="/Orders/Details" asp-route-id="@orderId">Order details</a>
@@ -20,11 +22,14 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <span>OrderManager</span>
+        <span>Enkel ordreoversikt for hverdagen</span>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
