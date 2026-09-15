@@ -18,6 +18,11 @@
         <div class="alert alert-danger">@error</div>
     }
 
+    @if (TempData["Success"] is string success)
+    {
+        <div class="alert alert-success" role="status"><span class="feedback-icon" aria-hidden="true">✓</span>@success</div>
+    }
+
     @if (!Model.Items.Any())
     {
         <section class="empty-cart">

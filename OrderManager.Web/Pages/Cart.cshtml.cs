@@ -28,12 +28,14 @@ public class CartModel : PageModel
     public IActionResult OnPostIncrease(Guid productId)
     {
         UpdateQuantity(productId, 1);
+        TempData["Success"] = "Antallet er oppdatert.";
         return RedirectToPage();
     }
 
     public IActionResult OnPostDecrease(Guid productId)
     {
         UpdateQuantity(productId, -1);
+        TempData["Success"] = "Antallet er oppdatert.";
         return RedirectToPage();
     }
 
@@ -42,6 +44,7 @@ public class CartModel : PageModel
         var cart = ReadCart();
         cart.RemoveAll(item => item.ProductId == productId);
         SaveCart(cart);
+        TempData["Success"] = "Produktet er fjernet fra handlekurven.";
         return RedirectToPage();
     }
 
