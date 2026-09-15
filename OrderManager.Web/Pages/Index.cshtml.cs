@@ -2,19 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using PG3302.Domain.Entities;
-using PG3302.Domain.Services;
 
 namespace OrderManager.Web.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly OrderService _service;
-
-    public IndexModel(OrderService service)
-    {
-        _service = service;
-    }
-
     public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
     public int CartCount { get; private set; }
 
