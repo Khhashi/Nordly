@@ -881,6 +881,17 @@ h1, .catalog-header h2, .store-heading h1, .form-panel h2, .list-panel h2, .deta
 .footer-links a:hover { color: var(--blue); }
 .footer-payment { font-size: 0.78rem; }
 .footer-payment strong { color: var(--ink); display: block; font-size: 0.78rem; margin-top: 0.35rem; }
+.info-page { margin: 0 auto; max-width: 760px; padding: 5rem 1.25rem 7rem; }
+.info-page h1 { font-size: clamp(2.8rem, 6vw, 5.5rem); line-height: 0.95; margin: 0.5rem 0 2rem; }
+.info-lead { color: var(--muted); font-size: 1.2rem; line-height: 1.6; margin: 0 0 3rem; max-width: 560px; }
+.info-content { border-top: 1px solid var(--line); padding-top: 1.5rem; }
+.info-content h2 { color: var(--ink); font-size: 1.25rem; margin: 1.75rem 0 0.5rem; }
+.info-content p { color: var(--muted); line-height: 1.7; margin: 0; max-width: 600px; }
+.info-button { margin-top: 2rem; width: auto; }
+.support-card { background: var(--soft-blue); display: grid; gap: 0.45rem; margin-top: 2rem; padding: 1.5rem; }
+.support-card strong { color: var(--ink); font-size: 1.2rem; }
+.support-card span { color: var(--muted); font-size: 0.85rem; }
+.support-card .text-link { margin-top: 0.75rem; }
 
 @media (max-width: 800px) {
   .category-tiles, .service-grid, .newsletter-panel { grid-template-columns: 1fr; }
