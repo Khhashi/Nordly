@@ -9,16 +9,18 @@
     <link rel="stylesheet" href="~/OrderManager.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="announcement-bar">Fri frakt på ordre over 800 kr <span>•</span> Levering på 2–4 virkedager</div>
+    @{
+        var cartJson = Context.Session.GetString("cart");
+        var cartCount = string.IsNullOrWhiteSpace(cartJson)
+            ? 0
+            : System.Text.Json.JsonSerializer.Deserialize<List<OrderManager.Web.Pages.CartItem>>(cartJson)?.Sum(item => item.Quantity) ?? 0;
+    }
     <header class="topbar">
         <a class="brand" asp-page="/Index">OrderManager <span>STUDIO</span></a>
         <nav class="nav-links" aria-label="Main navigation">
             <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">Shop</a>
-            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Cart</a>
-            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Orders" ? "active" : "")" asp-page="/Orders">Admin</a>
-            @if (ViewData["OrderId"] is Guid orderId)
-            {
-                <a class="active" asp-page="/Orders/Details" asp-route-id="@orderId">Order details</a>
-            }
+            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Cart <span class="nav-badge">@cartCount</span></a>
         </nav>
     </header>
 
@@ -28,7 +30,7 @@
 
     <footer class="footer">
         <span>OrderManager</span>
-        <span>Enkel ordreoversikt for hverdagen</span>
+        <span>Objects for everyday living</span>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

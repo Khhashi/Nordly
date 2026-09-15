@@ -3,21 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PG3302.Domain.Entities;
 using PG3302.Domain.Services;
+using Stripe;
+using Stripe.Checkout;
 
 namespace OrderManager.Web.Pages;
 
 public class CartModel : PageModel
 {
     private readonly OrderService _service;
+    private readonly IConfiguration _configuration;
 
-    public CartModel(OrderService service) => _service = service;
+    public CartModel(OrderService service, IConfiguration configuration)
+    {
+        _service = service;
+        _configuration = configuration;
+    }
 
     public List<CartViewItem> Items { get; private set; } = new();
     public decimal Total => Items.Sum(item => item.Product.Price * item.Quantity);
 
     public void OnGet() => LoadCart();
 
-    public IActionResult OnPostCheckout()
+    public async Task<IActionResult> OnPostCheckout()
     {
         LoadCart();
 
@@ -27,14 +34,50 @@ public class CartModel : PageModel
             return RedirectToPage();
         }
 
-        var order = new Order();
-        foreach (var item in Items)
-            order.AddProduct(new Product(item.Product.Name, item.Product.Price), item.Quantity);
+        var secretKey = _configuration["Stripe:SecretKey"];
+        if (string.IsNullOrWhiteSpace(secretKey))
+        {
+            TempData["Error"] = "Stripe er ikke konfigurert ennå. Legg inn Stripe:SecretKey for å aktivere betaling.";
+            return RedirectToPage();
+        }
 
-        _service.CreateOrder(order);
-        HttpContext.Session.Remove("cart");
-        TempData["Success"] = $"Takk for bestillingen! Ordren din er {order.Id.ToString()[..8].ToUpperInvariant()}.";
-        return RedirectToPage("/Orders/Details", new { id = order.Id });
+        StripeConfiguration.ApiKey = secretKey;
+        var options = new SessionCreateOptions
+        {
+            Mode = "payment",
+            PaymentMethodTypes = new List<string> { "card" },
+            LineItems = Items.Select(item => new SessionLineItemOptions
+            {
+                Quantity = item.Quantity,
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    Currency = "nok",
+                    UnitAmount = (long)(item.Product.Price * 100),
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = item.Product.Name
+                    }
+                }
+            }).ToList(),
+            Metadata = new Dictionary<string, string>
+            {
+                ["product_ids"] = string.Join(",", Items.Select(item => item.Product.Id)),
+                ["quantities"] = string.Join(",", Items.Select(item => item.Quantity))
+            },
+            SuccessUrl = $"{Request.Scheme}://{Request.Host}/Checkout/Success?session_id={{CHECKOUT_SESSION_ID}}",
+            CancelUrl = $"{Request.Scheme}://{Request.Host}/Cart"
+        };
+
+        try
+        {
+            var session = await new SessionService().CreateAsync(options);
+            return Redirect(session.Url);
+        }
+        catch (StripeException)
+        {
+            TempData["Error"] = "Stripe kunne ikke starte betalingen. Kontroller testnøkkelen og prøv igjen.";
+            return RedirectToPage();
+        }
     }
 
     private void LoadCart()

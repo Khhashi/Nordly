@@ -1,6 +1,6 @@
 # OrderManager
 
-**Live demo:** [Open OrderManager](https://ordermanager-8ym2.onrender.com/Orders)
+**Live demo:** [Open OrderManager](https://ordermanager-8ym2.onrender.com/)
 
 OrderManager is a .NET 8 C# order management application with a layered architecture, JSON persistence, automated tests, and a Razor Pages web interface.
 
@@ -35,13 +35,18 @@ This repository includes a `Dockerfile` and `render.yaml` for deploying the web 
 
 Render will provide a public URL when the deployment finishes. The current JSON repository is suitable for a demo, but data on Render's free service can be lost when the service is redeployed or restarted. A database or persistent disk would be needed for permanent production data.
 
-The web interface supports:
+The web interface is a customer-facing storefront with a curated product catalog, search and category filters, session-based cart, and Stripe Checkout. The existing order management pages remain available for internal use, but are no longer part of the customer navigation.
 
-- Creating orders
-- Viewing all orders
-- Opening a separate order details page
-- Updating order information
-- Deleting orders
+## Configure Stripe Checkout
+
+Create a Stripe account and use a test-mode secret key locally. Never commit the key to the repository.
+
+```bash
+export Stripe__SecretKey=sk_test_your_key_here
+dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
+```
+
+For Render, add `Stripe__SecretKey` as a private environment variable. Stripe redirects customers back to `/Checkout/Success` only after the Checkout Session reports `paid`.
 
 ## Run the console application
 
