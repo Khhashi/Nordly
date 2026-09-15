@@ -2,7 +2,7 @@
 
 **Live demo:** [Open OrderManager](https://ordermanager-8ym2.onrender.com/)
 
-OrderManager is a .NET 8 C# order management application with a layered architecture, JSON persistence, automated tests, and a Razor Pages web interface.
+OrderManager is a .NET 10 C# order management application with a layered architecture, JSON persistence, automated tests, and a Razor Pages web interface.
 
 ## Project structure
 
@@ -14,7 +14,7 @@ OrderManager is a .NET 8 C# order management application with a layered architec
 
 ## Requirements
 
-- .NET 8 SDK
+- .NET 10 SDK
 
 ## Run the web application
 
