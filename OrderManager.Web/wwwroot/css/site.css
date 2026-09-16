@@ -491,11 +491,45 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .product-card, .cart-item { border-color: var(--line); box-shadow: 0 10px 24px rgba(28,28,27,0.04); }
 .primary-btn, .add-btn { background: var(--blue); box-shadow: 0 12px 22px rgba(86,112,90,0.18); }
 .product-buy-row strong, .cart-item-total, .detail-price { color: var(--ink); }
-.alert-success { align-items: center; background: #edf7ee; border-color: #cde5d0; color: #28553f; display: flex; gap: 0.55rem; }
+.alert-success {
+  align-items: center;
+  background: #edf7ee;
+  border-color: #cde5d0;
+  color: #28553f;
+  display: flex;
+  gap: 0.55rem;
+}
 .alert-success a { color: #28553f; }
-.feedback-icon { align-items: center; background: #5d8a67; border-radius: 50%; color: #fff; display: inline-flex; flex: 0 0 auto; font-size: 0.72rem; height: 20px; justify-content: center; width: 20px; }
-.action-toast { animation: toast-in 0.25s ease-out; box-shadow: 0 18px 36px rgba(28,28,27,0.1); max-width: min(420px, calc(100vw - 2rem)); position: fixed; right: 1rem; top: 5.5rem; z-index: 20; }
-.toast-close { background: transparent; border: 0; color: #28553f; cursor: pointer; font-size: 1.2rem; line-height: 1; margin-left: auto; padding: 0 0.1rem; }
+.feedback-icon {
+  align-items: center;
+  background: #5d8a67;
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  height: 20px;
+  justify-content: center;
+  width: 20px;
+}
+.action-toast {
+  align-items: center;
+  animation: toast-in 0.25s ease-out;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(28, 28, 27, 0.08);
+  border-radius: 999px;
+  box-shadow: 0 14px 28px rgba(28, 28, 27, 0.08);
+  display: flex;
+  gap: 0.6rem;
+  max-width: min(420px, calc(100vw - 2rem));
+  padding: 0.7rem 0.9rem 0.7rem 0.8rem;
+  position: fixed;
+  right: 1rem;
+  top: 5.5rem;
+  z-index: 20;
+}
+.toast-close { background: transparent; border: 0; color: #28553f; cursor: pointer; font-size: 1.15rem; line-height: 1; margin-left: auto; opacity: 0.72; padding: 0 0.15rem; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 .alert-danger { background: #fff2ed; border-color: #f4d0c4; color: #9f4935; }
 .footer { background: #1d2a24; border-top-color: rgba(255,255,255,0.08); color: #d6d0c8; }
