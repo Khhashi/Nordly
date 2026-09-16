@@ -16,12 +16,12 @@
     }
     <header class="topbar">
         <a class="brand" asp-page="/Index">NORDLY <span>STUDIO</span></a>
-        <nav class="nav-links" aria-label="Main navigation">
-            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">Shop</a>
+        <nav class="nav-links" aria-label="Hovedmeny">
+            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">Butikk</a>
             <a class="nav-optional" href="/#collection">Kolleksjon</a>
             <a class="nav-optional" href="/#new-arrivals">Nyheter</a>
             <a class="nav-optional" href="/#offers">Tilbud</a>
-            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Cart <span class="nav-badge">@cartCount</span></a>
+            <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Handlekurv <span class="nav-badge">@cartCount</span></a>
         </nav>
     </header>
 

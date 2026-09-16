@@ -1,13 +1,13 @@
 @page
 @model CartModel
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "Handlekurv";
 }
 
 <div class="store-shell">
     <div class="store-heading compact-heading">
         <div>
-            <span class="eyebrow">Your selection</span>
+            <span class="eyebrow">Ditt utvalg</span>
             <h1>Handlekurv</h1>
         </div>
         <a class="text-link" asp-page="/Index">Fortsett å handle <span aria-hidden="true">→</span></a>
@@ -56,7 +56,7 @@
                 }
             </section>
             <aside class="checkout-panel">
-                <span class="section-kicker">Summary</span>
+                <span class="section-kicker">Oppsummering</span>
                 <h2>Din ordre</h2>
                 <div class="summary-row"><span>Produkter</span><span>@Model.Items.Sum(item => item.Quantity)</span></div>
                 <div class="summary-row"><span>Levering</span><span>Gratis</span></div>
