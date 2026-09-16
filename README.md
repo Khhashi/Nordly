@@ -1,6 +1,6 @@
 # OrderManager
 
-**Live demo:** [Åpne OrderManager](https://ordermanager-8ym2.onrender.com/)
+**Live demo:** Kommer snart. Vi legger ut lenken når nettbutikken er klar.
 
 > **Status: Under aktiv utvikling**
 >
