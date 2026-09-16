@@ -73,7 +73,7 @@
 		{
 			<article class="product-card" data-category="@product.Category" data-search="@product.Name @product.Description">
 				<div class="product-image-wrap">
-					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" /></a>
+					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" loading="lazy" decoding="async" /></a>
 					<span class="product-category">@product.Category</span>
 					@if (product.Badge is not null)
 					{
