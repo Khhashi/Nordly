@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -7,6 +8,8 @@ namespace OrderManager.Web.Pages;
 
 public class IndexModel : PageModel
 {
+    private static readonly HashSet<string> NewsletterSubscribers = new(StringComparer.OrdinalIgnoreCase);
+
     public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
     public int CartCount { get; private set; }
 
@@ -32,6 +35,39 @@ public class IndexModel : PageModel
 
         SaveCart(cart);
         TempData["Success"] = "Produktet er lagt i handlekurven";
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostSubscribeNewsletter(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            TempData["NewsletterError"] = "Skriv inn en gyldig e-postadresse.";
+            return RedirectToPage();
+        }
+
+        try
+        {
+            var address = new MailAddress(email);
+            if (string.IsNullOrWhiteSpace(address.Address))
+            {
+                TempData["NewsletterError"] = "Skriv inn en gyldig e-postadresse.";
+                return RedirectToPage();
+            }
+        }
+        catch
+        {
+            TempData["NewsletterError"] = "Skriv inn en gyldig e-postadresse.";
+            return RedirectToPage();
+        }
+
+        if (!NewsletterSubscribers.Add(email.Trim()))
+        {
+            TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
+            return RedirectToPage();
+        }
+
+        TempData["NewsletterSuccess"] = "Du er nå påmeldt vårt nyhetsbrev.";
         return RedirectToPage();
     }
 

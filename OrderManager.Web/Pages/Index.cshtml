@@ -1,10 +1,18 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Shop";
+	ViewData["Title"] = "Butikk";
 }
 
 <div class="store-shell">
+	@if (TempData["NewsletterSuccess"] is string newsletterSuccess)
+	{
+		<div class="alert alert-success action-toast" role="status"><span class="feedback-icon" aria-hidden="true">✓</span><span>@newsletterSuccess</span><button class="toast-close" type="button" aria-label="Lukk melding">×</button></div>
+	}
+	@if (TempData["NewsletterError"] is string newsletterError)
+	{
+		<div class="alert alert-danger action-toast" role="status"><span class="feedback-icon" aria-hidden="true">!</span><span>@newsletterError</span><button class="toast-close" type="button" aria-label="Lukk melding">×</button></div>
+	}
 	<section class="store-hero">
 		<div>
 			<span class="eyebrow">Norsk design til hverdagen</span>
@@ -108,6 +116,13 @@
 
 	<section class="newsletter-panel">
 		<div><span class="section-kicker">Nyhetsbrev</span><h2>Gode ting, sendt<br />med omtanke.</h2></div>
-		<div><p>Få nyheter om nye produkter, gode tips og utvalgte favoritter.</p><form class="newsletter-form"><input type="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" /><button type="submit">Meld meg på <span aria-hidden="true">→</span></button></form><small>Ingen spam. Bare det vi faktisk vil dele.</small></div>
+		<div>
+			<p>Få nyheter om nye produkter, gode tips og utvalgte favoritter.</p>
+			<form class="newsletter-form" method="post" asp-page-handler="SubscribeNewsletter">
+				<input type="email" name="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" required />
+				<button type="submit">Meld meg på <span aria-hidden="true">→</span></button>
+			</form>
+			<small>Ingen spam. Bare det vi faktisk vil dele.</small>
+		</div>
 	</section>
 </div>
