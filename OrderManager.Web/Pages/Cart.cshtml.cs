@@ -71,7 +71,7 @@ public class CartModel : PageModel
             Mode = "payment",
             PaymentMethodTypes = new List<string> { "card" },
             ClientReferenceId = HttpContext.Session.Id,
-            ExpiresAt = DateTimeOffset.UtcNow.AddMinutes(30),
+            ExpiresAt = DateTime.UtcNow.AddMinutes(30),
             LineItems = Items.Select(item => new SessionLineItemOptions
             {
                 Quantity = item.Quantity,
