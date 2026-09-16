@@ -1,19 +1,42 @@
 # OrderManager
 
-**Live demo:** [Open OrderManager](https://ordermanager-8ym2.onrender.com/)
+**Live demo:** [Åpne OrderManager](https://ordermanager-8ym2.onrender.com/)
 
-OrderManager is a .NET 10 C# order management application with a layered architecture, JSON persistence, automated tests, and a Razor Pages web interface.
+> **Status: Under aktiv utvikling**
+>
+> OrderManager er en norsk nettbutikk under bygging. Vi jobber akkurat nå med å gjøre Stripe-betalingen komplett og klar for en trygg kjøpsflyt.
+
+## Hva vi jobber med nå
+
+Hovedfokuset er Stripe og en komplett e-commerce-flyt:
+
+- Stripe testmiljø og sikre miljøvariabler
+- Stripe Checkout fra handlekurven
+- Webhook for bekreftet betaling
+- Lagring av betalingsstatus og kobling til ordre
+- Beskyttelse mot dupliserte ordre
+- Tester av hele betalingsflyten
+
+## Hva som er ferdig
+
+- Norsk storefront med produktkatalog og produktdetaljer
+- Handlekurv med antallsstyring og tydelige tilbakemeldinger
+- Checkout-flyt med Stripe-integrasjon under videre utvikling
+- PostgreSQL og Entity Framework Core
+- REST-endepunkter for produkter, ordre og helsesjekk
+- GitHub Projects med plan, issues og arbeidsflyt
+- `main` for stabil versjon og `develop` for videre arbeid
 
 ## Project structure
 
-- `OrderManager.Web` - Browser-based Razor Pages interface
-- `PG3302.Domain` - Domain entities, repository contracts, and business logic
-- `PG3302.Infrastructure` - JSON-backed repository implementation
-- `PG3302.Tests` - NUnit unit and integration tests
+- `OrderManager.Web` - Razor Pages storefront og API
+- `PG3302.Domain` - Domeneobjekter, repository-kontrakter og forretningslogikk
+- `PG3302.Infrastructure` - PostgreSQL og Entity Framework Core
+- `PG3302.Tests` - NUnit-enhetstester og integrasjonstester
 
 ## Requirements
 
-- .NET 10 SDK
+- .NET 8 SDK
 
 ## Run the web application
 
@@ -34,7 +57,7 @@ This repository includes a `Dockerfile` and `render.yaml` for deploying the web 
 
 Render will provide a public URL when the deployment finishes. The current JSON repository is suitable for a demo, but data on Render's free service can be lost when the service is redeployed or restarted. A database or persistent disk would be needed for permanent production data.
 
-The web interface is a customer-facing storefront with a curated product catalog, search and category filters, session-based cart, and Stripe Checkout. The existing order management pages remain available for internal use, but are no longer part of the customer navigation.
+The web interface is a customer-facing storefront with a curated product catalog, category filters, session-based cart, and Stripe Checkout under active development. The existing order management pages remain available for internal use, but are no longer part of the customer navigation.
 
 ## Configure Stripe Checkout
 
