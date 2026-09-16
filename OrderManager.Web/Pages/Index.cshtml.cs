@@ -31,7 +31,7 @@ public class IndexModel : PageModel
             item.Quantity++;
 
         SaveCart(cart);
-        TempData["Success"] = "Lagt til i handlekurv";
+        TempData["Success"] = "Produktet er lagt i handlekurven";
         return RedirectToPage();
     }
 
