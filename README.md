@@ -61,14 +61,21 @@ The web interface is a customer-facing storefront with a curated product catalog
 
 ## Configure Stripe Checkout
 
-Create a Stripe account and use a test-mode secret key locally. Never commit the key to the repository.
+Create a Stripe account and use test-mode keys locally. Store them with .NET User Secrets so they are never committed to the repository.
 
 ```bash
-export Stripe__SecretKey=sk_test_your_key_here
+dotnet user-secrets set "Stripe:SecretKey" "sk_test_your_key_here" --project "OrderManager.Web/OrderManager.Web.csproj"
+dotnet user-secrets set "Stripe:WebhookSecret" "whsec_your_webhook_secret_here" --project "OrderManager.Web/OrderManager.Web.csproj"
 dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
 ```
 
-For Render, add `Stripe__SecretKey` as a private environment variable. Stripe redirects customers back to `/Checkout/Success` only after the Checkout Session reports `paid`.
+For local webhook testing, forward Stripe events to the application with the Stripe CLI:
+
+```bash
+stripe listen --forward-to http://localhost:5088/api/stripe/webhook
+```
+
+Use the `whsec_...` signing secret printed by Stripe CLI for `Stripe:WebhookSecret`. For Render, add `Stripe__SecretKey` and `Stripe__WebhookSecret` as private environment variables. Stripe redirects customers back to `/Checkout/Success` only after the Checkout Session reports `paid`.
 
 ## Database and REST API
 
