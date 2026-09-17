@@ -44,6 +44,9 @@ public class SuccessModel : PageModel
         if (!order.HasProducts())
             return RedirectToPage("/Cart");
 
+        order.PaymentStatus = "Paid";
+        order.StripeCheckoutSessionId = session.Id;
+        order.StripePaymentIntentId = session.PaymentIntentId;
         _service.CreateOrder(order);
         HttpContext.Session.Remove("cart");
         OrderId = order.Id;
