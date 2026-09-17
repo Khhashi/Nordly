@@ -12,10 +12,13 @@ public class IndexModel : PageModel
 
     public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
     public int CartCount { get; private set; }
+    public IReadOnlyDictionary<Guid, int> ProductQuantities { get; private set; } = new Dictionary<Guid, int>();
 
     public void OnGet()
     {
-        CartCount = GetCart().Sum(item => item.Quantity);
+        var cart = GetCart();
+        CartCount = cart.Sum(item => item.Quantity);
+        ProductQuantities = cart.ToDictionary(item => item.ProductId, item => item.Quantity);
     }
 
     public IActionResult OnPostAddToCart(Guid productId)
@@ -35,6 +38,23 @@ public class IndexModel : PageModel
 
         SaveCart(cart);
         TempData["Success"] = "Produktet er lagt i handlekurven";
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostRemoveFromCart(Guid productId)
+    {
+        var cart = GetCart();
+        var item = cart.FirstOrDefault(cartItem => cartItem.ProductId == productId);
+
+        if (item == null)
+            return RedirectToPage();
+
+        item.Quantity--;
+        if (item.Quantity <= 0)
+            cart.Remove(item);
+
+        SaveCart(cart);
+        TempData["Success"] = "Antallet er oppdatert.";
         return RedirectToPage();
     }
 
