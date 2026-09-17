@@ -382,6 +382,11 @@ h1 {
 .product-info p { color: #71827d; font-size: 0.82rem; line-height: 1.45; margin: 0; min-height: 3.5rem; }
 .product-buy-row { align-items: center; display: flex; justify-content: space-between; margin-top: 1rem; }
 .product-buy-row strong { color: #24564b; }
+.quantity-control { align-items: center; background: #f2f6f3; border: 1px solid #d5e2dc; border-radius: 999px; display: flex; gap: 0.35rem; padding: 0.2rem; }
+.quantity-control form { display: flex; }
+.quantity-btn { align-items: center; background: transparent; border: 0; border-radius: 50%; color: #173c35; cursor: pointer; display: flex; font-size: 1.15rem; height: 30px; justify-content: center; line-height: 1; padding: 0; width: 30px; }
+.quantity-btn:hover { background: #dcebe4; }
+.quantity-value { color: #173c35; font-size: 0.85rem; font-weight: 800; min-width: 1.2rem; text-align: center; }
 .add-btn {
   background: #173c35;
   border: 0;
