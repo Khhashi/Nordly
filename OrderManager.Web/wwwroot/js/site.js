@@ -66,6 +66,42 @@
 	if (hash === '#new-arrivals') applyProductFilter('new');
 	if (hash === '#offers') applyProductFilter('sale');
 
+	document.querySelectorAll('.cart-quantity-form').forEach(form => form.addEventListener('submit', async event => {
+		event.preventDefault();
+		const control = form.closest('.quantity-control');
+		const quantityValue = control?.querySelector('.quantity-value');
+		const removeForm = control?.querySelector('.remove-form');
+		const submitButton = form.querySelector('button');
+		if (!control || !quantityValue || !removeForm || !submitButton) return;
+
+		const isRemove = form.classList.contains('remove-form');
+		const currentQuantity = Number.parseInt(quantityValue.textContent || '0', 10) || 0;
+		submitButton.disabled = true;
+
+		try {
+			const response = await fetch(form.action, {
+				method: 'POST',
+				body: new FormData(form),
+				headers: { 'X-Requested-With': 'XMLHttpRequest' }
+			});
+			if (!response.ok) throw new Error('Cart update failed');
+
+			const nextQuantity = Math.max(0, currentQuantity + (isRemove ? -1 : 1));
+			quantityValue.textContent = nextQuantity.toString();
+			quantityValue.hidden = nextQuantity === 0;
+			removeForm.hidden = nextQuantity === 0;
+			const cartBadge = document.querySelector('.nav-badge');
+			if (cartBadge) {
+				const cartCount = Number.parseInt(cartBadge.textContent || '0', 10) || 0;
+				cartBadge.textContent = Math.max(0, cartCount + (isRemove ? -1 : 1)).toString();
+			}
+		} catch {
+			window.location.reload();
+		} finally {
+			submitButton.disabled = false;
+		}
+	}));
+
 	document.querySelector('.newsletter-form')?.addEventListener('submit', event => {
 		event.preventDefault();
 		const button = event.currentTarget.querySelector('button');
