@@ -25,6 +25,9 @@ public class OrderDbContext : DbContext
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(order => order.Id);
+            entity.Property(order => order.PaymentStatus).IsRequired().HasMaxLength(40);
+            entity.Property(order => order.StripeCheckoutSessionId).HasMaxLength(200);
+            entity.Property(order => order.StripePaymentIntentId).HasMaxLength(200);
             entity.HasMany(order => order.OrderLines)
                 .WithOne(line => line.Order)
                 .HasForeignKey(line => line.OrderId)

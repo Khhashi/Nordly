@@ -83,7 +83,7 @@ app.MapPost("/api/orders", async (CreateOrderRequest request, OrderDbContext db)
     await db.SaveChangesAsync();
     return Results.Created($"/api/orders/{order.Id}", order);
 });
-app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderDbContext db, IConfiguration configuration) =>
+app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orderService, IConfiguration configuration) =>
 {
     var webhookSecret = configuration["Stripe:WebhookSecret"];
     if (string.IsNullOrWhiteSpace(webhookSecret))
@@ -100,8 +100,25 @@ app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderDbContext db
         return Results.BadRequest();
     }
 
-    if (stripeEvent.Type == "payment_intent.succeeded")
-        app.Logger.LogInformation("Stripe payment succeeded: {EventId}", stripeEvent.Id);
+    if (stripeEvent.Type == "checkout.session.completed" && stripeEvent.Data.Object is Stripe.Checkout.Session session)
+    {
+        var order = orderService.GetAll().SingleOrDefault(item => item.StripeCheckoutSessionId == session.Id);
+        if (order != null && order.PaymentStatus != "Paid")
+        {
+            order.PaymentStatus = session.PaymentStatus == "paid" ? "Paid" : "Pending";
+            order.StripePaymentIntentId = session.PaymentIntentId;
+            orderService.UpdateOrder(order);
+        }
+    }
+    else if (stripeEvent.Type == "payment_intent.succeeded" && stripeEvent.Data.Object is Stripe.PaymentIntent paymentIntent)
+    {
+        var order = orderService.GetAll().SingleOrDefault(item => item.StripePaymentIntentId == paymentIntent.Id);
+        if (order != null && order.PaymentStatus != "Paid")
+        {
+            order.PaymentStatus = "Paid";
+            orderService.UpdateOrder(order);
+        }
+    }
 
     return Results.Ok();
 });
