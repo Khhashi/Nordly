@@ -14,6 +14,18 @@
 	const productFilterLinks = [...document.querySelectorAll('[data-product-filter]')];
 	const search = document.querySelector('#product-search');
 	const emptyState = document.querySelector('.no-results');
+	const showCartToast = message => {
+		document.querySelector('.ajax-cart-toast')?.remove();
+		const toast = document.createElement('div');
+		toast.className = 'alert alert-success action-toast ajax-cart-toast';
+		toast.setAttribute('role', 'status');
+		toast.innerHTML = '<span class="feedback-icon" aria-hidden="true">✓</span><span></span><button class="toast-close" type="button" aria-label="Lukk melding">×</button>';
+		toast.querySelector('span:nth-child(2)').textContent = message;
+		document.body.appendChild(toast);
+		const dismiss = () => toast.remove();
+		toast.querySelector('.toast-close')?.addEventListener('click', dismiss);
+		window.setTimeout(dismiss, 3000);
+	};
 
 	let selectedCategory = 'all';
 	let selectedFilter = 'all';
@@ -65,6 +77,43 @@
 	const hash = window.location.hash;
 	if (hash === '#new-arrivals') applyProductFilter('new');
 	if (hash === '#offers') applyProductFilter('sale');
+
+	document.querySelectorAll('.cart-quantity-form').forEach(form => form.addEventListener('submit', async event => {
+		event.preventDefault();
+		const control = form.closest('.quantity-control');
+		const quantityValue = control?.querySelector('.quantity-value');
+		const removeForm = control?.querySelector('.remove-form');
+		const submitButton = form.querySelector('button');
+		if (!control || !quantityValue || !removeForm || !submitButton) return;
+
+		const isRemove = form.classList.contains('remove-form');
+		const currentQuantity = Number.parseInt(quantityValue.textContent || '0', 10) || 0;
+		submitButton.disabled = true;
+
+		try {
+			const response = await fetch(form.action, {
+				method: 'POST',
+				body: new FormData(form),
+				headers: { 'X-Requested-With': 'XMLHttpRequest' }
+			});
+			if (!response.ok) throw new Error('Cart update failed');
+
+			const result = await response.json();
+			const nextQuantity = Number.isInteger(result.quantity)
+				? result.quantity
+				: Math.max(0, currentQuantity + (isRemove ? -1 : 1));
+			quantityValue.textContent = nextQuantity.toString();
+			quantityValue.hidden = nextQuantity === 0;
+			removeForm.hidden = nextQuantity === 0;
+			const cartBadge = document.querySelector('.nav-badge');
+			if (cartBadge && Number.isInteger(result.cartCount)) cartBadge.textContent = result.cartCount.toString();
+			showCartToast(isRemove ? (nextQuantity === 0 ? 'Produktet er fjernet fra handlekurven.' : 'Antallet er oppdatert.') : 'Produktet er lagt i handlekurven.');
+		} catch {
+			window.location.reload();
+		} finally {
+			submitButton.disabled = false;
+		}
+	}));
 
 	document.querySelector('.newsletter-form')?.addEventListener('submit', event => {
 		event.preventDefault();
