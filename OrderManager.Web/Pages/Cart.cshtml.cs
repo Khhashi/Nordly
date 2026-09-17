@@ -70,6 +70,8 @@ public class CartModel : PageModel
         {
             Mode = "payment",
             PaymentMethodTypes = new List<string> { "card" },
+            ClientReferenceId = HttpContext.Session.Id,
+            ExpiresAt = DateTime.UtcNow.AddMinutes(30),
             LineItems = Items.Select(item => new SessionLineItemOptions
             {
                 Quantity = item.Quantity,
@@ -85,6 +87,7 @@ public class CartModel : PageModel
             }).ToList(),
             Metadata = new Dictionary<string, string>
             {
+                ["cart_session_id"] = HttpContext.Session.Id,
                 ["product_ids"] = string.Join(",", Items.Select(item => item.Product.Id)),
                 ["quantities"] = string.Join(",", Items.Select(item => item.Quantity))
             },
