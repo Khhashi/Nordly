@@ -87,10 +87,23 @@
 					</div>
 					<div class="product-buy-row">
 						<div class="price-stack"><strong>@product.Price.ToString("N0") kr</strong>@if (product.OriginalPrice is not null) { <del>@product.OriginalPrice.Value.ToString("N0") kr</del> }</div>
-						<form method="post" asp-page-handler="AddToCart">
-							<input type="hidden" name="productId" value="@product.Id" />
-							<button class="add-btn" type="submit" aria-label="Legg @product.Name i handlekurven">+</button>
-						</form>
+						@{
+							var quantity = Model.ProductQuantities.GetValueOrDefault(product.Id);
+						}
+						<div class="quantity-control" aria-label="Antall @product.Name">
+							@if (quantity > 0)
+							{
+								<form method="post" asp-page-handler="RemoveFromCart">
+									<input type="hidden" name="productId" value="@product.Id" />
+									<button class="quantity-btn" type="submit" aria-label="Fjern én @product.Name">−</button>
+								</form>
+								<span class="quantity-value" aria-live="polite">@quantity</span>
+							}
+							<form method="post" asp-page-handler="AddToCart">
+								<input type="hidden" name="productId" value="@product.Id" />
+								<button class="quantity-btn add-btn" type="submit" aria-label="Legg én @product.Name i handlekurven">+</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			</article>
