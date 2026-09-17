@@ -71,7 +71,7 @@
 	<section id="collection" class="product-grid" aria-label="Produktkatalog">
 		@foreach (var product in Model.Products)
 		{
-			<article class="product-card" data-category="@product.Category" data-search="@product.Name @product.Description">
+			<article class="product-card" data-category="@product.Category" data-badge="@product.Badge" data-sale="@(product.OriginalPrice is not null ? "true" : "false")" data-search="@product.Name @product.Description">
 				<div class="product-image-wrap">
 					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" loading="lazy" decoding="async" /></a>
 					<span class="product-category">@product.Category</span>
