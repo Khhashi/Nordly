@@ -1,6 +1,21 @@
+databases:
+  - name: nordly-db
+    plan: free
+    databaseName: nordly
+    user: postgres
+
 services:
   - type: web
     name: ordermanager
     runtime: docker
     plan: free
     healthCheckPath: /health
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        fromDatabase:
+          name: nordly-db
+          property: connectionString
+      - key: Stripe__SecretKey
+        sync: false
+      - key: Stripe__WebhookSecret
+        sync: false
