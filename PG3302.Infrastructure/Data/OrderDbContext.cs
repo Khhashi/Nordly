@@ -28,6 +28,7 @@ public class OrderDbContext : DbContext
             entity.Property(order => order.PaymentStatus).IsRequired().HasMaxLength(40);
             entity.Property(order => order.StripeCheckoutSessionId).HasMaxLength(200);
             entity.Property(order => order.StripePaymentIntentId).HasMaxLength(200);
+            entity.HasIndex(order => order.StripeCheckoutSessionId).IsUnique();
             entity.HasMany(order => order.OrderLines)
                 .WithOne(line => line.Order)
                 .HasForeignKey(line => line.OrderId)

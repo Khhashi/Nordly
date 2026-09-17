@@ -31,6 +31,14 @@ public class SuccessModel : PageModel
         if (session.PaymentStatus != "paid")
             return RedirectToPage("/Cart");
 
+        var existingOrder = _service.GetOrderByStripeCheckoutSessionId(session.Id);
+        if (existingOrder != null)
+        {
+            HttpContext.Session.Remove("cart");
+            OrderId = existingOrder.Id;
+            return Page();
+        }
+
         var productIds = session.Metadata["product_ids"].Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse).ToList();
         var quantities = session.Metadata["quantities"].Split(',').Select(int.Parse).ToList();
         var order = new Order();

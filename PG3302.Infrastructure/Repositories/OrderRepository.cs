@@ -31,6 +31,14 @@ public class OrderRepository : IOrderRepository
             .SingleOrDefault(order => order.Id == id);
     }
 
+    public Order? GetByStripeCheckoutSessionId(string sessionId)
+    {
+        return _db.Orders
+            .Include(order => order.OrderLines)
+            .ThenInclude(line => line.Product)
+            .SingleOrDefault(order => order.StripeCheckoutSessionId == sessionId);
+    }
+
     public List<Order> GetAll()
     {
         return _db.Orders

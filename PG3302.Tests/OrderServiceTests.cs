@@ -58,6 +58,19 @@ public class OrderServiceTests
     }
 
     [Test]
+    public void GetOrderByStripeCheckoutSessionId_Should_Return_Existing_Order()
+    {
+        var product = new Product("Keyboard", 800);
+        var order = new Order { StripeCheckoutSessionId = "cs_test_existing" };
+        order.AddProduct(product, 1);
+        _service.CreateOrder(order);
+
+        var found = _service.GetOrderByStripeCheckoutSessionId("cs_test_existing");
+
+        Assert.That(found, Is.SameAs(order));
+    }
+
+    [Test]
     public void GetAllOrders_Should_Return_All_Orders()
     {
         var monitor = new Product("Monitor", 3000);

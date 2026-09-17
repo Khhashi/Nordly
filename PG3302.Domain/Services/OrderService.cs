@@ -28,6 +28,14 @@ public class OrderService
         return _repository.GetById(id);
     }
 
+    public Order? GetOrderByStripeCheckoutSessionId(string sessionId)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+            throw new ArgumentException("Stripe checkout session ID is required.", nameof(sessionId));
+
+        return _repository.GetByStripeCheckoutSessionId(sessionId);
+    }
+
     public List<Order> GetAllOrders()
     {
         return _repository.GetAll();

@@ -17,6 +17,11 @@ public class FakeOrderRepository : IOrderRepository
         return _orders.ContainsKey(id) ? _orders[id] : null;
     }
 
+    public Order? GetByStripeCheckoutSessionId(string sessionId)
+    {
+        return _orders.Values.SingleOrDefault(order => order.StripeCheckoutSessionId == sessionId);
+    }
+
     public List<Order> GetAll()
     {
         return _orders.Values.ToList();
