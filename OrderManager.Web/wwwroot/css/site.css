@@ -386,7 +386,9 @@ h1 {
 .quantity-control form { display: flex; }
 .quantity-control form[hidden], .quantity-control [hidden] { display: none !important; }
 .quantity-btn { align-items: center; background: var(--blue); border: 0; border-radius: 50%; color: #fff; cursor: pointer; display: flex; font-size: 1.15rem; height: 30px; justify-content: center; line-height: 1; padding: 0; width: 30px; }
-.quantity-btn:hover, .quantity-btn.add-btn:hover, .quantity-btn.remove-btn:hover { background: var(--blue); color: #fff; }
+.quantity-btn.remove-btn { background: #bb6b38; }
+.quantity-btn.add-btn:hover { background: var(--blue); color: #fff; }
+.quantity-btn.remove-btn:hover { background: #bb6b38; color: #fff; }
 .quantity-value { color: #173c35; font-size: 0.85rem; font-weight: 800; min-width: 1.2rem; text-align: center; }
 .add-btn {
   background: #173c35;
