@@ -86,15 +86,15 @@
 			});
 			if (!response.ok) throw new Error('Cart update failed');
 
-			const nextQuantity = Math.max(0, currentQuantity + (isRemove ? -1 : 1));
+			const result = await response.json();
+			const nextQuantity = Number.isInteger(result.quantity)
+				? result.quantity
+				: Math.max(0, currentQuantity + (isRemove ? -1 : 1));
 			quantityValue.textContent = nextQuantity.toString();
 			quantityValue.hidden = nextQuantity === 0;
 			removeForm.hidden = nextQuantity === 0;
 			const cartBadge = document.querySelector('.nav-badge');
-			if (cartBadge) {
-				const cartCount = Number.parseInt(cartBadge.textContent || '0', 10) || 0;
-				cartBadge.textContent = Math.max(0, cartCount + (isRemove ? -1 : 1)).toString();
-			}
+			if (cartBadge && Number.isInteger(result.cartCount)) cartBadge.textContent = result.cartCount.toString();
 		} catch {
 			window.location.reload();
 		} finally {

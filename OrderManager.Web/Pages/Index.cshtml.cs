@@ -37,6 +37,9 @@ public class IndexModel : PageModel
             item.Quantity++;
 
         SaveCart(cart);
+        if (IsAjaxRequest())
+            return new JsonResult(new { success = true, quantity = cart.First(item => item.ProductId == productId).Quantity, cartCount = cart.Sum(item => item.Quantity) });
+
         TempData["Success"] = "Produktet er lagt i handlekurven";
         return RedirectToPage();
     }
@@ -54,8 +57,16 @@ public class IndexModel : PageModel
             cart.Remove(item);
 
         SaveCart(cart);
+        if (IsAjaxRequest())
+            return new JsonResult(new { success = true, quantity = cart.FirstOrDefault(item => item.ProductId == productId)?.Quantity ?? 0, cartCount = cart.Sum(item => item.Quantity) });
+
         TempData["Success"] = "Antallet er oppdatert.";
         return RedirectToPage();
+    }
+
+    private bool IsAjaxRequest()
+    {
+        return string.Equals(Request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
     }
 
     public IActionResult OnPostSubscribeNewsletter(string email)
