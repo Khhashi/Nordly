@@ -6,6 +6,9 @@ public class Order
 
     public List<OrderLine> OrderLines { get; set; } = new();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string PaymentStatus { get; set; } = "Pending";
+    public string? StripeCheckoutSessionId { get; set; }
+    public string? StripePaymentIntentId { get; set; }
 
     public Order()
     {
