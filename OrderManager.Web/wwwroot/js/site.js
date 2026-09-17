@@ -14,6 +14,18 @@
 	const productFilterLinks = [...document.querySelectorAll('[data-product-filter]')];
 	const search = document.querySelector('#product-search');
 	const emptyState = document.querySelector('.no-results');
+	const showCartToast = message => {
+		document.querySelector('.ajax-cart-toast')?.remove();
+		const toast = document.createElement('div');
+		toast.className = 'alert alert-success action-toast ajax-cart-toast';
+		toast.setAttribute('role', 'status');
+		toast.innerHTML = '<span class="feedback-icon" aria-hidden="true">✓</span><span></span><button class="toast-close" type="button" aria-label="Lukk melding">×</button>';
+		toast.querySelector('span:nth-child(2)').textContent = message;
+		document.body.appendChild(toast);
+		const dismiss = () => toast.remove();
+		toast.querySelector('.toast-close')?.addEventListener('click', dismiss);
+		window.setTimeout(dismiss, 3000);
+	};
 
 	let selectedCategory = 'all';
 	let selectedFilter = 'all';
@@ -95,6 +107,7 @@
 			removeForm.hidden = nextQuantity === 0;
 			const cartBadge = document.querySelector('.nav-badge');
 			if (cartBadge && Number.isInteger(result.cartCount)) cartBadge.textContent = result.cartCount.toString();
+			showCartToast(isRemove ? (nextQuantity === 0 ? 'Produktet er fjernet fra handlekurven.' : 'Antallet er oppdatert.') : 'Produktet er lagt i handlekurven.');
 		} catch {
 			window.location.reload();
 		} finally {
