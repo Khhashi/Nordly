@@ -16,4 +16,4 @@ COPY --from=build /app/publish .
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 EXPOSE 10000
-ENTRYPOINT ["sh", "-c", "dotnet OrderManager.Web.dll --urls http://0.0.0.0:${PORT:-10000}"]
+ENTRYPOINT ["sh", "-c", "dotnet Nordly.Web.dll --urls http://0.0.0.0:${PORT:-10000}"]

@@ -6,7 +6,7 @@ databases:
 
 services:
   - type: web
-    name: ordermanager
+    name: nordly
     runtime: docker
     plan: free
     healthCheckPath: /health

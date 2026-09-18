@@ -61,7 +61,7 @@ Dette prosjektet inneholder `Dockerfile` og `render.yaml` for å publisere nettb
 1. Push prosjektet til GitHub.
 2. Velg **New +** og **Blueprint** i Render.
 3. Velg prosjektet `Khhashi/Nordly`.
-4. Publiser den registrerte `ordermanager`-nettjenesten.
+4. Publiser den registrerte `nordly`-nettjenesten.
 
 Render leverer den offentlige nettjenesten og den administrerte PostgreSQL-databasen gjennom Blueprint-oppsettet. Appen er fortsatt under utvikling, så den offentlige versjonen brukes til kontroll før nettbutikken regnes som produksjonsklar.
 
