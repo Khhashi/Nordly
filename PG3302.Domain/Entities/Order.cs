@@ -7,6 +7,10 @@ public class Order
     public List<OrderLine> OrderLines { get; set; } = new();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string PaymentStatus { get; set; } = "Pending";
+    public string? CustomerName { get; set; }
+    public string? CustomerEmail { get; set; }
+    public string? CustomerPhone { get; set; }
+    public string? ShippingAddress { get; set; }
     public string? StripeCheckoutSessionId { get; set; }
     public string? StripePaymentIntentId { get; set; }
 
