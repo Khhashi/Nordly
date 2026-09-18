@@ -2,7 +2,7 @@ databases:
   - name: nordly-db
     plan: free
     databaseName: nordly
-    user: postgres
+    user: nordly_app
 
 services:
   - type: web
