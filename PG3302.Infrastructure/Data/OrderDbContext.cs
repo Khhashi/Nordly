@@ -30,6 +30,7 @@ public class OrderDbContext : DbContext
             entity.Property(order => order.CustomerEmail).HasMaxLength(320);
             entity.Property(order => order.CustomerPhone).HasMaxLength(40);
             entity.Property(order => order.ShippingAddress).HasMaxLength(1000);
+            entity.Property(order => order.ShippingCost).HasPrecision(18, 2);
             entity.Property(order => order.StripeCheckoutSessionId).HasMaxLength(200);
             entity.Property(order => order.StripePaymentIntentId).HasMaxLength(200);
             entity.HasIndex(order => order.StripeCheckoutSessionId).IsUnique();

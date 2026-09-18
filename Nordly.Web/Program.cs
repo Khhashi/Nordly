@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PG3302.Infrastructure.Data;
 using PG3302.Infrastructure.Repositories;
 using Nordly.Web;
+using Nordly.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
 
 var app = builder.Build();
 
@@ -43,6 +45,7 @@ using (var scope = app.Services.CreateScope())
         ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "CustomerEmail" character varying(320);
         ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "CustomerPhone" character varying(40);
         ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "ShippingAddress" character varying(1000);
+        ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "ShippingCost" numeric(18, 2) NOT NULL DEFAULT 0;
         """);
     if (!db.Products.Any())
     {
