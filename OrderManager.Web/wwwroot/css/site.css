@@ -653,6 +653,7 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
   transform: translateY(-2px);
   box-shadow: 0 18px 30px rgba(49, 88, 216, 0.22);
 }
+.hero-primary:focus-visible { background: #2f5c4f; color: #fff; }
 .hero-secondary {
   border-bottom: 1px solid var(--ink);
   color: var(--ink);
@@ -660,6 +661,7 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
   transition: color 0.2s ease, transform 0.2s ease;
 }
 .hero-secondary:hover { color: var(--blue); transform: translateY(-1px); }
+.hero-secondary:focus-visible { background: #e4eee9; border-radius: 4px; color: var(--ink); padding-left: 0.35rem; padding-right: 0.35rem; }
 .store-hero h1 { font-weight: 700; }
 .checkout-coming-soon { align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: flex; gap: 0.7rem; padding: 0.8rem; }
 .checkout-status-dot { background: var(--coral); border-radius: 50%; flex: 0 0 auto; height: 9px; width: 9px; }
