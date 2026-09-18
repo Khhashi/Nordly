@@ -38,6 +38,12 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
     db.Database.EnsureCreated();
+    db.Database.ExecuteSqlRaw("""
+        ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "CustomerName" character varying(200);
+        ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "CustomerEmail" character varying(320);
+        ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "CustomerPhone" character varying(40);
+        ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "ShippingAddress" character varying(1000);
+        """);
     if (!db.Products.Any())
     {
         db.Products.AddRange(StorefrontCatalog.Products.Select(product =>

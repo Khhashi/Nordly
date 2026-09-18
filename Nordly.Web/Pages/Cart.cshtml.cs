@@ -70,6 +70,15 @@ public class CartModel : PageModel
         {
             Mode = "payment",
             PaymentMethodTypes = new List<string> { "card" },
+            BillingAddressCollection = "required",
+            PhoneNumberCollection = new SessionPhoneNumberCollectionOptions
+            {
+                Enabled = true
+            },
+            ShippingAddressCollection = new SessionShippingAddressCollectionOptions
+            {
+                AllowedCountries = new List<string> { "NO" }
+            },
             ClientReferenceId = HttpContext.Session.Id,
             ExpiresAt = DateTime.UtcNow.AddMinutes(30),
             LineItems = Items.Select(item => new SessionLineItemOptions
