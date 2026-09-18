@@ -19,17 +19,19 @@ Hovedfokuset er Stripe og en komplett netthandelsflyt:
 
 ## Hva som gjenstår
 
-- Kunde- og leveringsinformasjon
-- Frakt og leveringsvalg
-- Ordrebekreftelse på e-post
 - Full manuell test av kjøpsflyten på Render
-- Ekte nyhetsbrev-tjeneste
+- Automatiske tester for butikkflyten
+- Ende-til-ende-test av hele kjøpsflyten
 
 ## Hva som er ferdig
 
 - Norsk nettbutikk med produktkatalog og produktdetaljer
 - Handlekurv med antallsstyring og tydelige tilbakemeldinger
 - Checkout-flyt med Stripe-integrasjon, webhook og betalingsstatus
+- Kunde- og leveringsinformasjon i checkout
+- Fraktvalg med gratis levering over 800 kr
+- Ordrebekreftelse på e-post via SMTP
+- Persistent lagring av nyhetsbrevabonnenter i PostgreSQL
 - PostgreSQL og Entity Framework Core
 - REST-endepunkter for produkter, ordre og helsesjekk
 - GitHub Projects med plan, issues og arbeidsflyt

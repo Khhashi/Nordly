@@ -3,12 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using PG3302.Domain.Entities;
+using PG3302.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Nordly.Web.Pages;
 
 public class IndexModel : PageModel
 {
-    private static readonly HashSet<string> NewsletterSubscribers = new(StringComparer.OrdinalIgnoreCase);
+    private readonly OrderDbContext _db;
+
+    public IndexModel(OrderDbContext db)
+    {
+        _db = db;
+    }
 
     public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
     public int CartCount { get; private set; }
@@ -69,7 +76,7 @@ public class IndexModel : PageModel
         return string.Equals(Request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
     }
 
-    public IActionResult OnPostSubscribeNewsletter(string email)
+    public async Task<IActionResult> OnPostSubscribeNewsletter(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -92,7 +99,19 @@ public class IndexModel : PageModel
             return RedirectToPage();
         }
 
-        if (!NewsletterSubscribers.Add(email.Trim()))
+        var normalizedEmail = email.Trim().ToLowerInvariant();
+        if (await _db.NewsletterSubscribers.AnyAsync(subscriber => subscriber.Email == normalizedEmail))
+        {
+            TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
+            return RedirectToPage();
+        }
+
+        _db.NewsletterSubscribers.Add(new NewsletterSubscriber { Email = normalizedEmail });
+        try
+        {
+            await _db.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
         {
             TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
             return RedirectToPage();
