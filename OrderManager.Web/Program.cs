@@ -8,8 +8,9 @@ using OrderManager.Web;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                       ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is required.");
+var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                          ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is required.");
+var connectionString = DatabaseConnectionString.Normalize(rawConnectionString);
 builder.Services.AddDbContext<OrderDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
