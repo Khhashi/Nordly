@@ -26,4 +26,12 @@ public class DatabaseConnectionStringTests
 
         Assert.That(DatabaseConnectionString.Normalize(connectionString), Is.EqualTo(connectionString));
     }
+
+    [Test]
+    public void Normalize_Should_Default_Render_Postgres_Port_To_5432()
+    {
+        var result = DatabaseConnectionString.Normalize("postgres://user:secret@db.example.com/nordly");
+
+        Assert.That(result, Does.Contain("Port=5432"));
+    }
 }
