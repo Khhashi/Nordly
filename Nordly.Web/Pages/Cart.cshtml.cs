@@ -10,6 +10,8 @@ namespace Nordly.Web.Pages;
 
 public class CartModel : PageModel
 {
+    private const decimal FreeShippingThreshold = 800m;
+    private const decimal StandardShippingCost = 79m;
     private readonly OrderService _service;
     private readonly IConfiguration _configuration;
 
@@ -21,6 +23,9 @@ public class CartModel : PageModel
 
     public List<CartViewItem> Items { get; private set; } = new();
     public decimal Total => Items.Sum(item => item.Product.Price * item.Quantity);
+    public decimal ShippingCost => Total >= FreeShippingThreshold ? 0m : StandardShippingCost;
+    public string ShippingLabel => ShippingCost == 0m ? "Gratis levering" : "Standard levering";
+    public decimal GrandTotal => Total + ShippingCost;
     public bool StripeConfigured => !string.IsNullOrWhiteSpace(_configuration["Stripe:SecretKey"]);
 
     public void OnGet() => LoadCart();
@@ -78,6 +83,35 @@ public class CartModel : PageModel
             ShippingAddressCollection = new SessionShippingAddressCollectionOptions
             {
                 AllowedCountries = new List<string> { "NO" }
+            },
+            ShippingOptions = new List<SessionShippingOptionOptions>
+            {
+                new()
+                {
+                    ShippingRateData = new SessionShippingOptionShippingRateDataOptions
+                    {
+                        Type = "fixed_amount",
+                        DisplayName = ShippingLabel,
+                        FixedAmount = new SessionShippingOptionShippingRateDataFixedAmountOptions
+                        {
+                            Amount = (long)(ShippingCost * 100),
+                            Currency = "nok"
+                        },
+                        DeliveryEstimate = new SessionShippingOptionShippingRateDataDeliveryEstimateOptions
+                        {
+                            Minimum = new SessionShippingOptionShippingRateDataDeliveryEstimateMinimumOptions
+                            {
+                                Unit = "business_day",
+                                Value = 2
+                            },
+                            Maximum = new SessionShippingOptionShippingRateDataDeliveryEstimateMaximumOptions
+                            {
+                                Unit = "business_day",
+                                Value = 4
+                            }
+                        }
+                    }
+                }
             },
             ClientReferenceId = HttpContext.Session.Id,
             ExpiresAt = DateTime.UtcNow.AddMinutes(30),
