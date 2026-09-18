@@ -1,27 +1,25 @@
 # Nordly
 
-**Testside:** Kommer snart. Vi legger ut lenken når nettbutikken er klar.
+**Testside:** [https://ordermanager-8ym2.onrender.com](https://ordermanager-8ym2.onrender.com)
 
-> **Status: Under aktiv utvikling**
+> **Status: Klar for testing**
 >
-> Nordly er en norsk nettbutikk under bygging. Kjernefunksjonene er på plass, men prosjektet er ikke ferdig ennå. Vi jobber nå med de siste funksjonene for netthandel og produksjonskontroll på Render.
+> Nordly er en norsk nettbutikk som nå kan testes på Render. Kjernefunksjonene er på plass, men løsningen er fortsatt under utvikling og ikke klar for ordinær produksjon.
 
-## Hva vi jobber med nå
+## Viktig før testing
 
-Hovedfokuset er Stripe og en komplett netthandelsflyt:
+- Bruk testdata og Stripe testmodus. Ikke bruk ekte kort eller ekte kundeopplysninger.
+- Full kjøpsflyt på Render er ikke ferdig manuelt verifisert.
+- Ordrebekreftelse på e-post fungerer først når SMTP-miljøvariablene er lagt inn i Render.
+- Automatiske tester for hele butikkflyten og en ende-til-ende-test gjenstår.
+- Gratis Render-drift kan bruke tid på å våkne etter inaktivitet.
 
-- Stripe testmiljø og sikre miljøvariabler
-- Stripe Checkout fra handlekurven
-- Webhook for bekreftet betaling
-- Lagring av betalingsstatus og kobling til ordre
-- Beskyttelse mot dupliserte ordre
-- Tester av hele betalingsflyten
+## Hva som fortsatt mangler
 
-## Hva som gjenstår
-
-- Full manuell test av kjøpsflyten på Render
 - Automatiske tester for butikkflyten
 - Ende-til-ende-test av hele kjøpsflyten
+- Full manuell test av kjøpsflyten på Render
+- SMTP-oppsett i Render for at ordrebekreftelser faktisk skal sendes
 
 ## Hva som er ferdig
 
