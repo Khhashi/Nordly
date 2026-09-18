@@ -53,11 +53,30 @@ public class SuccessModel : PageModel
             return RedirectToPage("/Cart");
 
         order.PaymentStatus = "Paid";
+        order.CustomerName = session.CollectedInformation?.ShippingDetails?.Name ?? session.CustomerDetails?.Name;
+        order.CustomerEmail = session.CustomerDetails?.Email;
+        order.CustomerPhone = session.CustomerDetails?.Phone;
+        order.ShippingAddress = FormatAddress(session.CollectedInformation?.ShippingDetails?.Address ?? session.CustomerDetails?.Address);
         order.StripeCheckoutSessionId = session.Id;
         order.StripePaymentIntentId = session.PaymentIntentId;
         _service.CreateOrder(order);
         HttpContext.Session.Remove("cart");
         OrderId = order.Id;
         return Page();
+    }
+
+    private static string? FormatAddress(Address? address)
+    {
+        if (address == null)
+            return null;
+
+        return string.Join(", ", new[]
+        {
+            address.Line1,
+            address.Line2,
+            address.PostalCode,
+            address.City,
+            address.Country
+        }.Where(value => !string.IsNullOrWhiteSpace(value)));
     }
 }
