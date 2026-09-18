@@ -1,10 +1,10 @@
-# OrderManager
+# Nordly
 
 **Testside:** Kommer snart. Vi legger ut lenken når nettbutikken er klar.
 
 > **Status: Under aktiv utvikling**
 >
-> OrderManager er en norsk nettbutikk under bygging. Kjernefunksjonene er på plass, men prosjektet er ikke ferdig ennå. Vi jobber nå med de siste funksjonene for netthandel og produksjonskontroll på Render.
+> Nordly er en norsk nettbutikk under bygging. Kjernefunksjonene er på plass, men prosjektet er ikke ferdig ennå. Vi jobber nå med de siste funksjonene for netthandel og produksjonskontroll på Render.
 
 ## Hva vi jobber med nå
 
@@ -37,7 +37,7 @@ Hovedfokuset er Stripe og en komplett netthandelsflyt:
 
 ## Prosjektstruktur
 
-- `OrderManager.Web` - Razor Pages-nettbutikk og API
+- `Nordly.Web` - Razor Pages-nettbutikk og API
 - `PG3302.Domain` - Domeneobjekter, repository-kontrakter og forretningslogikk
 - `PG3302.Infrastructure` - PostgreSQL og Entity Framework Core
 - `PG3302.Tests` - NUnit-enhetstester og integrasjonstester
@@ -49,7 +49,7 @@ Hovedfokuset er Stripe og en komplett netthandelsflyt:
 ## Kjør nettbutikken
 
 ```bash
-dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
+dotnet run --project "Nordly.Web/Nordly.Web.csproj"
 ```
 
 Stopp den lokale serveren med `Ctrl+C` i terminalen.
@@ -60,7 +60,7 @@ Dette prosjektet inneholder `Dockerfile` og `render.yaml` for å publisere nettb
 
 1. Push prosjektet til GitHub.
 2. Velg **New +** og **Blueprint** i Render.
-3. Velg prosjektet `Khhashi/OrderManager`.
+3. Velg prosjektet `Khhashi/Nordly`.
 4. Publiser den registrerte `ordermanager`-nettjenesten.
 
 Render leverer den offentlige nettjenesten og den administrerte PostgreSQL-databasen gjennom Blueprint-oppsettet. Appen er fortsatt under utvikling, så den offentlige versjonen brukes til kontroll før nettbutikken regnes som produksjonsklar.
@@ -72,9 +72,9 @@ Nettgrensesnittet er en kundevendt nettbutikk med utvalgte produkter, kategorifi
 Opprett en Stripe-konto og bruk testnøkler lokalt. Lagre dem med .NET User Secrets slik at de aldri legges inn i prosjektet.
 
 ```bash
-dotnet user-secrets set "Stripe:SecretKey" "sk_test_your_key_here" --project "OrderManager.Web/OrderManager.Web.csproj"
-dotnet user-secrets set "Stripe:WebhookSecret" "whsec_your_webhook_secret_here" --project "OrderManager.Web/OrderManager.Web.csproj"
-dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
+dotnet user-secrets set "Stripe:SecretKey" "sk_test_your_key_here" --project "Nordly.Web/Nordly.Web.csproj"
+dotnet user-secrets set "Stripe:WebhookSecret" "whsec_your_webhook_secret_here" --project "Nordly.Web/Nordly.Web.csproj"
+dotnet run --project "Nordly.Web/Nordly.Web.csproj"
 ```
 
 For lokal testing av webhook kan du sende Stripe-hendelser til appen med Stripe CLI:
@@ -92,8 +92,8 @@ Appen bruker PostgreSQL gjennom Entity Framework Core. I produksjon leverer Rend
 For lokal utvikling oppgir du en privat tilkoblingsstreng gjennom User Secrets:
 
 ```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_POSTGRES_CONNECTION_STRING" --project "OrderManager.Web/OrderManager.Web.csproj"
-dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_POSTGRES_CONNECTION_STRING" --project "Nordly.Web/Nordly.Web.csproj"
+dotnet run --project "Nordly.Web/Nordly.Web.csproj"
 ```
 
 Render konfigurerer `ConnectionStrings__DefaultConnection` automatisk fra den administrerte `nordly-db`-databasen i `render.yaml`.
@@ -109,7 +109,7 @@ Tilgjengelige endepunkter:
 ## Kjør tester
 
 ```bash
-dotnet test "OrderManager.sln" --nologo
+dotnet test "Nordly.sln" --nologo
 ```
 
 ## Prosjektstatus

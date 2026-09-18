@@ -13,7 +13,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>OrderManager-Web-Stripe-Development</UserSecretsId>
+    <UserSecretsId>Nordly-Web-Stripe-Development</UserSecretsId>
   </PropertyGroup>
 
 </Project>

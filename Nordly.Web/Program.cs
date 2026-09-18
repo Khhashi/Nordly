@@ -3,7 +3,7 @@ using PG3302.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using PG3302.Infrastructure.Data;
 using PG3302.Infrastructure.Repositories;
-using OrderManager.Web;
+using Nordly.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -6,7 +6,7 @@ using PG3302.Domain.Services;
 using Stripe;
 using Stripe.Checkout;
 
-namespace OrderManager.Web.Pages;
+namespace Nordly.Web.Pages;
 
 public class CartModel : PageModel
 {
