@@ -23,6 +23,16 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment())
+{
+    var stripeSecretKey = app.Configuration["Stripe:SecretKey"];
+    var stripeWebhookSecret = app.Configuration["Stripe:WebhookSecret"];
+    if (string.IsNullOrWhiteSpace(stripeSecretKey) || string.IsNullOrWhiteSpace(stripeWebhookSecret))
+    {
+        throw new InvalidOperationException("Stripe:SecretKey and Stripe:WebhookSecret must be configured in production.");
+    }
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
@@ -53,7 +63,10 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
-app.MapGet("/health", () => Results.Ok("healthy"));
+app.MapGet("/health", async (OrderDbContext db) =>
+    await db.Database.CanConnectAsync()
+        ? Results.Ok("healthy")
+        : Results.Problem("Database is unavailable.", statusCode: StatusCodes.Status503ServiceUnavailable));
 app.MapGet("/api/products", async (OrderDbContext db) =>
     Results.Ok(await db.Products.AsNoTracking().OrderBy(product => product.Name).ToListAsync()));
 app.MapGet("/api/orders/{id:guid}", async (Guid id, OrderDbContext db) =>
@@ -102,7 +115,7 @@ app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orde
 
     if (stripeEvent.Type == "checkout.session.completed" && stripeEvent.Data.Object is Stripe.Checkout.Session session)
     {
-        var order = orderService.GetAll().SingleOrDefault(item => item.StripeCheckoutSessionId == session.Id);
+        var order = orderService.GetAllOrders().SingleOrDefault(item => item.StripeCheckoutSessionId == session.Id);
         if (order != null && order.PaymentStatus != "Paid")
         {
             order.PaymentStatus = session.PaymentStatus == "paid" ? "Paid" : "Pending";
@@ -112,7 +125,7 @@ app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orde
     }
     else if (stripeEvent.Type == "payment_intent.succeeded" && stripeEvent.Data.Object is Stripe.PaymentIntent paymentIntent)
     {
-        var order = orderService.GetAll().SingleOrDefault(item => item.StripePaymentIntentId == paymentIntent.Id);
+        var order = orderService.GetAllOrders().SingleOrDefault(item => item.StripePaymentIntentId == paymentIntent.Id);
         if (order != null && order.PaymentStatus != "Paid")
         {
             order.PaymentStatus = "Paid";

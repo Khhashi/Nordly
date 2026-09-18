@@ -1,0 +1,36 @@
+name: .NET
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore OrderManager.sln
+
+      - name: Build solution
+        run: dotnet build OrderManager.sln --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test OrderManager.sln --configuration Release --no-build --verbosity normal
