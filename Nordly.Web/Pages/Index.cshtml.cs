@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using PG3302.Domain.Entities;
 
-namespace OrderManager.Web.Pages;
+namespace Nordly.Web.Pages;
 
 public class IndexModel : PageModel
 {

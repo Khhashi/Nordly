@@ -1,4 +1,4 @@
-namespace OrderManager.Web;
+namespace Nordly.Web;
 
 public static class DatabaseConnectionString
 {

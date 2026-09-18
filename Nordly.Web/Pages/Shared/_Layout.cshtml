@@ -12,7 +12,7 @@
         var cartJson = Context.Session.GetString("cart");
         var cartCount = string.IsNullOrWhiteSpace(cartJson)
             ? 0
-            : System.Text.Json.JsonSerializer.Deserialize<List<OrderManager.Web.Pages.CartItem>>(cartJson)?.Sum(item => item.Quantity) ?? 0;
+            : System.Text.Json.JsonSerializer.Deserialize<List<Nordly.Web.Pages.CartItem>>(cartJson)?.Sum(item => item.Quantity) ?? 0;
     }
     <header class="topbar">
         <a class="brand" asp-page="/Index">NORDLY <span>STUDIO</span></a>

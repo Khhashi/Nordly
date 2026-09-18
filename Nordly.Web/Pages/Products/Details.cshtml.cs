@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace OrderManager.Web.Pages.Products;
+namespace Nordly.Web.Pages.Products;
 
 public class DetailsModel : PageModel
 {
