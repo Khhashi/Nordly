@@ -79,14 +79,16 @@ Use the `whsec_...` signing secret printed by Stripe CLI for `Stripe:WebhookSecr
 
 ## Database and REST API
 
-The application uses PostgreSQL through Entity Framework Core. Start a local database with Docker:
+The application uses PostgreSQL through Entity Framework Core. In production, the connection string is supplied by Render through `ConnectionStrings__DefaultConnection`; no database password is stored in the repository.
+
+For local development, provide a private connection string through User Secrets:
 
 ```bash
-docker compose up -d postgres
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_POSTGRES_CONNECTION_STRING" --project "OrderManager.Web/OrderManager.Web.csproj"
 dotnet run --project "OrderManager.Web/OrderManager.Web.csproj"
 ```
 
-The default local connection is `Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres`. In Render, configure `ConnectionStrings__DefaultConnection` as a private environment variable.
+Render configures `ConnectionStrings__DefaultConnection` automatically from the managed `nordly-db` database in `render.yaml`.
 
 Available endpoints:
 
