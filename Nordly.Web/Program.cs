@@ -46,6 +46,13 @@ using (var scope = app.Services.CreateScope())
         ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "CustomerPhone" character varying(40);
         ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "ShippingAddress" character varying(1000);
         ALTER TABLE "Orders" ADD COLUMN IF NOT EXISTS "ShippingCost" numeric(18, 2) NOT NULL DEFAULT 0;
+        CREATE TABLE IF NOT EXISTS "NewsletterSubscribers" (
+            "Id" uuid NOT NULL PRIMARY KEY,
+            "Email" character varying(320) NOT NULL,
+            "SubscribedAt" timestamp with time zone NOT NULL
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS "IX_NewsletterSubscribers_Email"
+            ON "NewsletterSubscribers" ("Email");
         """);
     if (!db.Products.Any())
     {

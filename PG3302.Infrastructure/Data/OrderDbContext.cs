@@ -12,6 +12,7 @@ public class OrderDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +49,14 @@ public class OrderDbContext : DbContext
                 .HasForeignKey(line => line.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
             entity.Property(line => line.Quantity).IsRequired();
+        });
+
+        modelBuilder.Entity<NewsletterSubscriber>(entity =>
+        {
+            entity.HasKey(subscriber => subscriber.Id);
+            entity.Property(subscriber => subscriber.Email).IsRequired().HasMaxLength(320);
+            entity.HasIndex(subscriber => subscriber.Email).IsUnique();
+            entity.Property(subscriber => subscriber.SubscribedAt).IsRequired();
         });
     }
 }
