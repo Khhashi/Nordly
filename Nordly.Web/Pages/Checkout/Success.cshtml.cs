@@ -53,10 +53,10 @@ public class SuccessModel : PageModel
             return RedirectToPage("/Cart");
 
         order.PaymentStatus = "Paid";
-        order.CustomerName = session.CustomerDetails?.Name;
+        order.CustomerName = session.CollectedInformation?.ShippingDetails?.Name ?? session.CustomerDetails?.Name;
         order.CustomerEmail = session.CustomerDetails?.Email;
         order.CustomerPhone = session.CustomerDetails?.Phone;
-        order.ShippingAddress = FormatAddress(session.CustomerDetails?.Address);
+        order.ShippingAddress = FormatAddress(session.CollectedInformation?.ShippingDetails?.Address ?? session.CustomerDetails?.Address);
         order.StripeCheckoutSessionId = session.Id;
         order.StripePaymentIntentId = session.PaymentIntentId;
         _service.CreateOrder(order);
