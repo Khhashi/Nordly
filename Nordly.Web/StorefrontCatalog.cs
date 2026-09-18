@@ -1,4 +1,4 @@
-namespace OrderManager.Web;
+namespace Nordly.Web;
 
 public sealed record StoreProduct(Guid Id, string Name, string Category, string Description, decimal Price, string ImageUrl, string? Badge = null, decimal? OriginalPrice = null)
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace OrderManager.Web.Pages;
+namespace Nordly.Web.Pages;
 
 public class PrivacyModel : PageModel
 {

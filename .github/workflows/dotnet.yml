@@ -27,10 +27,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore OrderManager.sln
+        run: dotnet restore Nordly.sln
 
       - name: Build solution
-        run: dotnet build OrderManager.sln --configuration Release --no-restore
+        run: dotnet build Nordly.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test OrderManager.sln --configuration Release --no-build --verbosity normal
+        run: dotnet test Nordly.sln --configuration Release --no-build --verbosity normal

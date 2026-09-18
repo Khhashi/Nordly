@@ -6,7 +6,7 @@ using Stripe;
 using Stripe.Checkout;
 using DomainProduct = PG3302.Domain.Entities.Product;
 
-namespace OrderManager.Web.Pages.Checkout;
+namespace Nordly.Web.Pages.Checkout;
 
 public class SuccessModel : PageModel
 {
