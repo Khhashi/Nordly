@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PG3302.Domain\PG3302.Domain.csproj" />
     <ProjectReference Include="..\PG3302.Infrastructure\PG3302.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrderManager.Web\OrderManager.Web.csproj"/>
   </ItemGroup>
 
 </Project>
