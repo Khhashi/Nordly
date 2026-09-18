@@ -4,7 +4,7 @@
 
 > **Status: Under aktiv utvikling**
 >
-> OrderManager er en norsk nettbutikk under bygging. Vi jobber akkurat nå med å gjøre Stripe-betalingen komplett og klar for en trygg kjøpsflyt.
+> OrderManager er en norsk nettbutikk under bygging. Kjernefunksjonene er på plass, men prosjektet er ikke ferdig ennå. Vi jobber nå med de siste e-commerce-funksjonene og produksjonsverifisering på Render.
 
 ## Hva vi jobber med nå
 
@@ -17,11 +17,19 @@ Hovedfokuset er Stripe og en komplett e-commerce-flyt:
 - Beskyttelse mot dupliserte ordre
 - Tester av hele betalingsflyten
 
+## Hva som gjenstår
+
+- Kunde- og leveringsinformasjon
+- Frakt og leveringsvalg
+- Ordrebekreftelse på e-post
+- Full manuell test av kjøpsflyten på Render
+- Ekte nyhetsbrev-tjeneste
+
 ## Hva som er ferdig
 
 - Norsk storefront med produktkatalog og produktdetaljer
 - Handlekurv med antallsstyring og tydelige tilbakemeldinger
-- Checkout-flyt med Stripe-integrasjon under videre utvikling
+- Checkout-flyt med Stripe-integrasjon, webhook og betalingsstatus
 - PostgreSQL og Entity Framework Core
 - REST-endepunkter for produkter, ordre og helsesjekk
 - GitHub Projects med plan, issues og arbeidsflyt
@@ -55,7 +63,7 @@ This repository includes a `Dockerfile` and `render.yaml` for deploying the web 
 3. Select the `Khhashi/OrderManager` repository.
 4. Deploy the detected `ordermanager` web service.
 
-Render will provide a public URL when the deployment finishes. The current JSON repository is suitable for a demo, but data on Render's free service can be lost when the service is redeployed or restarted. A database or persistent disk would be needed for permanent production data.
+Render provides the public web service and managed PostgreSQL database through the Blueprint configuration. The application is still under development, so the public deployment is used for verification before the store is considered production-ready.
 
 The web interface is a customer-facing storefront with a curated product catalog, category filters, session-based cart, and Stripe Checkout under active development. The existing order management pages remain available for internal use, but are no longer part of the customer navigation.
 
@@ -104,16 +112,6 @@ Available endpoints:
 dotnet test "OrderManager.sln" --nologo
 ```
 
-## Features
+## Project status
 
-- Create orders
-- View orders by ID
-- List all orders
-- Update orders
-- Delete orders
-- Validate products, prices, quantities, and empty orders
-- Persist orders to a local JSON file
-
-## Notes
-
-The application stores order data in a local `orders.json` file generated and updated at runtime. The domain and service layers are shared by both the console application and the web application.
+The repository is actively maintained through GitHub Issues, Projects and Pull Requests. New work is developed on a feature branch, checked by GitHub Actions, reviewed in a PR, and merged only after the checks pass.
