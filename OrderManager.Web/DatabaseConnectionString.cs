@@ -14,7 +14,8 @@ public static class DatabaseConnectionString
         var username = Uri.UnescapeDataString(credentials[0]);
         var password = credentials.Length > 1 ? Uri.UnescapeDataString(credentials[1]) : string.Empty;
         var database = Uri.UnescapeDataString(uri.AbsolutePath.Trim('/'));
+        var port = uri.Port > 0 ? uri.Port : 5432;
 
-        return $"Host={uri.Host};Port={uri.Port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+        return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
     }
 }
