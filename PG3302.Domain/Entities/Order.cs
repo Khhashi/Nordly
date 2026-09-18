@@ -11,6 +11,7 @@ public class Order
     public string? CustomerEmail { get; set; }
     public string? CustomerPhone { get; set; }
     public string? ShippingAddress { get; set; }
+    public decimal ShippingCost { get; set; }
     public string? StripeCheckoutSessionId { get; set; }
     public string? StripePaymentIntentId { get; set; }
 
@@ -51,5 +52,10 @@ public class Order
             throw new InvalidOperationException("Cannot calculate total for empty order.");
 
         return OrderLines.Sum(x => x.Product.Price * x.Quantity);
+    }
+
+    public decimal GetGrandTotal()
+    {
+        return GetTotal() + ShippingCost;
     }
 }

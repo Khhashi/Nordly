@@ -85,6 +85,22 @@ stripe listen --forward-to http://localhost:5088/api/stripe/webhook
 
 Bruk signeringshemmeligheten `whsec_...` som Stripe CLI viser, som verdi for `Stripe:WebhookSecret`. I Render legger du inn `Stripe__SecretKey` og `Stripe__WebhookSecret` som private miljøvariabler. Stripe sender kunden tilbake til `/Checkout/Success` først etter at Checkout Session har status `paid`.
 
+## Konfigurer ordrebekreftelse på e-post
+
+Ordrebekreftelsen sendes etter en bekreftet Stripe-betaling via SMTP. I Render legger du inn disse private miljøvariablene fra e-postleverandøren din:
+
+```text
+Email__SmtpHost=smtp.example.com
+Email__SmtpPort=587
+Email__EnableSsl=true
+Email__Username=bruker@example.com
+Email__Password=SETT_SOM_SECRET
+Email__FromAddress=butikk@example.com
+Email__FromName=Nordly
+```
+
+Uten SMTP-konfigurasjon lagres ordren fortsatt, men e-post blir hoppet over og skrevet som en advarsel i loggen.
+
 ## Database og REST-API
 
 Appen bruker PostgreSQL gjennom Entity Framework Core. I produksjon leverer Render tilkoblingsstrengen gjennom `ConnectionStrings__DefaultConnection`; ingen databasepassord lagres i prosjektet.
