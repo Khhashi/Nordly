@@ -103,7 +103,7 @@ Uten SMTP-konfigurasjon lagres ordren fortsatt, men e-post blir hoppet over og s
 
 ## Database og REST-API
 
-Appen bruker PostgreSQL gjennom Entity Framework Core. I produksjon leverer Render tilkoblingsstrengen gjennom `ConnectionStrings__DefaultConnection`; ingen databasepassord lagres i prosjektet.
+Appen bruker PostgreSQL gjennom Entity Framework Core. I produksjon lagres dataene i Neon. Render kjører webappen og mottar Neon-tilkoblingen gjennom den private miljøvariabelen `ConnectionStrings__DefaultConnection`; ingen databasepassord lagres i prosjektet.
 
 For lokal utvikling oppgir du en privat tilkoblingsstreng gjennom User Secrets:
 
@@ -112,7 +112,7 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_POSTGRES_CON
 dotnet run --project "Nordly.Web/Nordly.Web.csproj"
 ```
 
-Render konfigurerer `ConnectionStrings__DefaultConnection` automatisk fra den administrerte `nordly-db`-databasen i `render.yaml`.
+I Render legges Neon-tilkoblingen inn manuelt som `ConnectionStrings__DefaultConnection`. `render.yaml` inneholder bare webtjenesten og peker ikke på en Render-administrert database.
 
 Tilgjengelige endepunkter:
 
