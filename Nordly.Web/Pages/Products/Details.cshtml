@@ -1,14 +1,14 @@
 @page "{id:guid}"
 @model DetailsModel
 @{
-    ViewData["Title"] = Model.Product?.Name ?? "Product";
+    ViewData["Title"] = Model.Product?.Name ?? "Produkt";
 }
 
 @if (Model.Product is not null)
 {
     <div class="product-detail-shell">
         <nav class="breadcrumb" aria-label="Brødsmulesti">
-            <a asp-page="/Index">Shop</a><span>/</span><span>@Model.Product.Category</span><span>/</span><strong>@Model.Product.Name</strong>
+            <a asp-page="/Index">Butikk</a><span>/</span><span>@Model.Product.Category</span><span>/</span><strong>@Model.Product.Name</strong>
         </nav>
 
         @if (TempData["Success"] is string success)
@@ -45,7 +45,7 @@
         </section>
 
         <section class="detail-story">
-            <div><span class="section-kicker">Why it belongs</span><h2>Designet for å bli brukt.</h2></div>
+            <div><span class="section-kicker">Hvorfor vi valgte den</span><h2>Designet for å bli brukt.</h2></div>
             <p>Vi tror gode produkter skal gjøre hverdagen litt bedre uten å kreve oppmerksomhet. Derfor velger vi materialer, former og detaljer som tåler å brukes igjen og igjen.</p>
         </section>
     </div>
