@@ -40,7 +40,11 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 
 **C#, .NET 8, Razor Pages · PostgreSQL, Entity Framework Core · Stripe · NUnit · Docker, GitHub Actions, Render**
 
-Løsningen er delt i egne prosjekter for web, domene, infrastruktur og tester, slik at forretningslogikken ikke er avhengig av web eller database.
+## Tekniske valg og læring
+
+- **Lagdelt arkitektur:** Løsningen er delt i egne prosjekter for web, domene, infrastruktur og tester. Domenet er uavhengig av web og database, så forretningsreglene kan testes isolert.
+- **Betaling bekreftes av Stripe:** En ordre markeres som betalt først når Stripe bekrefter det, enten via en signert webhook eller ved at serveren henter betalingsstatusen fra Stripe. Nettleseren kan ikke selv si at en ordre er betalt.
+- **Personvern:** Jeg oppdaget at ordre-API-et returnerte kundens navn, e-post og adresse uten innlogging. Jeg fikset det slik at API-et bare returnerer ordrelinjer og status, og fjernet et ubrukt endepunkt som lot hvem som helst opprette ordrer.
 
 ## Tester og CI
 
