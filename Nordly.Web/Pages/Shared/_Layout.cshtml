@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="announcement-bar">Fri frakt på ordre over 800 kr <span>•</span> Levering på 2–4 virkedager</div>
+    <div class="announcement-bar">Fri frakt på ordre fra 800 kr <span>•</span> Levering på 2–4 virkedager</div>
     @{
         var cartJson = Context.Session.GetString("cart");
         var cartCount = string.IsNullOrWhiteSpace(cartJson)
