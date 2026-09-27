@@ -108,24 +108,6 @@ app.MapGet("/api/orders/{id:guid}", async (Guid id, OrderDbContext db) =>
         })
     });
 });
-app.MapPost("/api/orders", async (CreateOrderRequest request, OrderDbContext db) =>
-{
-    if (request.Items.Count == 0 || request.Items.Any(item => item.Quantity <= 0))
-        return Results.BadRequest(new { error = "Order must contain valid items." });
-
-    var productIds = request.Items.Select(item => item.ProductId).ToList();
-    var products = await db.Products.Where(product => productIds.Contains(product.Id)).ToDictionaryAsync(product => product.Id);
-    if (products.Count != productIds.Distinct().Count())
-        return Results.BadRequest(new { error = "One or more products do not exist." });
-
-    var order = new PG3302.Domain.Entities.Order();
-    foreach (var item in request.Items)
-        order.AddProduct(products[item.ProductId], item.Quantity);
-
-    db.Orders.Add(order);
-    await db.SaveChangesAsync();
-    return Results.Created($"/api/orders/{order.Id}", order);
-});
 app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orderService, IConfiguration configuration) =>
 {
     var webhookSecret = configuration["Stripe:WebhookSecret"];
@@ -168,6 +150,3 @@ app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orde
 app.MapRazorPages();
 
 app.Run();
-
-public sealed record CreateOrderRequest(List<CreateOrderItem> Items);
-public sealed record CreateOrderItem(Guid ProductId, int Quantity);
