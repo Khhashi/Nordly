@@ -32,7 +32,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 - Produktkatalog med kategorifiltre og produktsider
 - Handlekurv med antallsstyring
 - Stripe Checkout med signert webhook for betalingsstatus
-- Fraktvalg med gratis frakt over 800 kr
+- Fraktvalg med gratis frakt fra 800 kr
 - Ordrebekreftelse på e-post via SMTP
 - Nyhetsbrev lagret i PostgreSQL
 
