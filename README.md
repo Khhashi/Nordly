@@ -1,133 +1,128 @@
 # Nordly
 
-**Testside:** [https://ordermanager-8ym2.onrender.com](https://ordermanager-8ym2.onrender.com)
+[![.NET](https://github.com/Khhashi/Nordly/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Khhashi/Nordly/actions/workflows/dotnet.yml)
 
-> **Status: Klar for testing**
->
-> Nordly er en norsk nettbutikk som nå kan testes på Render. Kjernefunksjonene er på plass, men løsningen er fortsatt under utvikling og ikke klar for ordinær produksjon.
+Nordly er en nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
 
-## Viktig før testing
+**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**
+Siden kjører på Renders gratisnivå og kan bruke opptil ett minutt på å starte første gang.
 
-- Bruk testdata og Stripe testmodus. Ikke bruk ekte kort eller ekte kundeopplysninger.
-- Full kjøpsflyt på Render er ikke ferdig manuelt verifisert.
-- Ordrebekreftelse på e-post fungerer først når SMTP-miljøvariablene er lagt inn i Render.
-- Automatiske tester for hele butikkflyten og en ende-til-ende-test gjenstår.
-- Gratis Render-drift kan bruke tid på å våkne etter inaktivitet.
+<!-- Legg skjermbildene i mappen docs/ og fjern kommentaren rundt linjene under -->
+<!--
+![Forside](docs/forside.png)
+![Produktside](docs/produkt.png)
+![Checkout](docs/checkout.png)
+-->
 
-## Hva som fortsatt mangler
+## Funksjoner
 
-- Automatiske tester for butikkflyten
-- Ende-til-ende-test av hele kjøpsflyten
-- Full manuell test av kjøpsflyten på Render
-- SMTP-oppsett i Render for at ordrebekreftelser faktisk skal sendes
+- Produktkatalog med kategorifiltre og produktsider
+- Handlekurv med antallsstyring, lagret i økten
+- Checkout med Stripe, der betalingsstatus oppdateres via en signert webhook
+- Kunde- og leveringsinformasjon med fraktvalg og gratis frakt over 800 kr
+- Ordrebekreftelse på e-post via SMTP etter bekreftet betaling
+- Påmelding til nyhetsbrev, lagret i PostgreSQL
+- REST-API for produkter, ordre og helsesjekk
 
-## Hva som er ferdig
+## Teknologier
 
-- Norsk nettbutikk med produktkatalog og produktdetaljer
-- Handlekurv med antallsstyring og tydelige tilbakemeldinger
-- Checkout-flyt med Stripe-integrasjon, webhook og betalingsstatus
-- Kunde- og leveringsinformasjon i checkout
-- Fraktvalg med gratis levering over 800 kr
-- Ordrebekreftelse på e-post via SMTP
-- Persistent lagring av nyhetsbrevabonnenter i PostgreSQL
-- PostgreSQL og Entity Framework Core
-- REST-endepunkter for produkter, ordre og helsesjekk
-- GitHub Projects med plan, issues og arbeidsflyt
-- `main` for stabil versjon og `develop` for videre arbeid
+| Område | Teknologi |
+| --- | --- |
+| Backend og frontend | C#, .NET 8, Razor Pages |
+| Database | PostgreSQL (Neon i produksjon), Entity Framework Core |
+| Betaling | Stripe Checkout og webhooks |
+| Testing | NUnit, enhets- og integrasjonstester |
+| Drift | Docker, GitHub Actions, Render |
 
-## Prosjektstruktur
+## Arkitektur
 
-- `Nordly.Web` - Razor Pages-nettbutikk og API
-- `PG3302.Domain` - Domeneobjekter, repository-kontrakter og forretningslogikk
-- `PG3302.Infrastructure` - PostgreSQL og Entity Framework Core
-- `PG3302.Tests` - NUnit-enhetstester og integrasjonstester
+Løsningen er delt i fire prosjekter, slik at forretningslogikken ikke er avhengig av web eller database:
 
-## Krav
+| Prosjekt | Ansvar |
+| --- | --- |
+| `Nordly.Web` | Razor Pages-nettbutikk, REST-API og Stripe-webhook |
+| `PG3302.Domain` | Entiteter, forretningsregler og repository-grensesnitt |
+| `PG3302.Infrastructure` | PostgreSQL-tilgang med Entity Framework Core |
+| `PG3302.Tests` | Enhets- og integrasjonstester |
 
-- .NET 8 SDK
+## Tester
 
-## Kjør nettbutikken
+Løsningen har 22 automatiserte tester i NUnit. De dekker blant annet:
 
-```bash
-dotnet run --project "Nordly.Web/Nordly.Web.csproj"
-```
+- Forretningsregler for ordre og produkter, som totalsum, ugyldig antall og tomme ordre
+- `OrderService` mot et falskt repository
+- Integrasjonstester mot databasen, inkludert lagring av Stripe-betalingsdata
+- Tolkning av tilkoblingsstrenger for Render og Neon
 
-Stopp den lokale serveren med `Ctrl+C` i terminalen.
-
-## Publiser til Render
-
-Dette prosjektet inneholder `Dockerfile` og `render.yaml` for å publisere nettbutikken som en Render-nettjeneste.
-
-1. Push prosjektet til GitHub.
-2. Velg **New +** og **Blueprint** i Render.
-3. Velg prosjektet `Khhashi/Nordly`.
-4. Publiser den registrerte `nordly`-nettjenesten.
-
-Render leverer den offentlige nettjenesten og den administrerte PostgreSQL-databasen gjennom Blueprint-oppsettet. Appen er fortsatt under utvikling, så den offentlige versjonen brukes til kontroll før nettbutikken regnes som produksjonsklar.
-
-Nettgrensesnittet er en kundevendt nettbutikk med utvalgte produkter, kategorifiltre, øktbasert handlekurv og Stripe Checkout under aktiv utvikling. Eventuelle interne ordresider er fortsatt tilgjengelige i prosjektet, men vises ikke i kundemenyen.
-
-## Konfigurer Stripe Checkout
-
-Opprett en Stripe-konto og bruk testnøkler lokalt. Lagre dem med .NET User Secrets slik at de aldri legges inn i prosjektet.
+GitHub Actions bygger løsningen og kjører alle testene ved hver push og pull request til `main` og `develop`.
 
 ```bash
-dotnet user-secrets set "Stripe:SecretKey" "sk_test_your_key_here" --project "Nordly.Web/Nordly.Web.csproj"
-dotnet user-secrets set "Stripe:WebhookSecret" "whsec_your_webhook_secret_here" --project "Nordly.Web/Nordly.Web.csproj"
-dotnet run --project "Nordly.Web/Nordly.Web.csproj"
+dotnet test Nordly.sln --nologo
 ```
 
-For lokal testing av webhook kan du sende Stripe-hendelser til appen med Stripe CLI:
+## Kjør lokalt
 
-```bash
-stripe listen --forward-to http://localhost:5088/api/stripe/webhook
-```
+**Krav:** .NET 8 SDK og Docker, eller en egen PostgreSQL-database.
 
-Bruk signeringshemmeligheten `whsec_...` som Stripe CLI viser, som verdi for `Stripe:WebhookSecret`. I Render legger du inn `Stripe__SecretKey` og `Stripe__WebhookSecret` som private miljøvariabler. Stripe sender kunden tilbake til `/Checkout/Success` først etter at Checkout Session har status `paid`.
+1. Start PostgreSQL:
 
-## Konfigurer ordrebekreftelse på e-post
+   ```bash
+   docker compose up -d
+   ```
 
-Ordrebekreftelsen sendes etter en bekreftet Stripe-betaling via SMTP. I Render legger du inn disse private miljøvariablene fra e-postleverandøren din:
+2. Legg inn tilkoblingsstreng og Stripe-testnøkler med User Secrets, slik at ingen hemmeligheter havner i koden:
 
-```text
-Email__SmtpHost=smtp.example.com
-Email__SmtpPort=587
-Email__EnableSsl=true
-Email__Username=bruker@example.com
-Email__Password=SETT_SOM_SECRET
-Email__FromAddress=butikk@example.com
-Email__FromName=Nordly
-```
+   ```bash
+   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" --project Nordly.Web
+   dotnet user-secrets set "Stripe:SecretKey" "sk_test_..." --project Nordly.Web
+   dotnet user-secrets set "Stripe:WebhookSecret" "whsec_..." --project Nordly.Web
+   ```
 
-Uten SMTP-konfigurasjon lagres ordren fortsatt, men e-post blir hoppet over og skrevet som en advarsel i loggen.
+3. Start appen:
 
-## Database og REST-API
+   ```bash
+   dotnet run --project Nordly.Web
+   ```
 
-Appen bruker PostgreSQL gjennom Entity Framework Core. I produksjon lagres dataene i Neon. Render kjører webappen og mottar Neon-tilkoblingen gjennom den private miljøvariabelen `ConnectionStrings__DefaultConnection`; ingen databasepassord lagres i prosjektet.
+4. Valgfritt: Send Stripe-webhooks til appen lokalt med Stripe CLI:
 
-For lokal utvikling oppgir du en privat tilkoblingsstreng gjennom User Secrets:
+   ```bash
+   stripe listen --forward-to http://localhost:5055/api/stripe/webhook
+   ```
 
-```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "YOUR_POSTGRES_CONNECTION_STRING" --project "Nordly.Web/Nordly.Web.csproj"
-dotnet run --project "Nordly.Web/Nordly.Web.csproj"
-```
+Bruk testkortet `4242 4242 4242 4242` med en hvilken som helst fremtidig dato og CVC.
 
-I Render legges Neon-tilkoblingen inn manuelt som `ConnectionStrings__DefaultConnection`. `render.yaml` inneholder bare webtjenesten og peker ikke på en Render-administrert database.
+## REST-API
 
-Tilgjengelige endepunkter:
+| Metode | Endepunkt | Beskrivelse |
+| --- | --- | --- |
+| `GET` | `/api/products` | Henter alle produkter |
+| `GET` | `/api/orders/{id}` | Henter én ordre |
+| `POST` | `/api/orders` | Oppretter en ordre fra produkt-ID-er og antall |
+| `POST` | `/api/stripe/webhook` | Tar imot Stripe-hendelser og kontrollerer signaturen |
+| `GET` | `/health` | Helsesjekk, inkludert databasetilkobling |
 
-- `GET /api/products` - hent produkter
-- `GET /api/orders/{id}` - hent en ordre
-- `POST /api/orders` - opprett en ordre fra produkt-ID-er og antall
-- `POST /api/stripe/webhook` - kontroller Stripe-webhooksignaturer
-- `GET /health` - helsekontroll
+## Drift
 
-## Kjør tester
+Appen kjører som en Docker-tjeneste på Render, definert i `render.yaml`. Databasen ligger hos Neon. Alle hemmeligheter legges inn som private miljøvariabler i Render:
 
-```bash
-dotnet test "Nordly.sln" --nologo
-```
+| Variabel | Formål |
+| --- | --- |
+| `ConnectionStrings__DefaultConnection` | Tilkobling til Neon PostgreSQL |
+| `Stripe__SecretKey`, `Stripe__WebhookSecret` | Stripe |
+| `Email__SmtpHost`, `Email__SmtpPort`, `Email__EnableSsl`, `Email__Username`, `Email__Password`, `Email__FromAddress`, `Email__FromName` | SMTP for ordrebekreftelse |
 
-## Prosjektstatus
+Uten SMTP-oppsett lagres ordren likevel, men e-posten hoppes over og det skrives en advarsel i loggen.
 
-Prosjektet vedlikeholdes aktivt gjennom GitHub Issues, Projects og Pull Requests. Nye endringer utvikles på en feature-branch, kontrolleres av GitHub Actions, gjennomgås i en PR og merges først når kontrollene er godkjent.
+## Arbeidsflyt
+
+- Oppgaver planlegges i GitHub Issues og Projects.
+- Nye endringer utvikles på feature-brancher og merges via pull requests.
+- En pull request merges først når bygg og tester er grønne i GitHub Actions.
+- `main` er den stabile versjonen og `develop` brukes til videre arbeid.
+
+## Kjente begrensninger
+
+- Stripe kjører i testmodus, så ingen ekte betalinger gjennomføres.
+- Renders gratisnivå går i dvale ved inaktivitet.
+- En ende-til-ende-test av hele kjøpsflyten står på planen.
