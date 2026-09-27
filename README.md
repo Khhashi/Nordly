@@ -1,129 +1,65 @@
 # Nordly
 
 [![.NET](https://github.com/Khhashi/Nordly/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Khhashi/Nordly/actions/workflows/dotnet.yml)
+![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-239120?logo=csharp&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-635BFF?logo=stripe&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
-Nordly er en nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
+Nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
 
-**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**
-Siden kjører på Renders gratisnivå og kan bruke opptil ett minutt på å starte første gang.
+**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**<br>
+Kan bruke opptil ett minutt på å starte (Render gratisnivå).
 
-<img width="1920" height="1080" alt="Skjermbilde 2026-09-27 kl  23 24 28 (2)" src="https://github.com/user-attachments/assets/1fc6be54-893c-41f6-a1b6-75dcf4a7f8b3" />
+## Grensesnitt
 
-<img width="1440" height="900" alt="Skjermbilde 2026-09-27 kl  23 25 13" src="https://github.com/user-attachments/assets/1e976134-b90a-4df3-9735-b48e70fe8e58" />
+Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurven og bekreftelsen etter betaling.
 
-<img width="1440" height="900" alt="Skjermbilde 2026-09-27 kl  23 26 12" src="https://github.com/user-attachments/assets/ccb9b257-49cf-4368-b507-3ccca361da8b" />
-
-
+<table>
+  <tr>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/560c83d7-2a2e-4eed-8974-195f626803af" alt="Forsiden til Nordly" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/eae616b7-d69d-41ae-a0f7-9e5eaca18278" alt="Produktside i Nordly" /></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/941fecbf-1b17-4102-8df8-68437982fca7" alt="Handlekurv med Stripe-betaling i Nordly" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/7514ae8e-1c76-4f5b-9215-e99cdca5bba1" alt="Ordrebekreftelse etter betaling i Nordly" /></td>
+  </tr>
+</table>
 
 ## Funksjoner
 
 - Produktkatalog med kategorifiltre og produktsider
-- Handlekurv med antallsstyring, lagret i økten
-- Checkout med Stripe, der betalingsstatus oppdateres via en signert webhook
-- Kunde- og leveringsinformasjon med fraktvalg og gratis frakt over 800 kr
-- Ordrebekreftelse på e-post via SMTP etter bekreftet betaling
-- Påmelding til nyhetsbrev, lagret i PostgreSQL
-- REST-API for produkter, ordre og helsesjekk
+- Handlekurv med antallsstyring
+- Stripe Checkout med signert webhook for betalingsstatus
+- Fraktvalg med gratis frakt over 800 kr
+- Ordrebekreftelse på e-post via SMTP
+- Nyhetsbrev lagret i PostgreSQL
 
-## Teknologier
+## Teknologi
 
-| Område | Teknologi |
-| --- | --- |
-| Backend og frontend | C#, .NET 8, Razor Pages |
-| Database | PostgreSQL (Neon i produksjon), Entity Framework Core |
-| Betaling | Stripe Checkout og webhooks |
-| Testing | NUnit, enhets- og integrasjonstester |
-| Drift | Docker, GitHub Actions, Render |
+**C#, .NET 8, Razor Pages · PostgreSQL, Entity Framework Core · Stripe · NUnit · Docker, GitHub Actions, Render**
 
-## Arkitektur
+Løsningen er delt i egne prosjekter for web, domene, infrastruktur og tester, slik at forretningslogikken ikke er avhengig av web eller database.
 
-Løsningen er delt i fire prosjekter, slik at forretningslogikken ikke er avhengig av web eller database:
+## Tester og CI
 
-| Prosjekt | Ansvar |
-| --- | --- |
-| `Nordly.Web` | Razor Pages-nettbutikk, REST-API og Stripe-webhook |
-| `PG3302.Domain` | Entiteter, forretningsregler og repository-grensesnitt |
-| `PG3302.Infrastructure` | PostgreSQL-tilgang med Entity Framework Core |
-| `PG3302.Tests` | Enhets- og integrasjonstester |
-
-## Tester
-
-Løsningen har 22 automatiserte tester i NUnit. De dekker blant annet:
-
-- Forretningsregler for ordre og produkter, som totalsum, ugyldig antall og tomme ordre
-- `OrderService` mot et falskt repository
-- Integrasjonstester mot databasen, inkludert lagring av Stripe-betalingsdata
-- Tolkning av tilkoblingsstrenger for Render og Neon
-
-GitHub Actions bygger løsningen og kjører alle testene ved hver push og pull request til `main` og `develop`.
-
-```bash
-dotnet test Nordly.sln --nologo
-```
-
-## Kjør lokalt
-
-**Krav:** .NET 8 SDK og Docker, eller en egen PostgreSQL-database.
-
-1. Start PostgreSQL:
-
-   ```bash
-   docker compose up -d
-   ```
-
-2. Legg inn tilkoblingsstreng og Stripe-testnøkler med User Secrets, slik at ingen hemmeligheter havner i koden:
-
-   ```bash
-   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" --project Nordly.Web
-   dotnet user-secrets set "Stripe:SecretKey" "sk_test_..." --project Nordly.Web
-   dotnet user-secrets set "Stripe:WebhookSecret" "whsec_..." --project Nordly.Web
-   ```
-
-3. Start appen:
-
-   ```bash
-   dotnet run --project Nordly.Web
-   ```
-
-4. Valgfritt: Send Stripe-webhooks til appen lokalt med Stripe CLI:
-
-   ```bash
-   stripe listen --forward-to http://localhost:5055/api/stripe/webhook
-   ```
-
-Bruk testkortet `4242 4242 4242 4242` med en hvilken som helst fremtidig dato og CVC.
-
-## REST-API
-
-| Metode | Endepunkt | Beskrivelse |
-| --- | --- | --- |
-| `GET` | `/api/products` | Henter alle produkter |
-| `GET` | `/api/orders/{id}` | Henter én ordre |
-| `POST` | `/api/orders` | Oppretter en ordre fra produkt-ID-er og antall |
-| `POST` | `/api/stripe/webhook` | Tar imot Stripe-hendelser og kontrollerer signaturen |
-| `GET` | `/health` | Helsesjekk, inkludert databasetilkobling |
-
-## Drift
-
-Appen kjører som en Docker-tjeneste på Render, definert i `render.yaml`. Databasen ligger hos Neon. Alle hemmeligheter legges inn som private miljøvariabler i Render:
-
-| Variabel | Formål |
-| --- | --- |
-| `ConnectionStrings__DefaultConnection` | Tilkobling til Neon PostgreSQL |
-| `Stripe__SecretKey`, `Stripe__WebhookSecret` | Stripe |
-| `Email__SmtpHost`, `Email__SmtpPort`, `Email__EnableSsl`, `Email__Username`, `Email__Password`, `Email__FromAddress`, `Email__FromName` | SMTP for ordrebekreftelse |
-
-Uten SMTP-oppsett lagres ordren likevel, men e-posten hoppes over og det skrives en advarsel i loggen.
+22 automatiserte enhets- og integrasjonstester i NUnit dekker ordre- og produktregler, `OrderService` og lagring av Stripe-betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
 
 ## Arbeidsflyt
 
-- Oppgaver planlegges i GitHub Issues og Projects.
-- Nye endringer utvikles på feature-brancher og merges via pull requests.
-- En pull request merges først når bygg og tester er grønne i GitHub Actions.
-- `main` er den stabile versjonen og `develop` brukes til videre arbeid.
+Hver oppgave starter som et issue og utvikles på en egen feature-branch. Endringen går gjennom en pull request med code review, og merges til `main` først når bygg og tester er grønne i GitHub Actions.
 
-## Kjente begrensninger
+## Kjør lokalt
 
-- Stripe kjører i testmodus, så ingen ekte betalinger gjennomføres.
-- Renders gratisnivå går i dvale ved inaktivitet.
-- En ende-til-ende-test av hele kjøpsflyten står på planen.
+Krever .NET 8 SDK og Docker.
+
+```bash
+docker compose up -d
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" --project Nordly.Web
+dotnet user-secrets set "Stripe:SecretKey" "sk_test_..." --project Nordly.Web
+dotnet user-secrets set "Stripe:WebhookSecret" "whsec_..." --project Nordly.Web
+dotnet run --project Nordly.Web
+```
+
+Kjør testene med `dotnet test`. Bruk Stripe-testkortet `4242 4242 4242 4242`.
