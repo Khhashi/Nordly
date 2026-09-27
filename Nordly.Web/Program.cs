@@ -93,7 +93,20 @@ app.MapGet("/api/orders/{id:guid}", async (Guid id, OrderDbContext db) =>
         .Include(item => item.OrderLines)
         .ThenInclude(line => line.Product)
         .SingleOrDefaultAsync(item => item.Id == id);
-    return order is null ? Results.NotFound() : Results.Ok(order);
+    if (order is null) return Results.NotFound();
+
+    return Results.Ok(new
+    {
+        order.Id,
+        order.CreatedAt,
+        order.PaymentStatus,
+        order.ShippingCost,
+        Lines = order.OrderLines.Select(line => new
+        {
+            Product = line.Product.Name,
+            line.Quantity
+        })
+    });
 });
 app.MapPost("/api/orders", async (CreateOrderRequest request, OrderDbContext db) =>
 {
