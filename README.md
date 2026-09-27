@@ -7,12 +7,13 @@ Nordly er en nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Ch
 **[Live demo ↗](https://ordermanager-8ym2.onrender.com)**
 Siden kjører på Renders gratisnivå og kan bruke opptil ett minutt på å starte første gang.
 
-<!-- Legg skjermbildene i mappen docs/ og fjern kommentaren rundt linjene under -->
-<!--
-![Forside](docs/forside.png)
-![Produktside](docs/produkt.png)
-![Checkout](docs/checkout.png)
--->
+<img width="1920" height="1080" alt="Skjermbilde 2026-09-27 kl  23 24 28 (2)" src="https://github.com/user-attachments/assets/1fc6be54-893c-41f6-a1b6-75dcf4a7f8b3" />
+
+<img width="1440" height="900" alt="Skjermbilde 2026-09-27 kl  23 25 13" src="https://github.com/user-attachments/assets/1e976134-b90a-4df3-9735-b48e70fe8e58" />
+
+<img width="1440" height="900" alt="Skjermbilde 2026-09-27 kl  23 26 12" src="https://github.com/user-attachments/assets/ccb9b257-49cf-4368-b507-3ccca361da8b" />
+
+
 
 ## Funksjoner
 
