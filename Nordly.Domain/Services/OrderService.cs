@@ -23,6 +23,23 @@ public class OrderService
         _repository.Add(order);
     }
 
+    public bool RecordPaidCheckout(Order order, string checkoutSessionId)
+    {
+        if (order == null)
+            throw new ArgumentNullException(nameof(order));
+
+        if (string.IsNullOrWhiteSpace(checkoutSessionId))
+            throw new ArgumentException("Stripe checkout session ID is required.", nameof(checkoutSessionId));
+
+        if (_repository.GetByStripeCheckoutSessionId(checkoutSessionId) != null)
+            return false;
+
+        order.StripeCheckoutSessionId = checkoutSessionId;
+        order.PaymentStatus = "Paid";
+        CreateOrder(order);
+        return true;
+    }
+
     public Order? GetOrder(Guid id)
     {
         return _repository.GetById(id);
