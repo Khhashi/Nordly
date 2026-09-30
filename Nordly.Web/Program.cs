@@ -109,7 +109,7 @@ app.MapGet("/api/orders/{id:guid}", async (Guid id, OrderDbContext db) =>
         })
     });
 });
-app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orderService, IConfiguration configuration) =>
+app.MapPost("/api/stripe/webhook", async (HttpRequest request, CheckoutOrderProcessor processor, IConfiguration configuration) =>
 {
     var webhookSecret = configuration["Stripe:WebhookSecret"];
     if (string.IsNullOrWhiteSpace(webhookSecret))
@@ -126,24 +126,12 @@ app.MapPost("/api/stripe/webhook", async (HttpRequest request, OrderService orde
         return Results.BadRequest();
     }
 
-    if (stripeEvent.Type == "checkout.session.completed" && stripeEvent.Data.Object is Stripe.Checkout.Session session)
+    // Ordren opprettes her selv om kunden lukker nettleseren før bekreftelsessiden lastes.
+    // CheckoutOrderProcessor sørger for at samme betaling bare gir én ordre og én e-post.
+    if (stripeEvent.Type is "checkout.session.completed" or "checkout.session.async_payment_succeeded"
+        && stripeEvent.Data.Object is Stripe.Checkout.Session session)
     {
-        var order = orderService.GetAllOrders().SingleOrDefault(item => item.StripeCheckoutSessionId == session.Id);
-        if (order != null && order.PaymentStatus != "Paid")
-        {
-            order.PaymentStatus = session.PaymentStatus == "paid" ? "Paid" : "Pending";
-            order.StripePaymentIntentId = session.PaymentIntentId;
-            orderService.UpdateOrder(order);
-        }
-    }
-    else if (stripeEvent.Type == "payment_intent.succeeded" && stripeEvent.Data.Object is Stripe.PaymentIntent paymentIntent)
-    {
-        var order = orderService.GetAllOrders().SingleOrDefault(item => item.StripePaymentIntentId == paymentIntent.Id);
-        if (order != null && order.PaymentStatus != "Paid")
-        {
-            order.PaymentStatus = "Paid";
-            orderService.UpdateOrder(order);
-        }
+        await processor.ProcessPaidSessionAsync(session);
     }
 
     return Results.Ok();
