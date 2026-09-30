@@ -2,8 +2,8 @@ using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
-using PG3302.Domain.Entities;
-using PG3302.Infrastructure.Data;
+using Nordly.Domain.Entities;
+using Nordly.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Nordly.Web.Pages;

@@ -1,6 +1,6 @@
-using PG3302.Domain.Entities;
+using Nordly.Domain.Entities;
 
-namespace PG3302.Domain.Interfaces;
+namespace Nordly.Domain.Interfaces;
 
 public interface IOrderRepository
 {

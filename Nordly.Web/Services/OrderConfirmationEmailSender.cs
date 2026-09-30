@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using PG3302.Domain.Entities;
+using Nordly.Domain.Entities;
 
 namespace Nordly.Web.Services;
 
