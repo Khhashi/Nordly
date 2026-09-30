@@ -13,3 +13,4 @@ riderModule.iml
 /_ReSharper.Caches/
 orders.json
 **/orders.json
+.vscode/
