@@ -1,7 +1,7 @@
-using PG3302.Domain.Entities;
-using PG3302.Domain.Interfaces;
+using Nordly.Domain.Entities;
+using Nordly.Domain.Interfaces;
 
-namespace PG3302.Domain.Services;
+namespace Nordly.Domain.Services;
 
 public class OrderService
 {

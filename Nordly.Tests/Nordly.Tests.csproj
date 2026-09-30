@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PG3302.Domain\PG3302.Domain.csproj" />
-    <ProjectReference Include="..\PG3302.Infrastructure\PG3302.Infrastructure.csproj" />
+    <ProjectReference Include="..\Nordly.Domain\Nordly.Domain.csproj" />
+    <ProjectReference Include="..\Nordly.Infrastructure\Nordly.Infrastructure.csproj" />
     <ProjectReference Include="..\Nordly.Web\Nordly.Web.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\PG3302.Domain\PG3302.Domain.csproj" />
+    <ProjectReference Include="..\Nordly.Domain\Nordly.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

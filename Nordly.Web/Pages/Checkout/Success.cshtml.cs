@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PG3302.Domain.Entities;
-using PG3302.Domain.Services;
+using Nordly.Domain.Entities;
+using Nordly.Domain.Services;
 using Stripe;
 using Stripe.Checkout;
-using DomainProduct = PG3302.Domain.Entities.Product;
+using DomainProduct = Nordly.Domain.Entities.Product;
 using Nordly.Web.Services;
 
 namespace Nordly.Web.Pages.Checkout;

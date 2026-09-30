@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PG3302.Domain.Entities;
-using PG3302.Domain.Services;
+using Nordly.Domain.Entities;
+using Nordly.Domain.Services;
 using Stripe;
 using Stripe.Checkout;
 

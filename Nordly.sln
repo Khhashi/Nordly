@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.Domain", "PG3302.Domain\PG3302.Domain.csproj", "{04420265-7A09-434E-A99B-AFF499089CE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nordly.Domain", "Nordly.Domain\Nordly.Domain.csproj", "{04420265-7A09-434E-A99B-AFF499089CE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.Infrastructure", "PG3302.Infrastructure\PG3302.Infrastructure.csproj", "{47D76FC9-DBD7-4A7F-9B80-F45BD818ACC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nordly.Infrastructure", "Nordly.Infrastructure\Nordly.Infrastructure.csproj", "{47D76FC9-DBD7-4A7F-9B80-F45BD818ACC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG3302.Tests", "PG3302.Tests\PG3302.Tests.csproj", "{478F96AB-F4FC-4950-9A6C-4E2BBB4BD58C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nordly.Tests", "Nordly.Tests\Nordly.Tests.csproj", "{478F96AB-F4FC-4950-9A6C-4E2BBB4BD58C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nordly.Web", "Nordly.Web\Nordly.Web.csproj", "{F2C167D8-E060-47D4-BC09-3685F4E89830}"
 EndProject

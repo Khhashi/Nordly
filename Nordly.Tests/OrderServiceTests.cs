@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using PG3302.Domain.Entities;
-using PG3302.Domain.Services;
+using Nordly.Domain.Entities;
+using Nordly.Domain.Services;
 
-namespace PG3302.Tests;
+namespace Nordly.Tests;
 
 public class OrderServiceTests
 {

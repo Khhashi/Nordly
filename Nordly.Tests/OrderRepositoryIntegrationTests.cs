@@ -1,10 +1,10 @@
 using NUnit.Framework;
-using PG3302.Domain.Entities;
-using PG3302.Infrastructure.Repositories;
+using Nordly.Domain.Entities;
+using Nordly.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using PG3302.Infrastructure.Data;
+using Nordly.Infrastructure.Data;
 
-namespace PG3302.Tests;
+namespace Nordly.Tests;
 
 public class OrderRepositoryIntegrationTests
 {

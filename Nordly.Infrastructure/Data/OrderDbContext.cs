@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using PG3302.Domain.Entities;
+using Nordly.Domain.Entities;
 
-namespace PG3302.Infrastructure.Data;
+namespace Nordly.Infrastructure.Data;
 
 public class OrderDbContext : DbContext
 {
