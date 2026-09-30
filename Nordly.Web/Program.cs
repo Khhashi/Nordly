@@ -23,6 +23,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
+builder.Services.AddScoped<CheckoutOrderProcessor>();
 
 var app = builder.Build();
 
