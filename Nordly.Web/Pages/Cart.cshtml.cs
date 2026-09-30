@@ -10,8 +10,6 @@ namespace Nordly.Web.Pages;
 
 public class CartModel : PageModel
 {
-    private const decimal FreeShippingThreshold = 800m;
-    private const decimal StandardShippingCost = 79m;
     private readonly OrderService _service;
     private readonly IConfiguration _configuration;
 
@@ -23,7 +21,7 @@ public class CartModel : PageModel
 
     public List<CartViewItem> Items { get; private set; } = new();
     public decimal Total => Items.Sum(item => item.Product.Price * item.Quantity);
-    public decimal ShippingCost => Total >= FreeShippingThreshold ? 0m : StandardShippingCost;
+    public decimal ShippingCost => ShippingPolicy.CalculateShippingCost(Total);
     public string ShippingLabel => ShippingCost == 0m ? "Gratis levering" : "Standard levering";
     public decimal GrandTotal => Total + ShippingCost;
     public bool StripeConfigured => !string.IsNullOrWhiteSpace(_configuration["Stripe:SecretKey"]);
