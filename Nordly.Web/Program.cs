@@ -1,8 +1,8 @@
-using PG3302.Domain.Services;
-using PG3302.Domain.Interfaces;
+using Nordly.Domain.Services;
+using Nordly.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using PG3302.Infrastructure.Data;
-using PG3302.Infrastructure.Repositories;
+using Nordly.Infrastructure.Data;
+using Nordly.Infrastructure.Repositories;
 using Nordly.Web;
 using Nordly.Web.Services;
 
@@ -57,7 +57,7 @@ using (var scope = app.Services.CreateScope())
     if (!db.Products.Any())
     {
         db.Products.AddRange(StorefrontCatalog.Products.Select(product =>
-            new PG3302.Domain.Entities.Product(product.Name, product.Price)
+            new Nordly.Domain.Entities.Product(product.Name, product.Price)
             {
                 Id = product.Id
             }));

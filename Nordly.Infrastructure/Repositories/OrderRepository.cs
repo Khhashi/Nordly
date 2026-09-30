@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PG3302.Domain.Entities;
-using PG3302.Domain.Interfaces;
-using PG3302.Infrastructure.Data;
+using Nordly.Domain.Entities;
+using Nordly.Domain.Interfaces;
+using Nordly.Infrastructure.Data;
 
-namespace PG3302.Infrastructure.Repositories;
+namespace Nordly.Infrastructure.Repositories;
 
 public class OrderRepository : IOrderRepository
 {

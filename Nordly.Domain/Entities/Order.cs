@@ -1,4 +1,4 @@
-namespace PG3302.Domain.Entities;
+namespace Nordly.Domain.Entities;
 
 public class Order
 {

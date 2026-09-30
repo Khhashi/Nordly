@@ -2,8 +2,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY ["Nordly.Web/Nordly.Web.csproj", "Nordly.Web/"]
-COPY ["PG3302.Domain/PG3302.Domain.csproj", "PG3302.Domain/"]
-COPY ["PG3302.Infrastructure/PG3302.Infrastructure.csproj", "PG3302.Infrastructure/"]
+COPY ["Nordly.Domain/Nordly.Domain.csproj", "Nordly.Domain/"]
+COPY ["Nordly.Infrastructure/Nordly.Infrastructure.csproj", "Nordly.Infrastructure/"]
 RUN dotnet restore "Nordly.Web/Nordly.Web.csproj"
 
 COPY . .

@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Nordly.Web;
 
-namespace PG3302.Tests;
+namespace Nordly.Tests;
 
 public class DatabaseConnectionStringTests
 {
