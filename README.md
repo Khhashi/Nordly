@@ -48,7 +48,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 
 ## Tester og CI
 
-22 automatiserte enhets- og integrasjonstester i NUnit dekker ordre- og produktregler, `OrderService` og lagring av Stripe-betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
+26 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, `OrderService` og lagring av Stripe-betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
 
 ## Arbeidsflyt
 
