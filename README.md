@@ -43,12 +43,12 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 ## Tekniske valg og læring
 
 - **Lagdelt arkitektur:** Løsningen er delt i egne prosjekter for web, domene, infrastruktur og tester. Domenet er uavhengig av web og database, så forretningsreglene kan testes isolert.
-- **Betaling bekreftes av Stripe:** En ordre markeres som betalt først når Stripe bekrefter det, enten via en signert webhook eller ved at serveren henter betalingsstatusen fra Stripe. Nettleseren kan ikke selv si at en ordre er betalt.
+- **Betaling bekreftes av Stripe:** Ordren opprettes først når Stripe bekrefter betalingen, enten via en signert webhook eller når bekreftelsessiden henter økten fra Stripe. Begge veier bruker samme kode, og en unik Stripe-økt-ID i databasen sikrer at samme betaling bare gir én ordre og én e-post, selv om kunden lukker nettleseren.
 - **Personvern:** Jeg oppdaget at ordre-API-et returnerte kundens navn, e-post og adresse uten innlogging. Jeg fikset det slik at API-et bare returnerer ordrelinjer og status, og fjernet et ubrukt endepunkt som lot hvem som helst opprette ordrer.
 
 ## Tester og CI
 
-26 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, `OrderService` og lagring av Stripe-betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
+34 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, `OrderService`, at samme Stripe-betaling bare gir én ordre og lagring av betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
 
 ## Arbeidsflyt
 
