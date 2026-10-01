@@ -9,8 +9,7 @@
 
 Nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
 
-**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**<br>
-Kan bruke opptil ett minutt på å starte (Render gratisnivå).
+**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**
 
 ## Grensesnitt
 
@@ -38,7 +37,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 
 ## Teknologi
 
-**C#, .NET 8, Razor Pages · PostgreSQL, Entity Framework Core · Stripe · NUnit · Docker, GitHub Actions, Render**
+**C#, .NET 8, Razor Pages · PostgreSQL (Neon), Entity Framework Core · Stripe · NUnit · Docker, GitHub Actions, Render**
 
 ## Tekniske valg og læring
 
