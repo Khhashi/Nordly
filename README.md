@@ -9,7 +9,12 @@
 
 Nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
 
-**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**
+**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**<br>
+<sub>Åpner med en gang på hverdager kl. 07–20. Ellers kan første besøk ta opptil ett minutt.</sub>
+
+## Hvorfor jeg bygde det
+
+Jeg bygde Nordly for å bli bedre på backend, og på det som faktisk er vanskelig i en nettbutikk: at én betaling alltid gir nøyaktig én ordre, også når kunden lukker nettleseren underveis. Jeg valgte C# og .NET for å lære et typet backend-rammeverk med lagdelt arkitektur.
 
 ## Grensesnitt
 
