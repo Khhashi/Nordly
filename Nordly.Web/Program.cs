@@ -22,7 +22,10 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
+if (!string.IsNullOrWhiteSpace(builder.Configuration["Email:BrevoApiKey"]))
+    builder.Services.AddHttpClient<IOrderConfirmationEmailSender, BrevoOrderConfirmationEmailSender>();
+else
+    builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
 builder.Services.AddScoped<CheckoutOrderProcessor>();
 
 var app = builder.Build();

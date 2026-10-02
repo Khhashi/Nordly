@@ -36,7 +36,7 @@ flowchart LR
     Nordly -->|Checkout Session| Stripe[(Stripe<br/>testmodus)]
     Stripe -->|signert webhook| Nordly
     Nordly -->|EF Core| DB[(PostgreSQL<br/>Neon)]
-    Nordly -->|SMTP| Mail[Mailjet]
+    Nordly -->|HTTPS-API| Mail[Brevo]
     Cron[cron-job.org] -->|GET /health| Nordly
 ```
 
@@ -88,7 +88,7 @@ sequenceDiagram
     participant Stripe
     participant P as CheckoutOrderProcessor
     participant DB as PostgreSQL
-    participant Mail as Mailjet
+    participant Mail as Brevo
 
     Kunde->>Web: Gå til kassen
     Web->>Stripe: Opprett Checkout Session (varer i metadata)
@@ -182,9 +182,14 @@ erDiagram
 - *Alternativ:* Betalt plan hos Render.
 - *Hvorfor:* Render sin gratisplan sover etter 15 minutter. Pingen holder appen våken når den mest sannsynlig besøkes, og holder seg innenfor 750 gratis timer i måneden.
 
+**ADR-6: E-post via Brevo sitt HTTP-API**
+- *Valg:* Ordrebekreftelser sendes med Brevo sitt API over HTTPS. SMTP-senderen brukes bare når ingen API-nøkkel er satt, for eksempel lokalt.
+- *Alternativ:* SMTP direkte fra appen.
+- *Hvorfor:* Render sin gratisplan blokkerer utgående SMTP-porter (25, 465, 587). Begge senderne implementerer samme grensesnitt, så resten av koden merker ikke forskjell.
+
 ## 8. Begrensninger og videre arbeid
 
 - **Kaldstart:** Utenom hverdager 07–20 kan første besøk ta opptil ett minutt.
 - **Databaseskjema:** `EnsureCreated` brukes i stedet for EF-migrasjoner. Endringer i modellen krever derfor manuell håndtering. Neste steg er å gå over til migrasjoner.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
-- **Ingen kø for e-post:** Feiler SMTP, logges det, men e-posten sendes ikke på nytt.
+- **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.

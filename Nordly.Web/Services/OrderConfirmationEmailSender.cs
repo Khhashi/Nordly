@@ -59,7 +59,7 @@ public sealed class SmtpOrderConfirmationEmailSender : IOrderConfirmationEmailSe
         await client.SendMailAsync(message, cancellationToken);
     }
 
-    private static string BuildBody(Order order)
+    internal static string BuildBody(Order order)
     {
         var body = new StringBuilder();
         body.AppendLine($"Hei {order.CustomerName ?? "der"},");
