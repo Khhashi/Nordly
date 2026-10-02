@@ -751,3 +751,9 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
   .hero-visual { min-height: 260px; }
   .hero-visual .hero-note { margin-top: 0; }
 }
+
+/* Hero: produktlenke i stedet for nummer */
+.hero-product { backdrop-filter: blur(8px); background: rgba(255,253,249,0.94); border-radius: 12px; bottom: 1rem; color: var(--ink); display: grid; gap: 0.15rem; left: 1rem; padding: 0.7rem 1rem; position: absolute; text-decoration: none; transition: transform 0.2s ease; }
+.hero-product:hover { color: var(--ink); transform: translateY(-2px); }
+.hero-product > span { color: var(--terracotta); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.hero-product strong { font-size: 0.95rem; }
