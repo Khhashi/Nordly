@@ -748,3 +748,6 @@ button, input, select, textarea { font-family: inherit; }
 
 /* Små overskrifter: samme terrakotta overalt */
 .section-kicker { color: var(--terracotta); }
+
+/* Like runde hjørner på store flater */
+.editorial-panel { border-radius: 18px; }
