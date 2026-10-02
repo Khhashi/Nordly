@@ -41,7 +41,7 @@ public class CheckoutOrderProcessor
         {
             created = _orderService.RecordPaidCheckout(order, session.Id);
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException) when (_orderService.GetOrderByStripeCheckoutSessionId(session.Id) != null)
         {
             // Nettsiden og webhooken kom samtidig; den andre lagret ordren først.
             created = false;
@@ -76,7 +76,7 @@ public class CheckoutOrderProcessor
         {
             var product = StorefrontCatalog.Products.FirstOrDefault(item => item.Id == productIds[index]);
             if (product != null)
-                order.AddProduct(new DomainProduct(product.Name, product.Price), quantities[index]);
+                order.AddProduct(new DomainProduct(product.Name, product.Price) { Id = product.Id }, quantities[index]);
         }
 
         order.CustomerName = session.CollectedInformation?.ShippingDetails?.Name ?? session.CustomerDetails?.Name;
