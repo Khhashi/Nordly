@@ -737,8 +737,3 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .newsletter-panel .newsletter-message { line-height: 1.4; margin: 0.9rem 0 0; max-width: 460px; }
 .newsletter-panel .newsletter-success { background: rgba(255,255,255,0.18); color: #fff; }
 .newsletter-panel .newsletter-error { background: #fff; color: #9f4935; }
-
-/* Nyhetsbrev: meldingen må vinne over .newsletter-panel p */
-.newsletter-panel .newsletter-message { line-height: 1.4; margin: 0.9rem 0 0; max-width: 460px; }
-.newsletter-panel .newsletter-success { background: rgba(255,255,255,0.18); color: #fff; }
-.newsletter-panel .newsletter-error { background: #fff; color: #9f4935; }
