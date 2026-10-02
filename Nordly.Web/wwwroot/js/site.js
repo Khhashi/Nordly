@@ -5,7 +5,29 @@
 		window.setTimeout(dismiss, 5000);
 	});
 
+	document.querySelectorAll('.detail-stepper').forEach(stepper => {
+		const input = stepper.querySelector('input');
+		const buttons = [...stepper.querySelectorAll('[data-step]')];
+		const min = Number(input.min) || 1;
+		const max = Number(input.max) || 10;
+		const sync = () => {
+			const value = Math.min(max, Math.max(min, Number.parseInt(input.value, 10) || min));
+			input.value = value.toString();
+			buttons.forEach(button => button.disabled = Number(button.dataset.step) < 0 ? value <= min : value >= max);
+		};
+		buttons.forEach(button => button.addEventListener('click', () => {
+			input.value = ((Number.parseInt(input.value, 10) || min) + Number(button.dataset.step)).toString();
+			sync();
+		}));
+		input.addEventListener('change', sync);
+		sync();
+	});
+
 	const cards = [...document.querySelectorAll('.product-card')];
+	const catalogHeader = document.querySelector('#new-arrivals');
+	const catalogTitle = catalogHeader?.querySelector('h2');
+	const catalogCount = document.querySelector('.catalog-count');
+	const filterTitles = { all: 'Utvalgte produkter', new: 'Nyheter', sale: 'Tilbud' };
 	const tabs = [...document.querySelectorAll('.category-tab')];
 	const categoryLinks = [...document.querySelectorAll('[data-category-link]')];
 	const productFilterLinks = [...document.querySelectorAll('[data-product-filter]')];
@@ -44,9 +66,12 @@
 		});
 
 		if (emptyState) emptyState.hidden = visible !== 0;
+		if (catalogTitle) catalogTitle.textContent = filterTitles[selectedFilter] || filterTitles.all;
+		if (catalogCount) catalogCount.textContent = `${visible} varer`;
 	};
 
 	tabs.forEach(tab => tab.addEventListener('click', () => {
+		selectedFilter = 'all';
 		selectedCategory = tab.dataset.category || 'all';
 		tabs.forEach(item => item.classList.toggle('active', item === tab));
 		updateProducts();
@@ -67,13 +92,18 @@
 		updateProducts();
 	};
 
-	productFilterLinks.forEach(link => link.addEventListener('click', () => {
+	productFilterLinks.forEach(link => link.addEventListener('click', event => {
+		event.preventDefault();
+		catalogHeader?.scrollIntoView({ behavior: 'smooth' });
 		applyProductFilter(link.dataset.productFilter);
 	}));
 
 	const hash = window.location.hash;
 	if (hash === '#new-arrivals') applyProductFilter('new');
-	if (hash === '#offers') applyProductFilter('sale');
+	if (hash === '#offers') {
+		applyProductFilter('sale');
+		catalogHeader?.scrollIntoView();
+	}
 
 	document.querySelectorAll('.cart-quantity-form').forEach(form => form.addEventListener('submit', async event => {
 		event.preventDefault();
