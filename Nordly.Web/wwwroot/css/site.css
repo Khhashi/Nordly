@@ -730,3 +730,12 @@ button, input, select, textarea { font-family: inherit; }
 @media (max-width: 800px) {
   .service-card { border-bottom: 0; padding: 1.25rem; }
 }
+
+/* Nyhetsbrev: terrakotta i stedet for grønt, og ingen blåtoner igjen fra gammelt tema */
+.newsletter-panel { background: var(--terracotta); border-radius: 18px; }
+.newsletter-panel .section-kicker { color: #ffe1cf; }
+.newsletter-panel p { color: #fbe9de; }
+.newsletter-panel small { color: #fbe9de; }
+.newsletter-form button { background: #23463b; }
+.newsletter-form button:hover { background: #18332b; }
+.newsletter-panel h2 { font-size: clamp(2rem, 3.4vw, 3.2rem); }
