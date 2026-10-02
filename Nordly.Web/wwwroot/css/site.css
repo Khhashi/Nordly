@@ -707,3 +707,11 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
   .site-footer { grid-template-columns: 1fr; gap: 1.25rem; padding: 2rem 1.25rem; }
   .nav-optional { display: none; }
 }
+
+/* Antallvelger på produktsiden */
+.quantity-control.detail-stepper { gap: 0.25rem; height: 48px; padding: 0 0.45rem; }
+.quantity-control.detail-stepper .quantity-btn { height: 34px; width: 34px; }
+.quantity-control.detail-stepper input { -moz-appearance: textfield; appearance: textfield; background: transparent; border: 0; font-weight: 800; height: auto; padding: 0; text-align: center; width: 2.4rem; }
+.quantity-control.detail-stepper input::-webkit-inner-spin-button,
+.quantity-control.detail-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.quantity-control.detail-stepper .quantity-btn:disabled { cursor: default; opacity: 0.35; }
