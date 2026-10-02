@@ -739,3 +739,9 @@ button, input, select, textarea { font-family: inherit; }
 .newsletter-form button { background: #23463b; }
 .newsletter-form button:hover { background: #18332b; }
 .newsletter-panel h2 { font-size: clamp(2rem, 3.4vw, 3.2rem); }
+
+/* Footer: mørk grønn ramme nederst, som toppstripen */
+.site-footer { background: #1d2a24; border-top: 0; color: #c9d3cd; margin-top: 4rem; }
+.footer-brand strong, .footer-payment strong { color: #fff; }
+.footer-links a { color: #c9d3cd; }
+.footer-links a:hover { color: #f0b48f; }
