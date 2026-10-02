@@ -18,7 +18,10 @@
 		</div>
 		<figure class="hero-visual">
 			<img src="@hero.ImageUrl" alt="@hero.Name" fetchpriority="high" />
-			<figcaption class="hero-note"><span>01</span><span>Utvalgte favoritter<br />for et enklere hjem</span></figcaption>
+			<a class="hero-product" asp-page="/Products/Details" asp-route-id="@hero.Id">
+				<span>Ukens favoritt</span>
+				<strong>@hero.Name · @hero.Price.ToString("N0") kr <span aria-hidden="true">→</span></strong>
+			</a>
 		</figure>
 	</section>
 
