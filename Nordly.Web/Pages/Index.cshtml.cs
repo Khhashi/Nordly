@@ -1,7 +1,6 @@
 using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
 using Nordly.Domain.Entities;
 using Nordly.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +22,9 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        var cart = GetCart();
-        CartCount = cart.Sum(item => item.Quantity);
-        ProductQuantities = cart.ToDictionary(item => item.ProductId, item => item.Quantity);
+        var cart = Cart.Load(HttpContext.Session);
+        CartCount = cart.Count;
+        ProductQuantities = cart.Items.ToDictionary(item => item.ProductId, item => item.Quantity);
     }
 
     public IActionResult OnPostAddToCart(Guid productId)
@@ -35,17 +34,12 @@ public class IndexModel : PageModel
             return NotFound();
         }
 
-        var cart = GetCart();
-        var item = cart.FirstOrDefault(cartItem => cartItem.ProductId == productId);
+        var cart = Cart.Load(HttpContext.Session);
+        cart.Add(productId);
+        cart.Save(HttpContext.Session);
 
-        if (item == null)
-            cart.Add(new CartItem(productId, 1));
-        else
-            item.Quantity++;
-
-        SaveCart(cart);
         if (IsAjaxRequest())
-            return new JsonResult(new { success = true, quantity = cart.First(item => item.ProductId == productId).Quantity, cartCount = cart.Sum(item => item.Quantity) });
+            return new JsonResult(new { success = true, quantity = cart.QuantityOf(productId), cartCount = cart.Count });
 
         TempData["Success"] = "Produktet er lagt i handlekurven";
         return RedirectToPage();
@@ -53,19 +47,12 @@ public class IndexModel : PageModel
 
     public IActionResult OnPostRemoveFromCart(Guid productId)
     {
-        var cart = GetCart();
-        var item = cart.FirstOrDefault(cartItem => cartItem.ProductId == productId);
+        var cart = Cart.Load(HttpContext.Session);
+        cart.Decrease(productId);
+        cart.Save(HttpContext.Session);
 
-        if (item == null)
-            return RedirectToPage();
-
-        item.Quantity--;
-        if (item.Quantity <= 0)
-            cart.Remove(item);
-
-        SaveCart(cart);
         if (IsAjaxRequest())
-            return new JsonResult(new { success = true, quantity = cart.FirstOrDefault(item => item.ProductId == productId)?.Quantity ?? 0, cartCount = cart.Sum(item => item.Quantity) });
+            return new JsonResult(new { success = true, quantity = cart.QuantityOf(productId), cartCount = cart.Count });
 
         TempData["Success"] = "Antallet er oppdatert.";
         return RedirectToPage();
@@ -120,29 +107,4 @@ public class IndexModel : PageModel
         TempData["NewsletterSuccess"] = "Du er nå påmeldt vårt nyhetsbrev.";
         return RedirectToPage();
     }
-
-    private List<CartItem> GetCart()
-    {
-        var json = HttpContext.Session.GetString("cart");
-        return string.IsNullOrWhiteSpace(json)
-            ? new List<CartItem>()
-            : JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>();
-    }
-
-    private void SaveCart(List<CartItem> cart)
-    {
-        HttpContext.Session.SetString("cart", JsonSerializer.Serialize(cart));
-    }
-}
-
-public sealed class CartItem
-{
-    public CartItem(Guid productId, int quantity)
-    {
-        ProductId = productId;
-        Quantity = quantity;
-    }
-
-    public Guid ProductId { get; set; }
-    public int Quantity { get; set; }
 }

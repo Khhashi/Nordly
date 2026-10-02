@@ -38,7 +38,7 @@ public class SuccessModel : PageModel
         if (order == null)
             return RedirectToPage("/Cart");
 
-        HttpContext.Session.Remove("cart");
+        Cart.Clear(HttpContext.Session);
         OrderId = order.Id;
         return Page();
     }
