@@ -8,7 +8,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   background: #f6f8f7;
   color: #17211f;
 }
@@ -233,7 +233,7 @@ h1 {
 
 .store-hero h1 em {
   color: #bb6b38;
-  font-family: Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-weight: 400;
 }
 
@@ -292,7 +292,7 @@ h1 {
 }
 
 .benefit-strip > div { align-items: center; display: flex; gap: 0.85rem; justify-content: center; }
-.benefit-strip strong { color: #bb6b38; font-family: Georgia, serif; font-size: 1.25rem; font-weight: 400; }
+.benefit-strip strong { color: #bb6b38; font-family: "Fraunces", Georgia, serif; font-size: 1.25rem; font-weight: 400; }
 .benefit-strip span { color: #5d756d; font-size: 0.75rem; line-height: 1.35; text-transform: uppercase; }
 
 .catalog-tools { align-items: center; display: flex; gap: 1.25rem; }
@@ -770,3 +770,6 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 @media (max-width: 800px) {
   .category-tile { min-height: 200px; }
 }
+
+/* Skjemaelementer arver skrifttypen */
+button, input, select, textarea { font-family: inherit; }
