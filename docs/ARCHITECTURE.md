@@ -19,14 +19,17 @@ Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stri
 
 | Type | Krav |
 |---|---|
-| Funksjonelt | Kunden kan legge varer i handlekurven og betale |
+| Funksjonelt | Kunden kan legge varer i handlekurven (maks 10 per produkt) og betale |
 | Funksjonelt | Betalt ordre lagres med kunde, adresse, varer og frakt |
 | Funksjonelt | Kunden får ordrebekreftelse på e-post |
 | Funksjonelt | Fri frakt fra 800 kr, ellers 79 kr |
+| Funksjonelt | Kunden kan melde seg på nyhetsbrev, og samme e-post lagres bare én gang |
 | Ikke-funksjonelt | Idempotent ordreopprettelse (én betaling = én ordre) |
 | Ikke-funksjonelt | Ingen hemmeligheter i koden, kun miljøvariabler |
 | Ikke-funksjonelt | Webhooks fra Stripe må være signert og verifisert |
 | Ikke-funksjonelt | `/health` viser om appen når databasen |
+| Ikke-funksjonelt | Containeren kjører uten root, og Docker-imaget bygges i CI |
+| Ikke-funksjonelt | Nøklene som krypterer cookies og skjemaer overlever omstart |
 
 ## 3. Systemkontekst
 
@@ -46,6 +49,7 @@ flowchart LR
 flowchart TB
     subgraph Web[Nordly.Web]
         Pages[Razor Pages]
+        Cart[Cart<br/>handlekurv i sesjonen]
         Webhook[Stripe webhook]
         Processor[CheckoutOrderProcessor]
         Email[OrderConfirmationEmailSender]
@@ -57,8 +61,9 @@ flowchart TB
     end
     subgraph Infra[Nordly.Infrastructure]
         Repo[OrderRepository]
-        Ctx[OrderDbContext]
+        Ctx[OrderDbContext<br/>også DataProtection-nøkler]
     end
+    Pages --> Cart
     Pages --> Processor
     Webhook --> Processor
     Processor --> Services
@@ -73,7 +78,7 @@ flowchart TB
 |---|---|---|
 | **Domain** | Entiteter, forretningsregler og grensesnitt | Ingenting |
 | **Infrastructure** | Databasetilgang med EF Core og PostgreSQL | Domain |
-| **Web** | Sider, webhook, Stripe, e-post og oppsett | Domain og Infrastructure |
+| **Web** | Sider, handlekurv, webhook, Stripe, e-post og oppsett | Domain og Infrastructure |
 
 Domain kjenner ikke til database, Stripe eller ASP.NET. Derfor kan reglene testes isolert. For eksempel validerer `Order` at antall er større enn null, og `ShippingPolicy` regner ut frakt.
 
@@ -152,6 +157,11 @@ erDiagram
         guid Id
         string Email "unik"
         datetime SubscribedAt
+    }
+    DATA_PROTECTION_KEY {
+        int Id
+        string FriendlyName
+        string Xml
     }
 ```
 
