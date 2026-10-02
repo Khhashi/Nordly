@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Nordly.Domain.Services;
 using Nordly.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,15 @@ else
 builder.Services.AddScoped<CheckoutOrderProcessor>();
 
 var app = builder.Build();
+
+// Render avslutter HTTPS foran appen. Les X-Forwarded-Proto så appen vet at forespørselen var https.
+var forwardedHeaders = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+};
+forwardedHeaders.KnownNetworks.Clear();
+forwardedHeaders.KnownProxies.Clear();
+app.UseForwardedHeaders(forwardedHeaders);
 
 if (!app.Environment.IsDevelopment())
 {

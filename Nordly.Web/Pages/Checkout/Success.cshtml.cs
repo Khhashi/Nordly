@@ -25,7 +25,15 @@ public class SuccessModel : PageModel
             return RedirectToPage("/Cart");
 
         StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
-        var session = await new SessionService().GetAsync(session_id);
+        Session session;
+        try
+        {
+            session = await new SessionService().GetAsync(session_id);
+        }
+        catch (StripeException)
+        {
+            return RedirectToPage("/Cart");
+        }
         var order = await _processor.ProcessPaidSessionAsync(session);
         if (order == null)
             return RedirectToPage("/Cart");
