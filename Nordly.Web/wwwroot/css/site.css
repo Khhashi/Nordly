@@ -709,3 +709,8 @@ button, input, select, textarea { font-family: inherit; }
 
 /* Hero: litt luft mellom bokstavene med DM Sans */
 .store-hero h1 { letter-spacing: -0.02em; }
+
+/* Fordel-stripen: grønn bakgrunn i stedet for tynne streker */
+.benefit-strip { background: #23463b; border: 0; border-radius: 18px; padding: 1.4rem 1rem; }
+.benefit-strip strong { color: #f0b48f; }
+.benefit-strip span { color: #e8efe9; }
