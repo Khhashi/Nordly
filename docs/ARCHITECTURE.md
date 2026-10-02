@@ -115,7 +115,7 @@ sequenceDiagram
 1. Processor ignorerer sesjoner som ikke har status `paid`.
 2. Den slår opp ordren på `StripeCheckoutSessionId` først.
 3. Databasen har en unik indeks på `StripeCheckoutSessionId`. Om to forespørsler lagrer samtidig, feiler den ene.
-4. Den som feiler fanger `DbUpdateException` og henter ordren den andre lagret.
+4. Den som feiler fanger `DbUpdateException` og henter ordren den andre lagret. Finnes det ingen ordre, er det en ekte databasefeil. Da kastes feilen videre, webhooken svarer 500, og Stripe prøver på nytt.
 5. E-post sendes bare av den som faktisk opprettet ordren.
 
 Webhooken håndterer `checkout.session.completed` og `checkout.session.async_payment_succeeded`.

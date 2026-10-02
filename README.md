@@ -54,7 +54,7 @@ Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for diagrammer, betalingsflyt og
 
 ## Tester og CI
 
-37 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, `OrderService`, at samme Stripe-betaling bare gir én ordre og lagring av betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
+40 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, `OrderService`, at samme Stripe-betaling bare gir én ordre og lagring av betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
 
 ## Arbeidsflyt
 
