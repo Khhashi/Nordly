@@ -760,3 +760,7 @@ button, input, select, textarea { font-family: inherit; }
 /* Én grønnfarge: knapper og merker bruker samme skogsgrønne som resten av siden */
 :root { --blue: #23463b; }
 .primary-btn, .add-btn { box-shadow: 0 12px 22px rgba(35,70,59,0.18); }
+
+/* Produktkort: lettere uttrykk uten kant, skygge bare ved hover */
+.product-card { border-color: transparent; border-radius: 14px; box-shadow: 0 1px 2px rgba(28,28,27,0.05); }
+.product-card:hover { box-shadow: 0 16px 32px rgba(28,28,27,0.09); }
