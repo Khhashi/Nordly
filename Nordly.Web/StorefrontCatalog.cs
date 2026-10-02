@@ -28,7 +28,7 @@ public static class StorefrontCatalog
         StoreProduct.Create("Sora lykt", "Hjem", "Varm sedertre, myk røyk og et lite stille øyeblikk.", 329, "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=900&q=85", "Bestselger"),
         StoreProduct.Create("Milo reisekrus", "Kjøkken", "Et balansert, lekkasjekontrollert krus for morgenen på farten.", 349, "https://images.unsplash.com/photo-1577937927133-66ef06acdf18?auto=format&fit=crop&w=900&q=85"),
         StoreProduct.Create("Arco leselampe", "Kontor", "Et fokusert lys for sider, skisser og sen arbeidstid.", 799, "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85", "Ny"),
-        StoreProduct.Create("Casa linputt", "Hjem", "Vasket lintekstur i en rolig, hverdagsskapende form.", 299, "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=900&q=85", "-15%", 349),
+        StoreProduct.Create("Casa linputt", "Hjem", "Vasket lintekstur i en rolig, hverdagsskapende form.", 299, "https://images.unsplash.com/photo-1587433701752-78cbf88ae429?auto=format&fit=crop&w=900&q=85", "-15%", 349),
         StoreProduct.Create("Raku oppbevaringsboks", "Objekter", "En liten eikeboks for det som er verdt å ha nærme.", 449, "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=85")
     };
 }
