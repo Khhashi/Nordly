@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Nordly.Domain.Entities;
 
 namespace Nordly.Infrastructure.Data;
 
-public class OrderDbContext : DbContext
+public class OrderDbContext : DbContext, IDataProtectionKeyContext
 {
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
@@ -13,6 +14,7 @@ public class OrderDbContext : DbContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
     public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

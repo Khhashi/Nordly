@@ -187,9 +187,15 @@ erDiagram
 - *Alternativ:* SMTP direkte fra appen.
 - *Hvorfor:* Render sin gratisplan blokkerer utgående SMTP-porter (25, 465, 587). Begge senderne implementerer samme grensesnitt, så resten av koden merker ikke forskjell.
 
+**ADR-7: Nøkler for databeskyttelse i Postgres**
+- *Valg:* ASP.NET Core sine nøkler for å kryptere cookies og skjema-tokens lagres i tabellen `DataProtectionKeys` i Postgres.
+- *Alternativ:* Standard lagring på disk i containeren.
+- *Hvorfor:* Containeren hos Render mister disken ved hver omstart og deploy. Da ble nøklene nye, og skjemaer som var åpne i nettleseren feilet med 400. Med nøklene i databasen overlever de omstart.
+
 ## 8. Begrensninger og videre arbeid
 
 - **Kaldstart:** Utenom hverdager 07–20 kan første besøk ta opptil ett minutt.
 - **Databaseskjema:** `EnsureCreated` brukes i stedet for EF-migrasjoner. Endringer i modellen krever derfor manuell håndtering. Neste steg er å gå over til migrasjoner.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
 - **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.
+- **Handlekurv i minnet:** Sesjonen ligger i minnet, så handlekurven tømmes når appen starter på nytt. Neste steg er å lagre sesjonen i Postgres.
