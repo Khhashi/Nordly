@@ -34,7 +34,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 ## Funksjoner
 
 - Produktkatalog med kategorifiltre og produktsider
-- Handlekurv med antallsstyring
+- Handlekurv med antallsstyring (maks 10 per produkt)
 - Stripe Checkout med signert webhook for betalingsstatus
 - Fraktvalg med gratis frakt fra 800 kr
 - Ordrebekreftelse på e-post via Brevo sitt API
@@ -48,17 +48,18 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 
 - **Lagdelt arkitektur:** Løsningen er delt i egne prosjekter for web, domene, infrastruktur og tester. Domenet er uavhengig av web og database, så forretningsreglene kan testes isolert.
 - **Betaling bekreftes av Stripe:** Ordren opprettes først når Stripe bekrefter betalingen, enten via en signert webhook eller når bekreftelsessiden henter økten fra Stripe. Begge veier bruker samme kode, og en unik Stripe-økt-ID i databasen sikrer at samme betaling bare gir én ordre og én e-post, selv om kunden lukker nettleseren.
-- **Personvern:** Jeg oppdaget at ordre-API-et returnerte kundens navn, e-post og adresse uten innlogging. Jeg fikset det slik at API-et bare returnerer ordrelinjer og status, og fjernet et ubrukt endepunkt som lot hvem som helst opprette ordrer.
+- **Personvern:** Jeg oppdaget at ordre-API-et returnerte kundens navn, e-post og adresse uten innlogging. Først begrenset jeg hva API-et returnerte og fjernet et endepunkt som lot hvem som helst opprette ordrer. Senere fjernet jeg hele ordre-API-et, siden ingen del av nettsiden brukte det.
+- **Drift på gratisplan:** Render blokkerer utgående SMTP, så e-post sendes via Brevo sitt HTTP-API. Containeren mister disken ved omstart, så nøklene som krypterer cookies og skjemaer lagres i Postgres.
 
 Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for diagrammer, betalingsflyt og designbeslutninger.
 
 ## Tester og CI
 
-46 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, `OrderService`, at samme Stripe-betaling bare gir én ordre og lagring av betalinger i databasen. GitHub Actions bygger og kjører testene på hver pull request.
+46 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, at samme Stripe-betaling bare gir én ordre, lagring i databasen og at krypteringsnøklene overlever omstart. GitHub Actions bygger løsningen, kjører testene og bygger Docker-imaget på hver pull request.
 
 ## Arbeidsflyt
 
-Hver oppgave starter som et issue og utvikles på en egen feature-branch. Endringen går gjennom en pull request med code review, og merges til `main` først når bygg og tester er grønne i GitHub Actions.
+Hver oppgave starter som et issue og utvikles på en egen feature-branch. Endringen går gjennom en pull request og merges til `main` først når bygg og tester er grønne i GitHub Actions.
 
 ## Kjør lokalt
 
