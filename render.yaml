@@ -11,15 +11,7 @@ services:
         sync: false
       - key: Stripe__WebhookSecret
         sync: false
-      - key: Email__SmtpHost
-        sync: false
-      - key: Email__SmtpPort
-        sync: false
-      - key: Email__EnableSsl
-        sync: false
-      - key: Email__Username
-        sync: false
-      - key: Email__Password
+      - key: Email__BrevoApiKey
         sync: false
       - key: Email__FromAddress
         sync: false
