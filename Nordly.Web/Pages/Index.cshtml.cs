@@ -68,7 +68,7 @@ public class IndexModel : PageModel
         if (string.IsNullOrWhiteSpace(email))
         {
             TempData["NewsletterError"] = "Skriv inn en gyldig e-postadresse.";
-            return RedirectToPage();
+            return RedirectToPage(null, null, "newsletter");
         }
 
         try
@@ -77,20 +77,20 @@ public class IndexModel : PageModel
             if (string.IsNullOrWhiteSpace(address.Address))
             {
                 TempData["NewsletterError"] = "Skriv inn en gyldig e-postadresse.";
-                return RedirectToPage();
+                return RedirectToPage(null, null, "newsletter");
             }
         }
         catch
         {
             TempData["NewsletterError"] = "Skriv inn en gyldig e-postadresse.";
-            return RedirectToPage();
+            return RedirectToPage(null, null, "newsletter");
         }
 
         var normalizedEmail = email.Trim().ToLowerInvariant();
         if (await _db.NewsletterSubscribers.AnyAsync(subscriber => subscriber.Email == normalizedEmail))
         {
             TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
-            return RedirectToPage();
+            return RedirectToPage(null, null, "newsletter");
         }
 
         _db.NewsletterSubscribers.Add(new NewsletterSubscriber { Email = normalizedEmail });
@@ -101,10 +101,10 @@ public class IndexModel : PageModel
         catch (DbUpdateException)
         {
             TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
-            return RedirectToPage();
+            return RedirectToPage(null, null, "newsletter");
         }
 
         TempData["NewsletterSuccess"] = "Du er nå påmeldt vårt nyhetsbrev.";
-        return RedirectToPage();
+        return RedirectToPage(null, null, "newsletter");
     }
 }
