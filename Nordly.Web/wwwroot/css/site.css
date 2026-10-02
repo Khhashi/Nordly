@@ -715,3 +715,8 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .quantity-control.detail-stepper input::-webkit-inner-spin-button,
 .quantity-control.detail-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .quantity-control.detail-stepper .quantity-btn:disabled { cursor: default; opacity: 0.35; }
+
+/* Nyhetsbrev: melding i boksen */
+.newsletter-message { border-radius: 10px; font-size: 0.9rem; font-weight: 700; margin: 0.9rem 0 0; max-width: 460px; padding: 0.7rem 1rem; }
+.newsletter-success { background: rgba(255,255,255,0.18); color: #fff; }
+.newsletter-error { background: #fff2ed; color: #9f4935; }

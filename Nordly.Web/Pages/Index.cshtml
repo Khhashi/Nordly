@@ -5,14 +5,6 @@
 }
 
 <div class="store-shell">
-	@if (TempData["NewsletterSuccess"] is string newsletterSuccess)
-	{
-		<div class="alert alert-success action-toast" role="status"><span class="feedback-icon" aria-hidden="true">✓</span><span>@newsletterSuccess</span><button class="toast-close" type="button" aria-label="Lukk melding">×</button></div>
-	}
-	@if (TempData["NewsletterError"] is string newsletterError)
-	{
-		<div class="alert alert-danger action-toast" role="status"><span class="feedback-icon" aria-hidden="true">!</span><span>@newsletterError</span><button class="toast-close" type="button" aria-label="Lukk melding">×</button></div>
-	}
 	<section class="store-hero">
 		<div>
 			<span class="eyebrow">Norsk design til hverdagen</span>
@@ -124,7 +116,7 @@
 		</div>
 	</section>
 
-	<section class="newsletter-panel">
+	<section id="newsletter" class="newsletter-panel">
 		<div><span class="section-kicker">Nyhetsbrev</span><h2>Gode ting, sendt<br />med omtanke.</h2></div>
 		<div>
 			<p>Få nyheter om nye produkter, gode tips og utvalgte favoritter.</p>
@@ -132,7 +124,18 @@
 				<input type="email" name="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" required />
 				<button type="submit">Meld meg på <span aria-hidden="true">→</span></button>
 			</form>
-			<small>Ingen spam. Bare det vi faktisk vil dele.</small>
+			@if (TempData["NewsletterSuccess"] is string newsletterSuccess)
+			{
+				<p class="newsletter-message newsletter-success" role="status">✓ @newsletterSuccess</p>
+			}
+			else if (TempData["NewsletterError"] is string newsletterError)
+			{
+				<p class="newsletter-message newsletter-error" role="alert">@newsletterError</p>
+			}
+			else
+			{
+				<small>Ingen spam. Bare det vi faktisk vil dele.</small>
+			}
 		</div>
 	</section>
 </div>
