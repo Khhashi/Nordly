@@ -22,12 +22,12 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 
 <table>
   <tr>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/560c83d7-2a2e-4eed-8974-195f626803af" alt="Forsiden til Nordly" width="420" height="250" /></td>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/0c8704e8-188e-479d-8394-beb66aee889f" alt="Produktside i Nordly" width="420" height="250" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/14e054b3-d045-4a3d-a2b2-c3858c033dca" alt="Forsiden til Nordly med hero, produktbilde og kategorier" width="420" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/6dd6c254-75d0-460a-bee6-94c5bab1c7ce" alt="Produktside i Nordly med antallsvelger" width="420" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/b38e093d-8a52-4797-8d59-ab30505d83ab" alt="Handlekurv med Stripe-betaling i Nordly" width="420" height="250" /></td>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/7514ae8e-1c76-4f5b-9215-e99cdca5bba1" alt="Ordrebekreftelse etter betaling i Nordly" width="420" height="250" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/2acd3f1e-7811-4077-8e96-4c4094e79a14" alt="Handlekurv med frakt og Stripe-betaling i Nordly" width="420" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/98f19559-a8e0-41e5-b766-d724ce6ea6d5" alt="Ordrebekreftelse etter betaling i Nordly" width="420" /></td>
   </tr>
 </table>
 
