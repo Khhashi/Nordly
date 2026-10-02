@@ -757,3 +757,16 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .hero-product:hover { color: var(--ink); transform: translateY(-2px); }
 .hero-product > span { color: var(--terracotta); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .hero-product strong { font-size: 0.95rem; }
+
+/* Kategoribokser med bilde */
+.category-tile { color: #fff; isolation: isolate; justify-content: flex-end; min-height: 280px; overflow: hidden; position: relative; }
+.category-tile:hover { color: #fff; }
+.category-tile img { height: 100%; inset: 0; object-fit: cover; position: absolute; transition: transform 0.4s ease; width: 100%; z-index: -2; }
+.category-tile::after { background: linear-gradient(180deg, rgba(20,20,18,0) 40%, rgba(20,20,18,0.7) 100%); content: ""; inset: 0; position: absolute; z-index: -1; }
+.category-tile:hover img { transform: scale(1.04); }
+.category-tile .tile-label { background: rgba(255,253,249,0.92); border-radius: 999px; color: var(--ink); left: 1.25rem; padding: 0.35rem 0.7rem; position: absolute; top: 1.25rem; }
+.category-tile strong { font-size: 1.5rem; max-width: 75%; }
+.category-tile .tile-arrow { bottom: 1.25rem; font-size: 1.3rem; position: absolute; right: 1.25rem; }
+@media (max-width: 800px) {
+  .category-tile { min-height: 200px; }
+}
