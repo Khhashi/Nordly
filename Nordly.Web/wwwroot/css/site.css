@@ -706,3 +706,6 @@ button, input, select, textarea { font-family: inherit; }
 /* Hero: grønn overskrift i stedet for svart */
 :root { --forest: #23463b; }
 .store-hero h1 { color: var(--forest); }
+
+/* Hero: litt luft mellom bokstavene med DM Sans */
+.store-hero h1 { letter-spacing: -0.02em; }
