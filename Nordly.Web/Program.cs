@@ -107,30 +107,6 @@ app.MapGet("/health", async (OrderDbContext db) =>
     await db.Database.CanConnectAsync()
         ? Results.Ok("healthy")
         : Results.Problem("Database is unavailable.", statusCode: StatusCodes.Status503ServiceUnavailable));
-app.MapGet("/api/products", async (OrderDbContext db) =>
-    Results.Ok(await db.Products.AsNoTracking().OrderBy(product => product.Name).ToListAsync()));
-app.MapGet("/api/orders/{id:guid}", async (Guid id, OrderDbContext db) =>
-{
-    var order = await db.Orders
-        .AsNoTracking()
-        .Include(item => item.OrderLines)
-        .ThenInclude(line => line.Product)
-        .SingleOrDefaultAsync(item => item.Id == id);
-    if (order is null) return Results.NotFound();
-
-    return Results.Ok(new
-    {
-        order.Id,
-        order.CreatedAt,
-        order.PaymentStatus,
-        order.ShippingCost,
-        Lines = order.OrderLines.Select(line => new
-        {
-            Product = line.Product.Name,
-            line.Quantity
-        })
-    });
-});
 app.MapPost("/api/stripe/webhook", async (HttpRequest request, CheckoutOrderProcessor processor, IConfiguration configuration) =>
 {
     var webhookSecret = configuration["Stripe:WebhookSecret"];

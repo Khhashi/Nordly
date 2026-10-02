@@ -1,7 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-(() => {
+﻿(() => {
 	document.querySelectorAll('.action-toast').forEach(toast => {
 		const dismiss = () => toast.remove();
 		toast.querySelector('.toast-close')?.addEventListener('click', dismiss);
@@ -114,10 +111,4 @@
 			submitButton.disabled = false;
 		}
 	}));
-
-	document.querySelector('.newsletter-form')?.addEventListener('submit', event => {
-		event.preventDefault();
-		const button = event.currentTarget.querySelector('button');
-		if (button) button.textContent = 'Takk!';
-	});
 })();

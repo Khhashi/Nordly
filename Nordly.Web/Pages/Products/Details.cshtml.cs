@@ -10,6 +10,8 @@ public class DetailsModel : PageModel
     public IActionResult OnGet(Guid id)
     {
         Product = StorefrontCatalog.Products.FirstOrDefault(product => product.Id == id);
+        if (Product == null)
+            Response.StatusCode = StatusCodes.Status404NotFound;
         return Page();
     }
 
