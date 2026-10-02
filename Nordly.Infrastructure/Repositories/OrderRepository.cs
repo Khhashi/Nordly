@@ -19,6 +19,13 @@ public class OrderRepository : IOrderRepository
         if (order == null)
             throw new ArgumentNullException(nameof(order));
 
+        foreach (var line in order.OrderLines)
+        {
+            var existing = _db.Products.Find(line.ProductId);
+            if (existing != null)
+                line.Product = existing;
+        }
+
         _db.Orders.Add(order);
         _db.SaveChanges();
     }
