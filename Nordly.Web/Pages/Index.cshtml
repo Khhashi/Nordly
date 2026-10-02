@@ -121,8 +121,8 @@
 		<div>
 			<p>Få nyheter om nye produkter, gode tips og utvalgte favoritter.</p>
 			<form class="newsletter-form" method="post" asp-page-handler="SubscribeNewsletter">
-				<input type="email" name="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" required />
-				<button type="submit">Meld meg på <span aria-hidden="true">→</span></button>
+				<input type="email" name="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" autocomplete="email" required />
+				<button type="submit">Meld meg på</button>
 			</form>
 			@if (TempData["NewsletterSuccess"] is string newsletterSuccess)
 			{
