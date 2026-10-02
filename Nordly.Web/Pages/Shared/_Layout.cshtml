@@ -9,10 +9,7 @@
 <body>
     <div class="announcement-bar">Fri frakt på ordre fra 800 kr <span>•</span> Levering på 2–4 virkedager</div>
     @{
-        var cartJson = Context.Session.GetString("cart");
-        var cartCount = string.IsNullOrWhiteSpace(cartJson)
-            ? 0
-            : System.Text.Json.JsonSerializer.Deserialize<List<Nordly.Web.Pages.CartItem>>(cartJson)?.Sum(item => item.Quantity) ?? 0;
+        var cartCount = Nordly.Web.Cart.Load(Context.Session).Count;
     }
     <header class="topbar">
         <a class="brand" asp-page="/Index">NORDLY <span>STUDIO</span></a>
