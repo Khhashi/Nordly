@@ -717,3 +717,16 @@ button, input, select, textarea { font-family: inherit; }
 
 /* Kategorifaner: grønn aktiv fane i stedet for svart */
 .category-tab:hover, .category-tab.active { background: #23463b; border-color: #23463b; color: #fff; }
+
+/* Tjenester: fargede kort og ikoner i samme palett */
+.service-grid { border: 0; gap: 1rem; padding: 0; }
+.service-card { border-radius: 18px; padding: 1.5rem; }
+.service-card:nth-child(1) { background: #e3ebdf; }
+.service-card:nth-child(2) { background: #f3e3d6; }
+.service-card:nth-child(3) { background: #f4e7c9; }
+.service-card:nth-child(1) .service-icon { color: #23463b; }
+.service-card:nth-child(2) .service-icon { color: var(--terracotta); }
+.service-card:nth-child(3) .service-icon { color: #a8742f; }
+@media (max-width: 800px) {
+  .service-card { border-bottom: 0; padding: 1.25rem; }
+}
