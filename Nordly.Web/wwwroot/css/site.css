@@ -720,3 +720,15 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .newsletter-message { border-radius: 10px; font-size: 0.9rem; font-weight: 700; margin: 0.9rem 0 0; max-width: 460px; padding: 0.7rem 1rem; }
 .newsletter-success { background: rgba(255,255,255,0.18); color: #fff; }
 .newsletter-error { background: #fff2ed; color: #9f4935; }
+
+/* Nyhetsbrev: hvitt felt med tydelig knapp */
+.newsletter-form { background: #fff; border: 0; border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,0.12); gap: 0.4rem; max-width: 460px; padding: 0.35rem; }
+.newsletter-form input { color: #1c1c1b; padding: 0.75rem 1rem; }
+.newsletter-form input::placeholder { color: #8a8a85; }
+.newsletter-form button { background: #1c1c1b; border-radius: 999px; color: #fff; padding: 0.75rem 1.3rem; transition: background 0.2s ease; white-space: nowrap; }
+.newsletter-form button:hover { background: #000; }
+.newsletter-form:focus-within { box-shadow: 0 0 0 3px rgba(255,255,255,0.45), 0 10px 24px rgba(0,0,0,0.12); }
+@media (max-width: 520px) {
+  .newsletter-form { border-radius: 16px; flex-direction: column; }
+  .newsletter-form button { width: 100%; }
+}
