@@ -21,4 +21,12 @@ public class StorefrontCatalogTests
 
         Assert.That(ids.Distinct().Count(), Is.EqualTo(ids.Count));
     }
+
+    [Test]
+    public void All_Products_In_Catalog_Should_Have_Unique_Images()
+    {
+        var images = StorefrontCatalog.Products.Select(product => product.ImageUrl).ToList();
+
+        Assert.That(images.Distinct().Count(), Is.EqualTo(images.Count));
+    }
 }
