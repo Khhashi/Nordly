@@ -2,6 +2,7 @@
 @model IndexModel
 @{
 	ViewData["Title"] = "Butikk";
+	var hero = Model.Products[0];
 }
 
 <div class="store-shell">
@@ -15,7 +16,10 @@
 				<a class="hero-secondary" href="#new-arrivals" data-product-filter="new">Nyheter</a>
 			</div>
 		</div>
-		<div class="hero-note"><span>01</span><span>Utvalgte favoritter<br />for et enklere hjem</span></div>
+		<figure class="hero-visual">
+			<img src="@hero.ImageUrl" alt="@hero.Name" fetchpriority="high" />
+			<figcaption class="hero-note"><span>01</span><span>Utvalgte favoritter<br />for et enklere hjem</span></figcaption>
+		</figure>
 	</section>
 
 	<div class="benefit-strip" aria-label="Kundefordeler">

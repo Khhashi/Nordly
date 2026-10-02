@@ -737,3 +737,17 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .newsletter-panel .newsletter-message { line-height: 1.4; margin: 0.9rem 0 0; max-width: 460px; }
 .newsletter-panel .newsletter-success { background: rgba(255,255,255,0.18); color: #fff; }
 .newsletter-panel .newsletter-error { background: #fff; color: #9f4935; }
+
+/* Hero: produktbilde i stedet for kule */
+.store-hero { align-items: stretch; display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); min-height: 0; }
+.store-hero::after { display: none; }
+.store-hero > div:first-child { align-self: center; }
+.store-hero h1 { font-size: clamp(2.8rem, 5.6vw, 5.4rem); }
+.hero-visual { border-radius: 14px; margin: 0; min-height: 400px; overflow: hidden; position: relative; }
+.hero-visual img { display: block; height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; }
+.hero-visual .hero-note { backdrop-filter: blur(8px); background: rgba(255,253,249,0.92); border-radius: 999px; bottom: 1rem; left: 1rem; padding: 0.45rem 1rem 0.45rem 0.45rem; position: absolute; }
+@media (max-width: 800px) {
+  .store-hero { gap: 1.75rem; grid-template-columns: 1fr; }
+  .hero-visual { min-height: 260px; }
+  .hero-visual .hero-note { margin-top: 0; }
+}
