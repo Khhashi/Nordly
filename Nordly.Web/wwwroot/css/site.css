@@ -702,3 +702,7 @@ button, input, select, textarea { font-family: inherit; }
   .price-stack { display: grid; }
   .price-stack strong, .price-stack del { white-space: nowrap; }
 }
+
+/* Hero: grønn overskrift i stedet for svart */
+:root { --forest: #23463b; }
+.store-hero h1 { color: var(--forest); }
