@@ -745,3 +745,6 @@ button, input, select, textarea { font-family: inherit; }
 .footer-brand strong, .footer-payment strong { color: #fff; }
 .footer-links a { color: #c9d3cd; }
 .footer-links a:hover { color: #f0b48f; }
+
+/* Små overskrifter: samme terrakotta overalt */
+.section-kicker { color: var(--terracotta); }
