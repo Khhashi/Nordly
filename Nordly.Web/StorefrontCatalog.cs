@@ -3,10 +3,16 @@ using System.Text;
 
 namespace Nordly.Web;
 
-public sealed record StoreProduct(Guid Id, string Name, string Category, string Description, decimal Price, string ImageUrl, string? Badge = null, decimal? OriginalPrice = null)
+public sealed record StoreProduct(Guid Id, string Name, string Category, string Description, decimal Price, string ImageUrl, string? Badge = null, decimal? OriginalPrice = null, IReadOnlyList<string>? AdditionalImageUrls = null)
 {
-    public static StoreProduct Create(string name, string category, string description, decimal price, string imageUrl, string? badge = null, decimal? originalPrice = null) =>
-        new(CreateStableId(name), name, category, description, price, imageUrl, badge, originalPrice);
+    public IReadOnlyList<string> ImageUrls => new[] { ImageUrl }
+        .Concat(AdditionalImageUrls ?? Array.Empty<string>())
+        .Where(url => !string.IsNullOrWhiteSpace(url))
+        .Distinct(StringComparer.Ordinal)
+        .ToArray();
+
+    public static StoreProduct Create(string name, string category, string description, decimal price, string imageUrl, string? badge = null, decimal? originalPrice = null, IReadOnlyList<string>? additionalImageUrls = null) =>
+        new(CreateStableId(name), name, category, description, price, imageUrl, badge, originalPrice, additionalImageUrls?.ToArray());
 
     // Samme navn gir alltid samme ID, også etter at appen har startet på nytt.
     // Stripe-økten lagrer produkt-ID-ene, så de må være stabile mellom betaling og bekreftelse.
