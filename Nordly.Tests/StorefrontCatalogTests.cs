@@ -94,4 +94,23 @@ public class StorefrontCatalogTests
         Assert.That(StorefrontCatalog.RelatedProductsFor(Guid.NewGuid()), Is.Empty);
         Assert.That(StorefrontCatalog.RelatedProductsFor(StorefrontCatalog.Products[0].Id, 0), Is.Empty);
     }
+
+    [Test]
+    public void Product_Specifications_Should_Be_Omitted_When_No_Details_Are_Provided()
+    {
+        var product = StoreProduct.Create("Produkt", "Kategori", "Beskrivelse", 100, "bilde.jpg");
+
+        Assert.That(product.Specifications, Is.Null);
+        Assert.That(new StoreProductSpecifications().HasDetails, Is.False);
+        Assert.That(new StoreProductSpecifications(Highlights: new[] { "", " " }).HasDetails, Is.False);
+    }
+
+    [Test]
+    public void Product_Specifications_Should_Be_Shown_When_A_Fact_Is_Provided()
+    {
+        var product = StorefrontCatalog.Products.Single(item => item.Name == "Alba keramikk kopp");
+
+        Assert.That(product.Specifications?.HasDetails, Is.True);
+        Assert.That(product.Specifications?.Material, Is.EqualTo("Keramikk"));
+    }
 }
