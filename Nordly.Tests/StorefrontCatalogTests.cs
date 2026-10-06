@@ -113,4 +113,19 @@ public class StorefrontCatalogTests
         Assert.That(product.Specifications?.HasDetails, Is.True);
         Assert.That(product.Specifications?.Material, Is.EqualTo("Keramikk"));
     }
+
+    [Test]
+    public void Linen_Bag_Should_Show_Only_Properties_From_Its_Description()
+    {
+        var product = StorefrontCatalog.Products.Single(item => item.Name == "Linen hverdagstaske");
+
+        Assert.That(product.Specifications?.Material, Is.Null);
+        Assert.That(product.Specifications?.Dimensions, Is.Null);
+        Assert.That(product.Specifications?.CareInstructions, Is.Null);
+        Assert.That(product.Specifications?.Highlights, Is.EqualTo(new[]
+        {
+            "Robust til hverdagens små plikter",
+            "Avslappet stil"
+        }));
+    }
 }
