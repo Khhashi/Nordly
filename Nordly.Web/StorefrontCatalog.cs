@@ -37,4 +37,19 @@ public static class StorefrontCatalog
         StoreProduct.Create("Casa linputt", "Hjem", "Vasket lintekstur i en rolig, hverdagsskapende form.", 299, "https://images.unsplash.com/photo-1587433701752-78cbf88ae429?auto=format&fit=crop&w=900&q=85", "-15%", 349),
         StoreProduct.Create("Raku oppbevaringsboks", "Objekter", "En liten eikeboks for det som er verdt å ha nærme.", 449, "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=85")
     };
+
+    public static IReadOnlyList<StoreProduct> RelatedProductsFor(Guid productId, int maximumCount = 4)
+    {
+        if (maximumCount <= 0)
+            return Array.Empty<StoreProduct>();
+
+        var product = Products.FirstOrDefault(candidate => candidate.Id == productId);
+        if (product is null)
+            return Array.Empty<StoreProduct>();
+
+        return Products
+            .Where(candidate => candidate.Id != product.Id && candidate.Category == product.Category)
+            .Take(maximumCount)
+            .ToArray();
+    }
 }
