@@ -96,6 +96,23 @@ public class StorefrontCatalogTests
     }
 
     [Test]
+    public void Linen_Bag_Should_Have_Three_Complementary_Accessory_Recommendations()
+    {
+        var linenBag = StorefrontCatalog.Products.Single(item => item.Name == "Linen hverdagstaske");
+
+        var related = StorefrontCatalog.RelatedProductsFor(linenBag.Id);
+
+        Assert.That(related, Has.Count.EqualTo(3));
+        Assert.That(related, Has.All.Matches<StoreProduct>(item => item.Category == "Tilbehør"));
+        Assert.That(related.Select(item => item.Name), Is.EquivalentTo(new[]
+        {
+            "Kompakt handlenett",
+            "Flettet skulderveske",
+            "Kompakt dagstursekk"
+        }));
+    }
+
+    [Test]
     public void Product_Specifications_Should_Be_Omitted_When_No_Details_Are_Provided()
     {
         var product = StoreProduct.Create("Produkt", "Kategori", "Beskrivelse", 100, "bilde.jpg");

@@ -58,6 +58,7 @@
 	const detailBuyForm = document.querySelector('#detail-buy-form');
 	const stickyAction = document.querySelector('[data-sticky-action]');
 	const siteFooter = document.querySelector('.site-footer');
+	const relatedProducts = document.querySelector('.related-products');
 	if (detailBuyForm && stickyAction) {
 		let hasPassedBuyForm = false;
 		const defaultStickyBottom = Number.parseFloat(getComputedStyle(stickyAction).bottom) || 16;
@@ -77,7 +78,12 @@
 				stickyAction.style.removeProperty('bottom');
 			}
 			const footerTooClose = footerVisible && footerBounds.top < stickyHeight + 32;
-			stickyAction.hidden = !hasPassedBuyForm || bounds.bottom > 0 || footerTooClose;
+			const actionBounds = stickyAction.getBoundingClientRect();
+			const relatedBounds = relatedProducts?.getBoundingClientRect();
+			const relatedProductsOverlapAction = relatedBounds
+				&& relatedBounds.top < actionBounds.bottom
+				&& relatedBounds.bottom > actionBounds.top;
+			stickyAction.hidden = !hasPassedBuyForm || bounds.bottom > 0 || footerTooClose || relatedProductsOverlapAction;
 		};
 		updateStickyAction();
 		window.addEventListener('scroll', updateStickyAction, { passive: true });
