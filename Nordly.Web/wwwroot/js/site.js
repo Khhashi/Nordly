@@ -23,6 +23,42 @@
 		sync();
 	});
 
+	const detailBuyForm = document.querySelector('#detail-buy-form');
+	const stickyAction = document.querySelector('[data-sticky-action]');
+	const siteFooter = document.querySelector('.site-footer');
+	if (detailBuyForm && stickyAction) {
+		let hasPassedBuyForm = false;
+		const defaultStickyBottom = Number.parseFloat(getComputedStyle(stickyAction).bottom) || 16;
+		const updateStickyAction = () => {
+			const bounds = detailBuyForm.getBoundingClientRect();
+			const footerBounds = siteFooter?.getBoundingClientRect();
+			const stickyButton = stickyAction.querySelector('button');
+			const stickyHeight = stickyButton?.offsetHeight || 52;
+			const stickyTop = window.innerHeight - defaultStickyBottom - stickyHeight;
+			if (bounds.bottom <= 0) hasPassedBuyForm = true;
+			else if (bounds.top >= window.innerHeight) hasPassedBuyForm = false;
+			const footerVisible = footerBounds && footerBounds.top < window.innerHeight && footerBounds.bottom > 0;
+			const footerOverlapsAction = footerVisible && footerBounds.top < stickyTop;
+			if (footerOverlapsAction) {
+				stickyAction.style.bottom = `${window.innerHeight - footerBounds.top + 12}px`;
+			} else {
+				stickyAction.style.removeProperty('bottom');
+			}
+			const footerTooClose = footerVisible && footerBounds.top < stickyHeight + 32;
+			stickyAction.hidden = !hasPassedBuyForm || bounds.bottom > 0 || footerTooClose;
+		};
+		updateStickyAction();
+		window.addEventListener('scroll', updateStickyAction, { passive: true });
+		window.addEventListener('resize', updateStickyAction);
+
+		if ('IntersectionObserver' in window) {
+			const buyFormObserver = new IntersectionObserver(updateStickyAction, { threshold: 0.1 });
+			buyFormObserver.observe(detailBuyForm);
+		}
+
+		stickyAction.querySelector('button')?.addEventListener('click', () => detailBuyForm.requestSubmit());
+	}
+
 	const cards = [...document.querySelectorAll('.product-card')];
 	const catalogHeader = document.querySelector('#new-arrivals');
 	const catalogTitle = catalogHeader?.querySelector('h2');

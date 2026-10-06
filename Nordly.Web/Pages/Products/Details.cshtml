@@ -27,7 +27,7 @@
                 <p class="detail-price">@Model.Product.Price.ToString("N0") kr</p>
                 <p class="detail-description">@Model.Product.Description Et gjennomtenkt objekt med en taktil finish og funksjon som holder over tid.</p>
 
-                <form method="post" asp-page-handler="AddToCart" class="detail-buy-form">
+                <form method="post" asp-page-handler="AddToCart" class="detail-buy-form" id="detail-buy-form">
                     <div class="quantity-control detail-stepper" role="group" aria-label="Antall">
                         <button class="quantity-btn remove-btn" type="button" data-step="-1" aria-label="Færre">−</button>
                         <input id="quantity" name="quantity" type="number" min="1" max="10" value="1" inputmode="numeric" aria-label="Antall" />
@@ -43,6 +43,13 @@
                 </div>
             </div>
         </section>
+
+        <div class="detail-sticky-action" data-sticky-action hidden>
+            <button class="primary-btn" type="button" aria-controls="detail-buy-form">
+                Legg i handlekurv <span aria-hidden="true">→</span>
+                <span class="detail-sticky-price">@Model.Product.Price.ToString("N0") kr</span>
+            </button>
+        </div>
 
         <section class="detail-story">
             <div><span class="section-kicker">Hvorfor vi valgte den</span><h2>Designet for å bli brukt.</h2></div>
