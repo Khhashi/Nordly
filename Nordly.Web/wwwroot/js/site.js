@@ -91,7 +91,7 @@
 		stickyAction.querySelector('button')?.addEventListener('click', () => detailBuyForm.requestSubmit());
 	}
 
-	const cards = [...document.querySelectorAll('.product-card')];
+	const cards = [...document.querySelectorAll('#collection .product-card')];
 	const catalogHeader = document.querySelector('#new-arrivals');
 	const catalogTitle = catalogHeader?.querySelector('h2');
 	const catalogCount = document.querySelector('.catalog-count');

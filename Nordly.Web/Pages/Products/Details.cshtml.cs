@@ -6,6 +6,9 @@ namespace Nordly.Web.Pages.Products;
 public class DetailsModel : PageModel
 {
     public StoreProduct? Product { get; private set; }
+    public IReadOnlyList<StoreProduct> RelatedProducts => Product is null
+        ? Array.Empty<StoreProduct>()
+        : StorefrontCatalog.RelatedProductsFor(Product.Id);
 
     public IActionResult OnGet(Guid id)
     {

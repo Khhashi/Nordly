@@ -65,4 +65,33 @@ public class StorefrontCatalogTests
 
         Assert.That(product.ImageUrls, Is.EqualTo(new[] { "hovedbilde.jpg", "detalj.jpg" }));
     }
+
+    [Test]
+    public void Related_Products_Should_Only_Include_Other_Products_In_The_Same_Category()
+    {
+        var product = StorefrontCatalog.Products.First(item => item.Category == "Kjøkken");
+
+        var related = StorefrontCatalog.RelatedProductsFor(product.Id);
+
+        Assert.That(related, Is.Not.Empty);
+        Assert.That(related, Has.None.Matches<StoreProduct>(item => item.Id == product.Id));
+        Assert.That(related, Has.All.Matches<StoreProduct>(item => item.Category == product.Category));
+    }
+
+    [Test]
+    public void Related_Products_Should_Respect_The_Maximum_Count()
+    {
+        var product = StorefrontCatalog.Products.First(item => item.Category == "Objekter");
+
+        var related = StorefrontCatalog.RelatedProductsFor(product.Id, 1);
+
+        Assert.That(related, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void Related_Products_Should_Be_Empty_For_Unknown_Product_Or_Nonpositive_Limit()
+    {
+        Assert.That(StorefrontCatalog.RelatedProductsFor(Guid.NewGuid()), Is.Empty);
+        Assert.That(StorefrontCatalog.RelatedProductsFor(StorefrontCatalog.Products[0].Id, 0), Is.Empty);
+    }
 }

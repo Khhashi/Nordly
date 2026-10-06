@@ -317,6 +317,13 @@ h1 {
 .detail-story { align-items: start; border-top: 1px solid var(--line); display: grid; gap: 2rem; grid-template-columns: 1fr 1fr; margin-top: 6rem; padding-top: 2rem; }
 .detail-story h2 { color: var(--forest); font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; margin: 0.35rem 0; }
 .detail-story p { color: #667773; line-height: 1.7; margin: 0; max-width: 420px; }
+.related-products { margin-top: 5rem; }
+.related-products .section-intro { margin-bottom: 1.25rem; }
+.related-products .section-intro h2 { color: var(--forest); font-size: clamp(1.8rem, 3vw, 2.5rem); margin: 0.35rem 0 0; }
+.product-detail-shell .related-product-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.related-product-grid .product-info p { min-height: 0; }
+.related-product-grid .product-buy-row { align-items: center; gap: 0.75rem; }
+.related-product-grid .product-buy-row .text-link { font-size: 0.8rem; white-space: nowrap; }
 .product-info p { color: var(--muted); font-size: 0.82rem; line-height: 1.45; margin: 0; min-height: 3.5rem; }
 .product-buy-row { align-items: center; display: flex; justify-content: space-between; margin-top: 1rem; }
 .product-buy-row strong { color: var(--forest); }
