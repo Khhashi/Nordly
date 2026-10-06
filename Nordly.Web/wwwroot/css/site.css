@@ -298,6 +298,10 @@ h1 {
 .detail-description { color: #667773; font-size: 1rem; line-height: 1.7; margin: 0 0 1.8rem; max-width: 440px; }
 .detail-buy-form { align-items: end; display: flex; gap: 0.65rem; }
 .detail-buy-form .primary-btn { flex: 1; margin: 0; min-height: 48px; }
+.detail-sticky-action[hidden] { display: none; }
+.detail-sticky-action { bottom: max(1rem, env(safe-area-inset-bottom)); left: 50%; max-width: 28rem; padding: 0 1rem; position: fixed; transform: translateX(-50%); width: 100%; z-index: 20; }
+.detail-sticky-action .primary-btn { align-items: center; box-shadow: 0 8px 28px rgba(23, 60, 53, 0.28); gap: 0.5rem; margin: 0; min-height: 52px; }
+.detail-sticky-price { font-weight: 600; opacity: 0.8; }
 .quantity-control label { color: var(--muted); display: block; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 0.35rem; text-transform: uppercase; }
 .quantity-control input { background: #fff; border: 1px solid var(--line); border-radius: 8px; font-size: 1rem; height: 48px; padding: 0 0.8rem; width: 76px; }
 .detail-promises { border-top: 1px solid #d9e5df; margin-top: 2rem; padding-top: 1.2rem; }
