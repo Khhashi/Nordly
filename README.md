@@ -27,7 +27,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
   </tr>
   <tr>
     <td width="50%"><img src="https://github.com/user-attachments/assets/21eb5807-0b39-4130-b2e7-e3ac207fbd60" alt="Handlekurv med frakt og Stripe-betaling i Nordly" width="420" /></td>
-    <td width="50%"><img src="docs/images/bekreftelse.png" alt="Ordrebekreftelse etter betaling i Nordly" width="420" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/98f19559-a8e0-41e5-b766-d724ce6ea6d5" alt="Ordrebekreftelse etter betaling i Nordly" width="420" /></td>
   </tr>
 </table>
 
