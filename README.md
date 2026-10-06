@@ -38,7 +38,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 - Stripe Checkout med signert webhook for betalingsstatus
 - Fraktvalg med gratis frakt fra 800 kr
 - Ordrebekreftelse på e-post via Brevo sitt API
-- Nyhetsbrev lagret i PostgreSQL
+- Nyhetsbrev lagret i PostgreSQL, med velkomst-e-post første gang en adresse meldes på
 
 ## Teknologi
 
@@ -55,7 +55,7 @@ Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for diagrammer, betalingsflyt og
 
 ## Tester og CI
 
-49 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, at samme Stripe-betaling bare gir én ordre, lagring i databasen og at krypteringsnøklene overlever omstart. GitHub Actions bygger løsningen, kjører testene og bygger Docker-imaget på hver pull request.
+52 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, at samme Stripe-betaling bare gir én ordre, lagring i databasen og at krypteringsnøklene overlever omstart. GitHub Actions bygger løsningen, kjører testene og bygger Docker-imaget på hver pull request.
 
 ## Arbeidsflyt
 
