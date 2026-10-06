@@ -370,6 +370,9 @@ h1 {
 @media (max-width: 800px) {
   .hero { align-items: flex-start; flex-direction: column; }
 
+  .compact-heading { align-items: flex-start; flex-direction: column; gap: 0.9rem; }
+  .compact-heading > .text-link { margin-left: 0; }
+
   .topbar {
     padding: 0.9rem 1rem;
   }
