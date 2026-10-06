@@ -6,6 +6,7 @@
 
 @if (Model.Product is not null)
 {
+    var productImages = Model.Product.ImageUrls;
     <div class="product-detail-shell">
         <nav class="breadcrumb" aria-label="Brødsmulesti">
             <a asp-page="/Index">Butikk</a><span>/</span><span>@Model.Product.Category</span><span>/</span><strong>@Model.Product.Name</strong>
@@ -17,9 +18,23 @@
         }
 
         <section class="product-detail-grid">
-            <div class="detail-image-panel">
-                <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" />
-                <span class="detail-image-label">Studio collection / @Model.Product.Category</span>
+            <div class="detail-gallery-column" data-product-gallery>
+                <div class="detail-image-panel">
+                    <img id="product-main-image" data-gallery-main src="@productImages[0]" alt="@Model.Product.Name" />
+                    <span class="detail-image-label">Studio collection / @Model.Product.Category</span>
+                </div>
+                @if (productImages.Count > 1)
+                {
+                    <div class="detail-gallery-thumbnails" role="group" aria-label="Produktbilder for @Model.Product.Name">
+                        @for (var imageIndex = 0; imageIndex < productImages.Count; imageIndex++)
+                        {
+                            var imageUrl = productImages[imageIndex];
+                            <button class="detail-gallery-thumbnail" type="button" data-gallery-thumbnail data-gallery-image="@imageUrl" data-gallery-alt="@Model.Product.Name – bilde @(imageIndex + 1)" aria-controls="product-main-image" aria-label="Vis bilde @(imageIndex + 1) av @productImages.Count" aria-pressed="@(imageIndex == 0 ? "true" : "false")">
+                                <img src="@imageUrl" alt="" loading="lazy" decoding="async" />
+                            </button>
+                        }
+                    </div>
+                }
             </div>
             <div class="product-detail-copy">
                 <span class="eyebrow">@Model.Product.Category · Studio collection</span>

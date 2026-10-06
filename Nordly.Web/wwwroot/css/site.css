@@ -289,8 +289,13 @@ h1 {
 .breadcrumb a { color: var(--forest); text-decoration: none; }
 .breadcrumb strong { color: #526b63; font-weight: 700; }
 .product-detail-grid { align-items: center; display: grid; gap: clamp(2rem, 7vw, 7rem); grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr); }
+.detail-gallery-column { min-width: 0; }
 .detail-image-panel { aspect-ratio: 1 / 1; background: var(--clay); overflow: hidden; position: relative; }
 .detail-image-panel img { height: 100%; object-fit: cover; width: 100%; }
+.detail-gallery-thumbnails { display: grid; gap: 0.65rem; grid-template-columns: repeat(auto-fill, minmax(64px, 82px)); margin-top: 0.75rem; }
+.detail-gallery-thumbnail { aspect-ratio: 1; background: #fff; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; overflow: hidden; padding: 0; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.detail-gallery-thumbnail img { display: block; height: 100%; object-fit: cover; width: 100%; }
+.detail-gallery-thumbnail[aria-pressed="true"] { border: 2px solid var(--forest); box-shadow: 0 0 0 2px rgba(35, 70, 59, 0.12); }
 .detail-image-label { background: rgba(255,255,255,0.9); bottom: 1rem; font-size: 0.68rem; font-weight: 800; left: 1rem; letter-spacing: 0.08em; padding: 0.55rem 0.7rem; position: absolute; text-transform: uppercase; }
 .product-detail-copy .eyebrow { margin-bottom: 0.75rem; }
 .product-detail-copy h1 { font-size: clamp(2.8rem, 5vw, 5.5rem); line-height: 0.95; margin: 0; }
