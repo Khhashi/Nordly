@@ -23,6 +23,21 @@
 		sync();
 	});
 
+	const detailBuyForm = document.querySelector('#detail-buy-form');
+	const stickyAction = document.querySelector('[data-sticky-action]');
+	if (detailBuyForm && stickyAction) {
+		if ('IntersectionObserver' in window) {
+			const buyFormObserver = new IntersectionObserver(([entry]) => {
+				stickyAction.hidden = entry.isIntersecting;
+			}, { threshold: 0.1 });
+			buyFormObserver.observe(detailBuyForm);
+		} else {
+			stickyAction.hidden = false;
+		}
+
+		stickyAction.querySelector('button')?.addEventListener('click', () => detailBuyForm.requestSubmit());
+	}
+
 	const cards = [...document.querySelectorAll('.product-card')];
 	const catalogHeader = document.querySelector('#new-arrivals');
 	const catalogTitle = catalogHeader?.querySelector('h2');
