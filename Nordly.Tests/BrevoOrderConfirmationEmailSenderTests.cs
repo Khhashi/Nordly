@@ -60,6 +60,19 @@ public class BrevoOrderConfirmationEmailSenderTests
     }
 
     [Test]
+    public async Task SendAsync_UsesShortOrderNumberInsteadOfFullId()
+    {
+        var handler = new CapturingHandler();
+        var sender = CreateSender(handler);
+        var order = CreateOrder();
+
+        await sender.SendAsync(order);
+
+        Assert.That(handler.Body, Does.Contain(order.Number));
+        Assert.That(handler.Body, Does.Not.Contain(order.Id.ToString()));
+    }
+
+    [Test]
     public async Task SendAsync_SkipsWhenApiKeyIsMissing()
     {
         var handler = new CapturingHandler();

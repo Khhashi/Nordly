@@ -15,6 +15,11 @@ public class Order
     public string? StripeCheckoutSessionId { get; set; }
     public string? StripePaymentIntentId { get; set; }
 
+    // Kort ordrenummer som vises til kunden, f.eks. 781C7228.
+    public string Number => FormatNumber(Id);
+
+    public static string FormatNumber(Guid id) => id.ToString("N")[..8].ToUpperInvariant();
+
     public Order()
     {
         Id = Guid.NewGuid();

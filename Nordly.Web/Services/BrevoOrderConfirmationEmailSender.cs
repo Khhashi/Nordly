@@ -38,7 +38,7 @@ public sealed class BrevoOrderConfirmationEmailSender : IOrderConfirmationEmailS
         {
             sender = new { name = _configuration["Email:FromName"] ?? "Nordly", email = fromAddress },
             to = new[] { new { email = order.CustomerEmail } },
-            subject = $"Ordrebekreftelse for ordre {order.Id}",
+            subject = $"Ordrebekreftelse for ordre {order.Number}",
             textContent = SmtpOrderConfirmationEmailSender.BuildBody(order)
         };
 

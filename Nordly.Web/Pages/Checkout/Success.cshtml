@@ -11,7 +11,7 @@
     <p>Betalingen er bekreftet, og vi gjør pakken klar med en gang.</p>
     @if (Model.OrderId is Guid orderId)
     {
-        <span class="confirmation-code">Ordre @orderId.ToString()[..8].ToUpperInvariant()</span>
+        <span class="confirmation-code">Ordre @Nordly.Domain.Entities.Order.FormatNumber(orderId)</span>
     }
     <a class="primary-btn" asp-page="/Index">Tilbake til butikken <span aria-hidden="true">→</span></a>
 </div>
