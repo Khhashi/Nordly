@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Nordly.Domain.Entities;
 using Nordly.Infrastructure.Data;
+using Nordly.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Nordly.Web.Pages;
@@ -10,10 +11,12 @@ namespace Nordly.Web.Pages;
 public class IndexModel : PageModel
 {
     private readonly OrderDbContext _db;
+    private readonly IWelcomeEmailSender _welcomeEmailSender;
 
-    public IndexModel(OrderDbContext db)
+    public IndexModel(OrderDbContext db, IWelcomeEmailSender welcomeEmailSender)
     {
         _db = db;
+        _welcomeEmailSender = welcomeEmailSender;
     }
 
     public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
@@ -103,6 +106,9 @@ public class IndexModel : PageModel
             TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
             return RedirectToPage(null, null, "newsletter");
         }
+
+        // Kommer bare hit første gang adressen meldes på, så velkomst-e-posten sendes én gang.
+        await _welcomeEmailSender.SendAsync(normalizedEmail);
 
         TempData["NewsletterSuccess"] = "Du er nå påmeldt vårt nyhetsbrev.";
         return RedirectToPage(null, null, "newsletter");

@@ -23,7 +23,7 @@ Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stri
 | Funksjonelt | Betalt ordre lagres med kunde, adresse, varer og frakt |
 | Funksjonelt | Kunden får ordrebekreftelse på e-post |
 | Funksjonelt | Fri frakt fra 800 kr, ellers 79 kr |
-| Funksjonelt | Kunden kan melde seg på nyhetsbrev, og samme e-post lagres bare én gang |
+| Funksjonelt | Kunden kan melde seg på nyhetsbrev, samme e-post lagres bare én gang og får én velkomst-e-post |
 | Ikke-funksjonelt | Idempotent ordreopprettelse (én betaling = én ordre) |
 | Ikke-funksjonelt | Ingen hemmeligheter i koden, kun miljøvariabler |
 | Ikke-funksjonelt | Webhooks fra Stripe må være signert og verifisert |
@@ -193,7 +193,7 @@ erDiagram
 - *Hvorfor:* Render sin gratisplan sover etter 15 minutter. Pingen holder appen våken når den mest sannsynlig besøkes, og holder seg innenfor 750 gratis timer i måneden.
 
 **ADR-6: E-post via Brevo sitt HTTP-API**
-- *Valg:* Ordrebekreftelser sendes med Brevo sitt API over HTTPS. SMTP-senderen brukes bare når ingen API-nøkkel er satt, for eksempel lokalt.
+- *Valg:* Ordrebekreftelser og velkomst-e-post for nyhetsbrevet sendes med Brevo sitt API over HTTPS. SMTP-senderen brukes bare når ingen API-nøkkel er satt, for eksempel lokalt.
 - *Alternativ:* SMTP direkte fra appen.
 - *Hvorfor:* Render sin gratisplan blokkerer utgående SMTP-porter (25, 465, 587). Begge senderne implementerer samme grensesnitt, så resten av koden merker ikke forskjell.
 
