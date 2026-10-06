@@ -26,13 +26,20 @@
 	const detailBuyForm = document.querySelector('#detail-buy-form');
 	const stickyAction = document.querySelector('[data-sticky-action]');
 	if (detailBuyForm && stickyAction) {
+		let hasPassedBuyForm = false;
+		const updateStickyAction = () => {
+			const bounds = detailBuyForm.getBoundingClientRect();
+			if (bounds.bottom <= 0) hasPassedBuyForm = true;
+			else if (bounds.top >= window.innerHeight) hasPassedBuyForm = false;
+			stickyAction.hidden = !hasPassedBuyForm || bounds.bottom > 0;
+		};
+		updateStickyAction();
+		window.addEventListener('scroll', updateStickyAction, { passive: true });
+		window.addEventListener('resize', updateStickyAction);
+
 		if ('IntersectionObserver' in window) {
-			const buyFormObserver = new IntersectionObserver(([entry]) => {
-				stickyAction.hidden = entry.isIntersecting;
-			}, { threshold: 0.1 });
+			const buyFormObserver = new IntersectionObserver(updateStickyAction, { threshold: 0.1 });
 			buyFormObserver.observe(detailBuyForm);
-		} else {
-			stickyAction.hidden = false;
 		}
 
 		stickyAction.querySelector('button')?.addEventListener('click', () => detailBuyForm.requestSubmit());
