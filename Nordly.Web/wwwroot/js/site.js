@@ -23,6 +23,38 @@
 		sync();
 	});
 
+	const selectGalleryImage = thumbnail => {
+		const gallery = thumbnail.closest('[data-product-gallery]');
+		const mainImage = gallery?.querySelector('[data-gallery-main]');
+		if (!gallery || !mainImage) return;
+
+		mainImage.src = thumbnail.dataset.galleryImage;
+		mainImage.alt = thumbnail.dataset.galleryAlt || mainImage.alt;
+		gallery.querySelectorAll('[data-gallery-thumbnail]').forEach(button => {
+			button.setAttribute('aria-pressed', button === thumbnail ? 'true' : 'false');
+		});
+	};
+
+	document.addEventListener('click', event => {
+		const thumbnail = event.target.closest('[data-gallery-thumbnail]');
+		if (thumbnail) selectGalleryImage(thumbnail);
+	});
+
+	document.addEventListener('keydown', event => {
+		const thumbnail = event.target.closest('[data-gallery-thumbnail]');
+		if (!thumbnail || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+
+		const gallery = thumbnail.closest('[data-product-gallery]');
+		if (!gallery) return;
+		const thumbnails = [...gallery.querySelectorAll('[data-gallery-thumbnail]')];
+		const currentIndex = thumbnails.indexOf(thumbnail);
+		const direction = event.key === 'ArrowRight' ? 1 : -1;
+		const nextIndex = (currentIndex + direction + thumbnails.length) % thumbnails.length;
+		event.preventDefault();
+		thumbnails[nextIndex].focus();
+		selectGalleryImage(thumbnails[nextIndex]);
+	});
+
 	const detailBuyForm = document.querySelector('#detail-buy-form');
 	const stickyAction = document.querySelector('[data-sticky-action]');
 	const siteFooter = document.querySelector('.site-footer');
