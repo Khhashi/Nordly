@@ -6,6 +6,14 @@ namespace Nordly.Tests;
 public class OrderTests
 {
     [Test]
+    public void Order_Number_Should_Be_First_Eight_Characters_Of_Id_In_Uppercase()
+    {
+        var order = new Order { Id = Guid.Parse("781c7228-1234-4abc-9def-000000000000") };
+
+        Assert.That(order.Number, Is.EqualTo("781C7228"));
+    }
+
+    [Test]
     public void Order_Total_Should_Be_Calculated_For_Multiple_Products()
     {
         var laptop = new Product("Laptop", 15000);

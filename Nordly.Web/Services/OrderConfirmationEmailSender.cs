@@ -50,7 +50,7 @@ public sealed class SmtpOrderConfirmationEmailSender : IOrderConfirmationEmailSe
         using var message = new MailMessage
         {
             From = new MailAddress(fromAddress, _configuration["Email:FromName"] ?? "Nordly"),
-            Subject = $"Ordrebekreftelse for ordre {order.Id}",
+            Subject = $"Ordrebekreftelse for ordre {order.Number}",
             Body = BuildBody(order),
             IsBodyHtml = false
         };
@@ -65,7 +65,7 @@ public sealed class SmtpOrderConfirmationEmailSender : IOrderConfirmationEmailSe
         body.AppendLine($"Hei {order.CustomerName ?? "der"},");
         body.AppendLine();
         body.AppendLine("Takk for bestillingen din hos Nordly.");
-        body.AppendLine($"Ordrenummer: {order.Id}");
+        body.AppendLine($"Ordrenummer: {order.Number}");
         body.AppendLine();
         body.AppendLine("Produkter:");
         foreach (var line in order.OrderLines)
