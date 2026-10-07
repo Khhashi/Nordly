@@ -20,7 +20,12 @@ public class CartModel : PageModel
 
     public List<CartViewItem> Items { get; private set; } = new();
     public decimal Total => Items.Sum(item => item.Product.Price * item.Quantity);
+    public decimal FreeShippingThreshold => ShippingPolicy.FreeShippingThreshold;
+    public decimal FreeShippingProgressValue => ShippingPolicy.CalculateFreeShippingProgressValue(Total);
     public decimal ShippingCost => ShippingPolicy.CalculateShippingCost(Total);
+    public decimal AmountUntilFreeShipping => ShippingPolicy.CalculateAmountUntilFreeShipping(Total);
+    public int FreeShippingProgressPercent => ShippingPolicy.CalculateFreeShippingProgressPercent(Total);
+    public bool HasFreeShipping => Total >= ShippingPolicy.FreeShippingThreshold;
     public string ShippingLabel => ShippingCost == 0m ? "Gratis levering" : "Standard levering";
     public decimal GrandTotal => Total + ShippingCost;
     public bool StripeConfigured => !string.IsNullOrWhiteSpace(_configuration["Stripe:SecretKey"]);
