@@ -67,15 +67,17 @@ public class StorefrontCatalogTests
     }
 
     [Test]
-    public void Related_Products_Should_Only_Include_Other_Products_In_The_Same_Category()
+    public void Related_Products_Should_Prioritize_Same_Category_Then_Fill_From_Catalog()
     {
         var product = StorefrontCatalog.Products.First(item => item.Category == "Kjøkken");
 
         var related = StorefrontCatalog.RelatedProductsFor(product.Id);
 
-        Assert.That(related, Is.Not.Empty);
+        Assert.That(related, Has.Count.EqualTo(4));
         Assert.That(related, Has.None.Matches<StoreProduct>(item => item.Id == product.Id));
-        Assert.That(related, Has.All.Matches<StoreProduct>(item => item.Category == product.Category));
+        Assert.That(related[0].Category, Is.EqualTo(product.Category));
+        Assert.That(related.Count(item => item.Category == product.Category), Is.EqualTo(1));
+        Assert.That(related.Select(item => item.Id).Distinct().ToArray(), Has.Length.EqualTo(related.Count));
     }
 
     [Test]
@@ -102,14 +104,11 @@ public class StorefrontCatalogTests
 
         var related = StorefrontCatalog.RelatedProductsFor(linenBag.Id);
 
-        Assert.That(related, Has.Count.EqualTo(3));
-        Assert.That(related, Has.All.Matches<StoreProduct>(item => item.Category == "Tilbehør"));
-        Assert.That(related.Select(item => item.Name), Is.EquivalentTo(new[]
-        {
-            "Kompakt handlenett",
-            "Flettet skulderveske",
-            "Kompakt dagstursekk"
-        }));
+        Assert.That(related, Has.Count.EqualTo(4));
+        Assert.That(related[0].Name, Is.EqualTo("Kompakt handlenett"));
+        Assert.That(related[1].Name, Is.EqualTo("Flettet skulderveske"));
+        Assert.That(related[2].Name, Is.EqualTo("Kompakt dagstursekk"));
+        Assert.That(related, Has.None.Matches<StoreProduct>(item => item.Id == linenBag.Id));
     }
 
     [Test]
