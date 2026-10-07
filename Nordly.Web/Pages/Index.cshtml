@@ -71,7 +71,10 @@
 			<h2>Utvalgte produkter</h2>
 		</div>
 		<div class="catalog-tools">
-			<label class="search-field"><span aria-hidden="true">⌕</span><input id="product-search" type="search" placeholder="Søk i sortimentet" aria-label="Søk i produkter" /></label>
+			<div class="search-field-wrap">
+				<label class="search-field"><span aria-hidden="true">⌕</span><input id="product-search" type="search" placeholder="Søk i sortimentet" aria-label="Søk i produkter" autocomplete="off" aria-autocomplete="list" aria-controls="product-suggestions" aria-expanded="false" /></label>
+				<ul id="product-suggestions" class="product-suggestions" role="listbox" aria-label="Produktforslag" hidden></ul>
+			</div>
 			<label class="catalog-sort-label" for="product-sort">Sorter</label>
 			<select id="product-sort" class="catalog-sort" aria-label="Sorter produkter">
 				<option value="default">Anbefalt</option>
@@ -127,7 +130,10 @@
 			</article>
 		}
 	</section>
-	<p class="no-results" hidden>Vi fant ingen produkter. Prøv et annet søk.</p>
+	<div class="no-results" role="status" hidden>
+		<p>Vi fant ingen produkter som passer søket og filtrene dine.</p>
+		<button class="text-link reset-catalog" type="button">Nullstill søk og filtre</button>
+	</div>
 
 	<section class="service-grid" aria-label="NORDLY tjenester">
 		<div class="service-card"><span class="service-icon">✦</span><h3>Fri frakt fra 800 kr</h3><p>Vi pakker ordren din med omtanke og sender den raskt.</p></div>

@@ -104,6 +104,9 @@
 	const productFilterLinks = [...document.querySelectorAll('[data-product-filter]')];
 	const search = document.querySelector('#product-search');
 	const emptyState = document.querySelector('.no-results');
+	const suggestionList = document.querySelector('#product-suggestions');
+	const resetCatalogButton = document.querySelector('.reset-catalog');
+	let activeSuggestionIndex = -1;
 	const showCartToast = message => {
 		document.querySelector('.ajax-cart-toast')?.remove();
 		const toast = document.createElement('div');
@@ -121,20 +124,79 @@
 	let selectedFilter = 'all';
 	if (!cards.length) return;
 
-	const updateProducts = () => {
+	const getMatchingCards = () => {
 		const term = (search?.value || '').trim().toLowerCase();
-		const sortOrder = sortSelect?.value || 'default';
-		let visible = 0;
-
-		cards.forEach(card => {
+		return cards.filter(card => {
 			const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
 			const matchesFilter = selectedFilter === 'all'
 				|| (selectedFilter === 'new' && card.dataset.badge === 'Ny')
 				|| (selectedFilter === 'sale' && card.dataset.sale === 'true');
 			const matchesSearch = !term || (card.dataset.search || '').toLowerCase().includes(term);
-			const shouldShow = matchesCategory && matchesFilter && matchesSearch;
-			card.hidden = !shouldShow;
-			if (shouldShow) visible++;
+			return matchesCategory && matchesFilter && matchesSearch;
+		});
+	};
+
+	const closeSuggestions = () => {
+		if (!suggestionList) return;
+		suggestionList.hidden = true;
+		suggestionList.replaceChildren();
+		search?.setAttribute('aria-expanded', 'false');
+		search?.removeAttribute('aria-activedescendant');
+		activeSuggestionIndex = -1;
+	};
+
+	const showSuggestions = () => {
+		if (!search || !suggestionList) return;
+		const term = search.value.trim();
+		if (!term) {
+			closeSuggestions();
+			return;
+		}
+
+		const suggestions = getMatchingCards().slice(0, 5);
+		suggestionList.replaceChildren();
+		suggestions.forEach((card, index) => {
+			const link = document.createElement('a');
+			link.className = 'product-suggestion';
+			link.id = `product-suggestion-${index}`;
+			link.role = 'option';
+			link.setAttribute('aria-selected', 'false');
+			link.href = card.querySelector('.product-image-wrap a')?.href || card.querySelector('h3 a')?.href || '#collection';
+			const title = document.createElement('strong');
+			title.textContent = card.querySelector('h3')?.textContent.trim() || '';
+			const detail = document.createElement('span');
+			detail.textContent = `${card.dataset.category} · ${card.querySelector('.price-stack strong')?.textContent || ''}`;
+			link.append(title, detail);
+			link.addEventListener('pointerdown', () => closeSuggestions());
+			suggestionList.appendChild(link);
+		});
+
+		const showAllItem = document.createElement('li');
+		const showAll = document.createElement('button');
+		showAll.type = 'button';
+		showAll.className = 'product-suggestion-all';
+		showAll.textContent = suggestions.length
+			? `Vis alle ${getMatchingCards().length} søketreff`
+			: 'Ingen forslag – vis resultatene nedenfor';
+		showAll.addEventListener('click', () => {
+			closeSuggestions();
+			catalogHeader?.scrollIntoView({ behavior: 'smooth' });
+		});
+		showAllItem.appendChild(showAll);
+		suggestionList.appendChild(showAllItem);
+		suggestionList.hidden = false;
+		search.setAttribute('aria-expanded', 'true');
+	};
+
+	const updateProducts = () => {
+		const term = (search?.value || '').trim().toLowerCase();
+		const sortOrder = sortSelect?.value || 'default';
+		const matchingCards = getMatchingCards();
+		const matchingSet = new Set(matchingCards);
+		const visible = matchingCards.length;
+
+		cards.forEach(card => {
+			card.hidden = !matchingSet.has(card);
 		});
 
 		if (productGrid) {
@@ -156,9 +218,58 @@
 		selectedCategory = tab.dataset.category || 'all';
 		tabs.forEach(item => item.classList.toggle('active', item === tab));
 		updateProducts();
+		showSuggestions();
 	}));
 
 	search?.addEventListener('input', updateProducts);
+	search?.addEventListener('input', showSuggestions);
+	search?.addEventListener('focus', showSuggestions);
+	search?.addEventListener('keydown', event => {
+		if (suggestionList?.hidden) {
+			if (event.key === 'Escape') closeSuggestions();
+			return;
+		}
+
+		const options = [...suggestionList.querySelectorAll('[role="option"]')];
+		if (event.key === 'ArrowDown' && options.length) {
+			event.preventDefault();
+			activeSuggestionIndex = (activeSuggestionIndex + 1) % options.length;
+		} else if (event.key === 'ArrowUp' && options.length) {
+			event.preventDefault();
+			activeSuggestionIndex = (activeSuggestionIndex - 1 + options.length) % options.length;
+		} else if (event.key === 'Enter' && activeSuggestionIndex >= 0) {
+			event.preventDefault();
+			options[activeSuggestionIndex]?.click();
+			return;
+		} else if (event.key === 'Escape') {
+			event.preventDefault();
+			closeSuggestions();
+			return;
+		} else if (event.key === 'Enter') {
+			closeSuggestions();
+			catalogHeader?.scrollIntoView({ behavior: 'smooth' });
+			return;
+		} else {
+			return;
+		}
+
+		options.forEach((option, index) => option.setAttribute('aria-selected', index === activeSuggestionIndex ? 'true' : 'false'));
+		search.setAttribute('aria-activedescendant', options[activeSuggestionIndex].id);
+	});
+	document.addEventListener('click', event => {
+		if (!event.target.closest('.search-field-wrap')) closeSuggestions();
+	});
+	resetCatalogButton?.addEventListener('click', () => {
+		search.value = '';
+		sortSelect.value = 'default';
+		selectedCategory = 'all';
+		selectedFilter = 'all';
+		tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.category === 'all'));
+		closeSuggestions();
+		updateProducts();
+		catalogHeader?.scrollIntoView({ behavior: 'smooth' });
+		search.focus({ preventScroll: true });
+	});
 	sortSelect?.addEventListener('change', updateProducts);
 
 	categoryLinks.forEach(link => link.addEventListener('click', () => {
@@ -172,6 +283,7 @@
 		selectedCategory = 'all';
 		tabs.forEach(item => item.classList.toggle('active', item.dataset.category === 'all'));
 		updateProducts();
+		showSuggestions();
 	};
 
 	productFilterLinks.forEach(link => link.addEventListener('click', event => {
