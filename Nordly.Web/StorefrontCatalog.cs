@@ -63,8 +63,12 @@ public static class StorefrontCatalog
         if (product is null)
             return Array.Empty<StoreProduct>();
 
-        return Products
-            .Where(candidate => candidate.Id != product.Id && candidate.Category == product.Category)
+        var otherProducts = Products.Where(candidate => candidate.Id != product.Id);
+        var sameCategory = otherProducts.Where(candidate => candidate.Category == product.Category);
+        var otherCategories = otherProducts.Where(candidate => candidate.Category != product.Category);
+
+        return sameCategory
+            .Concat(otherCategories)
             .Take(maximumCount)
             .ToArray();
     }
