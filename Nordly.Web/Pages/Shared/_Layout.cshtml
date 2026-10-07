@@ -16,13 +16,20 @@
     }
     <header class="topbar">
         <a class="brand" asp-page="/Index">NORDLY <span>STUDIO</span></a>
-        <nav class="nav-links" aria-label="Hovedmeny">
+        <nav class="nav-links" aria-label="Hovedmeny" id="main-navigation">
             <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">Butikk</a>
             <a class="nav-optional" href="/#collection" data-product-filter="all">Kolleksjon</a>
             <a class="nav-optional" href="/#new-arrivals" data-product-filter="new">Nyheter</a>
             <a class="nav-optional" href="/#offers" data-product-filter="sale">Tilbud</a>
             <a class="@(ViewContext.RouteData.Values["page"]?.ToString() == "/Cart" ? "active" : "")" asp-page="/Cart">Handlekurv <span class="nav-badge">@cartCount</span></a>
         </nav>
+        <div class="mobile-nav-actions">
+            <a class="mobile-search-link" href="/#product-search"><span aria-hidden="true">⌕</span><span>Søk</span></a>
+            <a class="mobile-cart-link" asp-page="/Cart" aria-label="Gå til handlekurven, @cartCount varer i kurven">
+            <span class="mobile-cart-icon" aria-hidden="true">Kurv</span>
+            <span class="nav-badge">@cartCount</span>
+            </a>
+        </div>
     </header>
 
     <main role="main">
