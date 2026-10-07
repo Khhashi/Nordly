@@ -362,6 +362,12 @@ h1 {
 .compact-heading h1 { font-size: 3rem; }
 
 .cart-layout { align-items: start; display: grid; gap: 2rem; grid-template-columns: 1.5fr 0.8fr; }
+.free-shipping-progress { background: #f2f6f3; border: 1px solid var(--line); border-radius: 14px; margin: 0 0 1.5rem; padding: 1rem 1.2rem; }
+.free-shipping-message { color: var(--forest); font-size: 0.9rem; margin: 0 0 0.75rem; }
+.free-shipping-message strong { color: var(--terracotta); }
+.free-shipping-track { background: #d9e5df; border-radius: 999px; height: 0.55rem; overflow: hidden; }
+.free-shipping-fill { background: var(--forest); border-radius: inherit; display: block; height: 100%; transition: width 0.35s ease; }
+.free-shipping-labels { color: var(--muted); display: flex; font-size: 0.72rem; justify-content: space-between; margin-top: 0.4rem; }
 .cart-items { display: flex; flex-direction: column; gap: 0.75rem; }
 .cart-item { align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 8px; display: flex; gap: 1rem; padding: 0.8rem; }
 .cart-item img { border-radius: 5px; height: 100px; object-fit: cover; width: 100px; }

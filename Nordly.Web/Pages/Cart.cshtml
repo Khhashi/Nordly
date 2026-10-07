@@ -34,6 +34,21 @@
     }
     else
     {
+        <section class="free-shipping-progress" aria-label="Fremdrift mot gratis levering">
+            @if (Model.HasFreeShipping)
+            {
+                <p class="free-shipping-message" role="status">Du har nådd grensen for gratis levering!</p>
+            }
+            else
+            {
+                <p class="free-shipping-message" role="status">Handle for <strong>@Model.AmountUntilFreeShipping.ToString("N0") kr</strong> til for å få gratis levering.</p>
+            }
+            <div class="free-shipping-track" role="progressbar" aria-label="Fremdrift mot gratis levering" aria-valuemin="0" aria-valuemax="@Model.FreeShippingThreshold.ToString("0")" aria-valuenow="@Model.FreeShippingProgressValue.ToString("0")" aria-valuetext="@(Model.HasFreeShipping ? "Gratis levering oppnådd" : $"{Model.FreeShippingProgressPercent} prosent")">
+                <span class="free-shipping-fill" style="width: @Model.FreeShippingProgressPercent%"></span>
+            </div>
+            <div class="free-shipping-labels"><span>0 kr</span><span>Gratis levering fra @Model.FreeShippingThreshold.ToString("N0") kr</span></div>
+        </section>
+
         <div class="cart-layout">
             <section class="cart-items">
                 @foreach (var item in Model.Items)
