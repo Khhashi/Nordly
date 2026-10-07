@@ -108,13 +108,14 @@
 					<div>
 						<h3><a asp-page="/Products/Details" asp-route-id="@product.Id">@product.Name</a></h3>
 						<p>@product.Description</p>
+						<a class="product-detail-link" asp-page="/Products/Details" asp-route-id="@product.Id">Se produkt <span aria-hidden="true">→</span></a>
 					</div>
 					<div class="product-buy-row">
-						<div class="price-stack"><strong>@product.Price.ToString("N0") kr</strong>@if (product.OriginalPrice is not null) { <del>@product.OriginalPrice.Value.ToString("N0") kr</del> }</div>
+						<div class="price-stack" role="group" aria-label="@(product.OriginalPrice is not null ? $"Nåpris {product.Price:N0} kroner, førpris {product.OriginalPrice.Value:N0} kroner" : $"Pris {product.Price:N0} kroner")"><strong><span class="visually-hidden">Nåpris </span>@product.Price.ToString("N0") kr</strong>@if (product.OriginalPrice is not null) { <del><span class="visually-hidden">Førpris </span>@product.OriginalPrice.Value.ToString("N0") kr</del> }</div>
 						@{
 							var quantity = Model.ProductQuantities.GetValueOrDefault(product.Id);
 						}
-						<div class="quantity-control" aria-label="Antall @product.Name">
+						<div class="quantity-control product-card-quantity @(quantity > 0 ? "has-quantity" : "")" aria-label="Antall @product.Name">
 							<form class="cart-quantity-form remove-form" method="post" asp-page-handler="RemoveFromCart" hidden="@(quantity == 0 ? "hidden" : null)">
 								<input type="hidden" name="productId" value="@product.Id" />
 								<button class="quantity-btn remove-btn" type="submit" aria-label="Fjern én @product.Name">−</button>
@@ -122,7 +123,7 @@
 							<span class="quantity-value" aria-live="polite" hidden="@(quantity == 0 ? "hidden" : null)">@quantity</span>
 							<form class="cart-quantity-form add-form" method="post" asp-page-handler="AddToCart">
 								<input type="hidden" name="productId" value="@product.Id" />
-								<button class="quantity-btn add-btn" type="submit" aria-label="Legg én @product.Name i handlekurven">+</button>
+								<button class="quantity-btn add-btn" type="submit" aria-label="Legg én @product.Name i handlekurven"><span class="product-add-icon" aria-hidden="true">+</span><span class="product-add-label" aria-hidden="true">Legg i kurv</span></button>
 							</form>
 						</div>
 					</div>
