@@ -92,9 +92,12 @@
 	}
 
 	const cards = [...document.querySelectorAll('#collection .product-card')];
+	const originalCardOrder = new Map(cards.map((card, index) => [card, index]));
 	const catalogHeader = document.querySelector('#new-arrivals');
 	const catalogTitle = catalogHeader?.querySelector('h2');
 	const catalogCount = document.querySelector('.catalog-count');
+	const productGrid = document.querySelector('#collection');
+	const sortSelect = document.querySelector('#product-sort');
 	const filterTitles = { all: 'Utvalgte produkter', new: 'Nyheter', sale: 'Tilbud' };
 	const tabs = [...document.querySelectorAll('.category-tab')];
 	const categoryLinks = [...document.querySelectorAll('[data-category-link]')];
@@ -120,6 +123,7 @@
 
 	const updateProducts = () => {
 		const term = (search?.value || '').trim().toLowerCase();
+		const sortOrder = sortSelect?.value || 'default';
 		let visible = 0;
 
 		cards.forEach(card => {
@@ -132,6 +136,15 @@
 			card.hidden = !shouldShow;
 			if (shouldShow) visible++;
 		});
+
+		if (productGrid) {
+			const sortedCards = [...cards].sort((first, second) => {
+				if (sortOrder === 'default') return originalCardOrder.get(first) - originalCardOrder.get(second);
+				const direction = sortOrder === 'price-ascending' ? 1 : -1;
+				return direction * (Number(first.dataset.price) - Number(second.dataset.price));
+			});
+			sortedCards.forEach(card => productGrid.appendChild(card));
+		}
 
 		if (emptyState) emptyState.hidden = visible !== 0;
 		if (catalogTitle) catalogTitle.textContent = filterTitles[selectedFilter] || filterTitles.all;
@@ -146,6 +159,7 @@
 	}));
 
 	search?.addEventListener('input', updateProducts);
+	sortSelect?.addEventListener('change', updateProducts);
 
 	categoryLinks.forEach(link => link.addEventListener('click', () => {
 		selectedFilter = 'all';
