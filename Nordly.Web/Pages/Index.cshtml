@@ -72,6 +72,12 @@
 		</div>
 		<div class="catalog-tools">
 			<label class="search-field"><span aria-hidden="true">⌕</span><input id="product-search" type="search" placeholder="Søk i sortimentet" aria-label="Søk i produkter" /></label>
+			<label class="catalog-sort-label" for="product-sort">Sorter</label>
+			<select id="product-sort" class="catalog-sort" aria-label="Sorter produkter">
+				<option value="default">Anbefalt</option>
+				<option value="price-ascending">Pris: lav til høy</option>
+				<option value="price-descending">Pris: høy til lav</option>
+			</select>
 			<span class="catalog-count">@Model.Products.Count varer</span>
 		</div>
 	</div>
@@ -86,7 +92,7 @@
 	<section id="collection" class="product-grid" aria-label="Produktkatalog">
 		@foreach (var product in Model.Products)
 		{
-			<article class="product-card" data-category="@product.Category" data-badge="@product.Badge" data-sale="@(product.OriginalPrice is not null ? "true" : "false")" data-search="@product.Name @product.Description">
+			<article class="product-card" data-price="@product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-category="@product.Category" data-badge="@product.Badge" data-sale="@(product.OriginalPrice is not null ? "true" : "false")" data-search="@product.Name @product.Description">
 				<div class="product-image-wrap">
 					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" loading="lazy" decoding="async" /></a>
 					<span class="product-category">@product.Category</span>
