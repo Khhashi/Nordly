@@ -326,8 +326,17 @@
 			quantityValue.textContent = nextQuantity.toString();
 			quantityValue.hidden = nextQuantity === 0;
 			removeForm.hidden = nextQuantity === 0;
-			const cartBadge = document.querySelector('.nav-badge');
-			if (cartBadge && Number.isInteger(result.cartCount)) cartBadge.textContent = result.cartCount.toString();
+			control.classList.toggle('has-quantity', nextQuantity > 0);
+			if (Number.isInteger(result.cartCount)) {
+				document.querySelectorAll('.nav-badge').forEach(cartBadge => {
+					cartBadge.textContent = result.cartCount.toString();
+				});
+				const mobileCartLink = document.querySelector('.mobile-cart-link');
+				if (mobileCartLink) {
+					const itemLabel = result.cartCount === 1 ? 'vare' : 'varer';
+					mobileCartLink.setAttribute('aria-label', `Gå til handlekurven, ${result.cartCount} ${itemLabel} i kurven`);
+				}
+			}
 			showCartToast(isRemove ? (nextQuantity === 0 ? 'Produktet er fjernet fra handlekurven.' : 'Antallet er oppdatert.') : 'Produktet er lagt i handlekurven.');
 		} catch {
 			window.location.reload();
