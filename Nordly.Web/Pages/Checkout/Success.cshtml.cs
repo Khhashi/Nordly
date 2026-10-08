@@ -18,6 +18,10 @@ public class SuccessModel : PageModel
     }
 
     public Guid? OrderId { get; private set; }
+    public string? FormattedOrderNumber => FormatOrderNumber(OrderId);
+
+    public static string? FormatOrderNumber(Guid? orderId) =>
+        orderId is Guid id ? Nordly.Domain.Entities.Order.FormatNumber(id) : null;
 
     public async Task<IActionResult> OnGetAsync(string? session_id)
     {
