@@ -413,6 +413,15 @@ h1 {
 .empty-cart { background: #fff; border: 1px dashed #bfd1ca; border-radius: 8px; padding: 5rem 1rem; text-align: center; }
 .empty-cart h2 { color: var(--forest); margin: 0.8rem 0 0.3rem; }
 .empty-cart p { color: var(--muted); margin: 0 0 1.4rem; }
+.empty-cart .primary-btn { margin: 0 auto; max-width: 14rem; }
+.empty-cart-recommendations { margin-top: 3rem; }
+.empty-cart-recommendations .section-intro { margin-bottom: 1.25rem; }
+.empty-cart-recommendations .section-intro h2 { color: var(--forest); font-size: clamp(1.7rem, 3vw, 2.3rem); margin: 0.35rem 0 0; }
+.store-shell .empty-cart-product-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.empty-cart-product-grid .product-info p { min-height: 0; }
+.empty-cart-product-grid .product-buy-row { align-items: center; gap: 0.75rem; }
+.empty-cart-add { background: var(--forest); border: 0; border-radius: 999px; color: #fff; cursor: pointer; font: inherit; font-size: 0.78rem; font-weight: 700; padding: 0.55rem 0.75rem; white-space: nowrap; }
+.empty-cart-add:hover { filter: brightness(1.08); }
 .empty-mark { color: #bb6b38; font-size: 2.5rem; }
 .alert a { color: inherit; margin-left: 0.5rem; }
 
