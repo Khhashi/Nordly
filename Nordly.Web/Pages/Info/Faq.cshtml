@@ -1,0 +1,56 @@
+@page
+@{
+    ViewData["Title"] = "Vanlige spørsmål";
+}
+
+<div class="info-page faq-page">
+    <span class="eyebrow">Hjelp og svar</span>
+    <h1>Vanlige spørsmål</h1>
+    <p class="info-lead">Her finner du svar om levering, retur, betaling og produktene våre. Finner du ikke det du leter etter, <a asp-page="/Info/Support">ta kontakt med oss</a>.</p>
+
+    <section class="faq-group" aria-labelledby="faq-delivery-title">
+        <h2 id="faq-delivery-title">Levering og retur</h2>
+        <details class="faq-item">
+            <summary>Hvor lang tid tar leveringen?</summary>
+            <p>Lagervarer sendes innen én virkedag. Normal leveringstid er 2–4 virkedager. Se <a asp-page="/Info/Delivery">leveringsinformasjonen</a> for flere detaljer.</p>
+        </details>
+        <details class="faq-item">
+            <summary>Når får jeg fri frakt?</summary>
+            <p>Du får fri frakt når varebeløpet er minst 800 kr. For ordre under dette er standard frakt 79 kr. Fraktkostnaden vises i handlekurven før betaling.</p>
+        </details>
+        <details class="faq-item">
+            <summary>Hvordan returnerer jeg en vare?</summary>
+            <p>Du har 14 dagers åpent kjøp. Ta kontakt med oss før du sender varen tilbake, så hjelper vi deg videre. Les mer på siden for <a asp-page="/Info/Delivery">levering og retur</a>.</p>
+        </details>
+    </section>
+
+    <section class="faq-group" aria-labelledby="faq-order-title">
+        <h2 id="faq-order-title">Ordre og betaling</h2>
+        <details class="faq-item">
+            <summary>Hvordan betaler jeg?</summary>
+            <p>Betalingen behandles gjennom Stripe. Prisene er oppgitt i norske kroner og inkluderer merverdiavgift. Les våre <a asp-page="/Info/Terms">vilkår for handel</a>.</p>
+        </details>
+        <details class="faq-item">
+            <summary>Hvordan vet jeg at bestillingen er bekreftet?</summary>
+            <p>Bestillingen er bekreftet når betalingen er godkjent. Du får en ordrebekreftelse på e-post med ordrenummer og informasjon om kjøpet.</p>
+        </details>
+        <details class="faq-item">
+            <summary>Jeg har spørsmål om bestillingen min – hvem kontakter jeg?</summary>
+            <p>Send oss en e-post på <a href="mailto:hello@nordly.studio">hello@nordly.studio</a>, så hjelper vi deg. Vi er tilgjengelige mandag–fredag kl. 09:00–16:00.</p>
+        </details>
+    </section>
+
+    <section class="faq-group" aria-labelledby="faq-product-title">
+        <h2 id="faq-product-title">Produkter</h2>
+        <details class="faq-item">
+            <summary>Hvor finner jeg mål, materialer og vedlikeholdsråd?</summary>
+            <p>Hvis slike opplysninger er tilgjengelige, finner du dem under produktdetaljene på produktsiden. Spør oss gjerne dersom du trenger mer informasjon før du bestiller.</p>
+        </details>
+        <details class="faq-item">
+            <summary>Hvordan får jeg hjelp til å velge et produkt?</summary>
+            <p>Ta gjerne kontakt med kundeservice. Fortell oss hva du ser etter, så svarer vi så godt vi kan.</p>
+        </details>
+    </section>
+
+    <a class="text-link faq-contact-link" asp-page="/Info/Support">Gå til kundeservice <span aria-hidden="true">→</span></a>
+</div>
