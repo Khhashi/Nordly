@@ -19,6 +19,7 @@ public class CartModel : PageModel
     }
 
     public List<CartViewItem> Items { get; private set; } = new();
+    public IReadOnlyList<StoreProduct> SuggestedProducts => StorefrontCatalog.Products.Take(4).ToArray();
     public decimal Total => Items.Sum(item => item.Product.Price * item.Quantity);
     public decimal FreeShippingThreshold => ShippingPolicy.FreeShippingThreshold;
     public decimal FreeShippingProgressValue => ShippingPolicy.CalculateFreeShippingProgressValue(Total);
@@ -57,6 +58,18 @@ public class CartModel : PageModel
         cart.Remove(productId);
         cart.Save(HttpContext.Session);
         TempData["Success"] = "Produktet er fjernet fra handlekurven.";
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostAddSuggestedProduct(Guid productId)
+    {
+        if (!StorefrontCatalog.Products.Any(product => product.Id == productId))
+            return NotFound();
+
+        var cart = Cart.Load(HttpContext.Session);
+        cart.Add(productId);
+        cart.Save(HttpContext.Session);
+        TempData["Success"] = "Produktet er lagt i handlekurven.";
         return RedirectToPage();
     }
 
