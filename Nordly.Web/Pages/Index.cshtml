@@ -72,8 +72,11 @@
 		</div>
 		<div class="catalog-tools">
 			<div class="search-field-wrap" id="catalog-search">
-				<label class="search-field"><span aria-hidden="true">⌕</span><input id="product-search" type="search" placeholder="Søk i sortimentet" aria-label="Søk i produkter" autocomplete="off" aria-autocomplete="list" aria-controls="product-suggestions" aria-expanded="false" /></label>
-				<ul id="product-suggestions" class="product-suggestions" role="listbox" aria-label="Produktforslag" hidden></ul>
+				<label class="search-field"><span aria-hidden="true">⌕</span><input id="product-search" type="search" role="combobox" aria-haspopup="listbox" placeholder="Søk i sortimentet" aria-label="Søk i produkter" autocomplete="off" aria-autocomplete="list" aria-controls="product-suggestions" aria-expanded="false" /></label>
+				<div id="product-suggestion-panel" class="product-suggestion-panel" hidden>
+					<ul id="product-suggestions" class="product-suggestions" role="listbox" aria-label="Produktforslag"></ul>
+					<button id="product-suggestion-all" class="product-suggestion-all" type="button" hidden></button>
+				</div>
 			</div>
 			<label class="catalog-sort-label" for="product-sort">Sorter</label>
 			<select id="product-sort" class="catalog-sort" aria-label="Sorter produkter">
@@ -84,15 +87,15 @@
 			<span class="catalog-count">@Model.Products.Count varer</span>
 		</div>
 	</div>
-	<div class="category-tabs" role="tablist" aria-label="Produktkategorier">
-		<button class="category-tab active" type="button" data-category="all">Alle</button>
+	<div class="category-tabs" role="group" aria-label="Filtrer produkter etter kategori">
+		<button class="category-tab active" type="button" data-category="all" aria-pressed="true">Alle</button>
 		@foreach (var category in Model.Products.Select(product => product.Category).Distinct())
 		{
-			<button class="category-tab" type="button" data-category="@category">@category</button>
+			<button class="category-tab" type="button" data-category="@category" aria-pressed="false">@category</button>
 		}
 	</div>
 
-	<section id="collection" class="product-grid" aria-label="Produktkatalog">
+	<section id="collection" class="product-grid" aria-label="Produktkatalog" tabindex="-1">
 		@foreach (var product in Model.Products)
 		{
 			<article class="product-card" data-price="@product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-category="@product.Category" data-badge="@product.Badge" data-sale="@(product.OriginalPrice is not null ? "true" : "false")" data-search="@product.Name @product.Description">

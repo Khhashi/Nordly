@@ -103,8 +103,11 @@
 	const categoryLinks = [...document.querySelectorAll('[data-category-link]')];
 	const productFilterLinks = [...document.querySelectorAll('[data-product-filter]')];
 	const search = document.querySelector('#product-search');
+	const searchWrapper = document.querySelector('#catalog-search');
+	const suggestionPanel = document.querySelector('#product-suggestion-panel');
 	const emptyState = document.querySelector('.no-results');
 	const suggestionList = document.querySelector('#product-suggestions');
+	const showAllButton = document.querySelector('#product-suggestion-all');
 	const resetCatalogButton = document.querySelector('.reset-catalog');
 	let activeSuggestionIndex = -1;
 	const showCartToast = message => {
@@ -137,16 +140,26 @@
 	};
 
 	const closeSuggestions = () => {
-		if (!suggestionList) return;
-		suggestionList.hidden = true;
-		suggestionList.replaceChildren();
+		if (suggestionPanel) suggestionPanel.hidden = true;
+		if (suggestionList) suggestionList.replaceChildren();
+		if (showAllButton) showAllButton.hidden = true;
 		search?.setAttribute('aria-expanded', 'false');
 		search?.removeAttribute('aria-activedescendant');
 		activeSuggestionIndex = -1;
 	};
 
+	const setActiveSuggestion = index => {
+		if (!suggestionList || !search) return;
+		const options = [...suggestionList.querySelectorAll('[role="option"]')];
+		activeSuggestionIndex = index;
+		options.forEach((option, optionIndex) => option.setAttribute('aria-selected', optionIndex === index ? 'true' : 'false'));
+		const activeOption = options[index];
+		if (activeOption) search.setAttribute('aria-activedescendant', activeOption.id);
+		else search.removeAttribute('aria-activedescendant');
+	};
+
 	const showSuggestions = () => {
-		if (!search || !suggestionList) return;
+		if (!search || !suggestionList || !suggestionPanel || !showAllButton) return;
 		const term = search.value.trim();
 		if (!term) {
 			closeSuggestions();
@@ -155,38 +168,53 @@
 
 		const suggestions = getMatchingCards().slice(0, 5);
 		suggestionList.replaceChildren();
+		activeSuggestionIndex = -1;
+		search.removeAttribute('aria-activedescendant');
 		suggestions.forEach((card, index) => {
-			const link = document.createElement('a');
-			link.className = 'product-suggestion';
-			link.id = `product-suggestion-${index}`;
-			link.role = 'option';
-			link.setAttribute('aria-selected', 'false');
-			link.href = card.querySelector('.product-image-wrap a')?.href || card.querySelector('h3 a')?.href || '#collection';
+			const option = document.createElement('li');
+			option.className = 'product-suggestion';
+			option.id = `product-suggestion-${index}`;
+			option.role = 'option';
+			option.tabIndex = -1;
+			option.setAttribute('aria-selected', 'false');
+			option.dataset.href = card.querySelector('.product-image-wrap a')?.href || card.querySelector('h3 a')?.href || '#collection';
 			const title = document.createElement('strong');
 			title.textContent = card.querySelector('h3')?.textContent.trim() || '';
 			const detail = document.createElement('span');
 			detail.textContent = `${card.dataset.category} · ${card.querySelector('.price-stack strong')?.textContent || ''}`;
-			link.append(title, detail);
-			link.addEventListener('pointerdown', () => closeSuggestions());
-			suggestionList.appendChild(link);
+			option.setAttribute('aria-label', `${title.textContent}, ${detail.textContent}`);
+			option.append(title, detail);
+			option.addEventListener('pointermove', () => setActiveSuggestion(index));
+			option.addEventListener('click', () => {
+				const href = option.dataset.href;
+				closeSuggestions();
+				if (href) window.location.assign(href);
+			});
+			suggestionList.appendChild(option);
 		});
 
-		const showAllItem = document.createElement('li');
-		const showAll = document.createElement('button');
-		showAll.type = 'button';
-		showAll.className = 'product-suggestion-all';
-		showAll.textContent = suggestions.length
+		showAllButton.textContent = suggestions.length
 			? `Vis alle ${getMatchingCards().length} søketreff`
 			: 'Ingen forslag – vis resultatene nedenfor';
-		showAll.addEventListener('click', () => {
-			closeSuggestions();
-			catalogHeader?.scrollIntoView({ behavior: 'smooth' });
-		});
-		showAllItem.appendChild(showAll);
-		suggestionList.appendChild(showAllItem);
-		suggestionList.hidden = false;
+		showAllButton.hidden = false;
+		suggestionPanel.hidden = false;
 		search.setAttribute('aria-expanded', 'true');
 	};
+
+	showAllButton?.addEventListener('click', () => {
+		closeSuggestions();
+		catalogHeader?.scrollIntoView({ behavior: 'smooth' });
+		productGrid?.focus({ preventScroll: true });
+	});
+	suggestionPanel?.addEventListener('keydown', event => {
+		if (event.key !== 'Escape') return;
+		event.preventDefault();
+		closeSuggestions();
+		search?.focus({ preventScroll: true });
+	});
+	searchWrapper?.addEventListener('focusout', event => {
+		if (!searchWrapper.contains(event.relatedTarget)) closeSuggestions();
+	});
 
 	const updateProducts = () => {
 		const term = (search?.value || '').trim().toLowerCase();
@@ -216,7 +244,11 @@
 	tabs.forEach(tab => tab.addEventListener('click', () => {
 		selectedFilter = 'all';
 		selectedCategory = tab.dataset.category || 'all';
-		tabs.forEach(item => item.classList.toggle('active', item === tab));
+		tabs.forEach(item => {
+			const selected = item === tab;
+			item.classList.toggle('active', selected);
+			item.setAttribute('aria-pressed', String(selected));
+		});
 		updateProducts();
 		showSuggestions();
 	}));
@@ -225,7 +257,7 @@
 	search?.addEventListener('input', showSuggestions);
 	search?.addEventListener('focus', showSuggestions);
 	search?.addEventListener('keydown', event => {
-		if (suggestionList?.hidden) {
+		if (suggestionPanel?.hidden) {
 			if (event.key === 'Escape') closeSuggestions();
 			return;
 		}
@@ -236,25 +268,22 @@
 			activeSuggestionIndex = (activeSuggestionIndex + 1) % options.length;
 		} else if (event.key === 'ArrowUp' && options.length) {
 			event.preventDefault();
-			activeSuggestionIndex = (activeSuggestionIndex - 1 + options.length) % options.length;
+			activeSuggestionIndex = activeSuggestionIndex <= 0 ? options.length - 1 : activeSuggestionIndex - 1;
 		} else if (event.key === 'Enter' && activeSuggestionIndex >= 0) {
 			event.preventDefault();
-			options[activeSuggestionIndex]?.click();
+			const activeOption = options[activeSuggestionIndex];
+			if (activeOption?.dataset.href) window.location.assign(activeOption.dataset.href);
 			return;
 		} else if (event.key === 'Escape') {
 			event.preventDefault();
 			closeSuggestions();
 			return;
-		} else if (event.key === 'Enter') {
-			closeSuggestions();
-			catalogHeader?.scrollIntoView({ behavior: 'smooth' });
-			return;
 		} else {
 			return;
 		}
 
-		options.forEach((option, index) => option.setAttribute('aria-selected', index === activeSuggestionIndex ? 'true' : 'false'));
-		search.setAttribute('aria-activedescendant', options[activeSuggestionIndex].id);
+		setActiveSuggestion(activeSuggestionIndex);
+		options[activeSuggestionIndex]?.scrollIntoView({ block: 'nearest' });
 	});
 	document.addEventListener('click', event => {
 		if (!event.target.closest('.search-field-wrap')) closeSuggestions();
@@ -264,7 +293,11 @@
 		sortSelect.value = 'default';
 		selectedCategory = 'all';
 		selectedFilter = 'all';
-		tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.category === 'all'));
+		tabs.forEach(tab => {
+			const selected = tab.dataset.category === 'all';
+			tab.classList.toggle('active', selected);
+			tab.setAttribute('aria-pressed', String(selected));
+		});
 		closeSuggestions();
 		updateProducts();
 		catalogHeader?.scrollIntoView({ behavior: 'smooth' });
