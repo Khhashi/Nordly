@@ -679,6 +679,17 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .info-content h2 { color: var(--ink); font-size: 1.25rem; margin: 1.75rem 0 0.5rem; }
 .info-content p { color: var(--muted); line-height: 1.7; margin: 0; max-width: 600px; }
 .info-button { margin-top: 2rem; width: auto; }
+.faq-page .info-lead a, .faq-item a { color: var(--forest); font-weight: 700; text-underline-offset: 3px; }
+.faq-group { border-top: 1px solid var(--line); padding: 1.25rem 0 0.5rem; }
+.faq-group h2 { color: var(--forest); font-size: 1.35rem; margin: 0 0 0.65rem; }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-item summary { align-items: center; color: var(--ink); cursor: pointer; display: flex; font-weight: 700; justify-content: space-between; gap: 1rem; list-style: none; padding: 1rem 0; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { color: var(--terracotta); content: "+"; flex: 0 0 auto; font-size: 1.35rem; font-weight: 400; }
+.faq-item[open] summary::after { content: "−"; }
+.faq-item summary:focus-visible { border-radius: 4px; outline-offset: 2px; }
+.faq-item p { color: var(--muted); line-height: 1.7; margin: -0.15rem 2.25rem 1rem 0; }
+.faq-contact-link { display: inline-block; margin-top: 1.5rem; }
 .support-card { background: var(--soft-blue); display: grid; gap: 0.45rem; margin-top: 2rem; padding: 1.5rem; }
 .support-card strong { color: var(--ink); font-size: 1.2rem; }
 .support-card span { color: var(--muted); font-size: 0.85rem; }
