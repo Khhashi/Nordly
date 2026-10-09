@@ -12,11 +12,13 @@ public class IndexModel : PageModel
 {
     private readonly OrderDbContext _db;
     private readonly IWelcomeEmailSender _welcomeEmailSender;
+    private readonly ILogger<IndexModel> _logger;
 
-    public IndexModel(OrderDbContext db, IWelcomeEmailSender welcomeEmailSender)
+    public IndexModel(OrderDbContext db, IWelcomeEmailSender welcomeEmailSender, ILogger<IndexModel> logger)
     {
         _db = db;
         _welcomeEmailSender = welcomeEmailSender;
+        _logger = logger;
     }
 
     public IReadOnlyList<StoreProduct> Products => StorefrontCatalog.Products;
@@ -101,9 +103,15 @@ public class IndexModel : PageModel
         {
             await _db.SaveChangesAsync();
         }
-        catch (DbUpdateException)
+        catch (DbUpdateException exception) when (IsDuplicateEmailError(exception))
         {
             TempData["NewsletterError"] = "Denne e-posten er allerede registrert.";
+            return RedirectToPage(null, null, "newsletter");
+        }
+        catch (DbUpdateException exception)
+        {
+            _logger.LogError(exception, "Could not save newsletter subscription.");
+            TempData["NewsletterError"] = "Påmeldingen kunne ikke fullføres akkurat nå. Prøv igjen senere.";
             return RedirectToPage(null, null, "newsletter");
         }
 
@@ -112,5 +120,20 @@ public class IndexModel : PageModel
 
         TempData["NewsletterSuccess"] = "Du er nå påmeldt vårt nyhetsbrev.";
         return RedirectToPage(null, null, "newsletter");
+    }
+
+    private static bool IsDuplicateEmailError(DbUpdateException exception)
+    {
+        for (Exception? cause = exception; cause is not null; cause = cause.InnerException)
+        {
+            if (cause is Npgsql.PostgresException postgresException
+                && postgresException.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation
+                && postgresException.ConstraintName == "IX_NewsletterSubscribers_Email")
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
