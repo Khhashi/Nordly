@@ -675,6 +675,10 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .footer-payment strong { color: var(--ink); display: block; font-size: 0.78rem; margin-top: 0.35rem; }
 .info-page { margin: 0 auto; max-width: 760px; padding: 5rem 1.25rem 7rem; }
 .info-page h1 { font-size: clamp(2.8rem, 6vw, 5.5rem); line-height: 0.95; margin: 0.5rem 0 2rem; }
+.error-page { min-height: 55vh; }
+.error-reference { color: var(--muted); font-size: 0.8rem; overflow-wrap: anywhere; }
+.error-page-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.error-page-actions .primary-btn { margin: 0; width: auto; }
 .info-lead { color: var(--muted); font-size: 1.2rem; line-height: 1.6; margin: 0 0 3rem; max-width: 560px; }
 .info-content { border-top: 1px solid var(--line); padding-top: 1.5rem; }
 .info-content h2 { color: var(--ink); font-size: 1.25rem; margin: 1.75rem 0 0.5rem; }
