@@ -5,6 +5,16 @@ namespace Nordly.Web;
 
 public sealed record StoreProduct(Guid Id, string Name, string Category, string Description, decimal Price, string ImageUrl, string? Badge = null, decimal? OriginalPrice = null, IReadOnlyList<string>? AdditionalImageUrls = null, StoreProductSpecifications? Specifications = null)
 {
+    public decimal Savings => OriginalPrice is decimal originalPrice && originalPrice > Price
+        ? originalPrice - Price
+        : 0m;
+
+    public int SavingsPercentage => OriginalPrice is > 0m && Savings > 0m
+        ? (int)Math.Round(Savings / OriginalPrice.Value * 100m, MidpointRounding.AwayFromZero)
+        : 0;
+
+    public bool IsOnSale => Savings > 0m;
+
     public IReadOnlyList<string> ImageUrls => new[] { ImageUrl }
         .Concat(AdditionalImageUrls ?? Array.Empty<string>())
         .Where(url => !string.IsNullOrWhiteSpace(url))
