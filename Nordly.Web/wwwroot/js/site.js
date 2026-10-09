@@ -125,7 +125,53 @@
 
 	let selectedCategory = 'all';
 	let selectedFilter = 'all';
+	let searchHistoryTimer;
 	if (!cards.length) return;
+	const validCategories = new Set(tabs.map(tab => tab.dataset.category).filter(Boolean));
+	const validFilters = new Set(['all', 'new', 'sale']);
+	const categoryFromUrl = value => validCategories.has(value) ? value : 'all';
+	const filterFromUrl = value => validFilters.has(value) ? value : 'all';
+
+	const readUrlState = () => {
+		const params = new URLSearchParams(window.location.search);
+		let category = categoryFromUrl(params.get('category'));
+		let filter = filterFromUrl(params.get('filter'));
+		const term = params.get('q') || '';
+		if (!params.has('filter') && !params.has('category') && !params.has('q')) {
+			if (window.location.hash === '#new-arrivals') filter = 'new';
+			if (window.location.hash === '#offers') filter = 'sale';
+		}
+		return { category, filter, term };
+	};
+
+	const updateUrl = (method = 'pushState') => {
+		const url = new URL(window.location.href);
+		if (selectedCategory === 'all') url.searchParams.delete('category');
+		else url.searchParams.set('category', selectedCategory);
+		if (selectedFilter === 'all') url.searchParams.delete('filter');
+		else url.searchParams.set('filter', selectedFilter);
+		const term = (search?.value || '').trim();
+		if (term) url.searchParams.set('q', term);
+		else url.searchParams.delete('q');
+		if (url.href !== window.location.href) window.history[method]({}, '', url);
+	};
+
+	const syncCategoryButtons = () => tabs.forEach(tab => {
+		const selected = tab.dataset.category === selectedCategory;
+		tab.classList.toggle('active', selected);
+		tab.setAttribute('aria-pressed', String(selected));
+	});
+
+	const restoreUrlState = () => {
+		const state = readUrlState();
+		selectedCategory = state.category;
+		selectedFilter = selectedCategory === 'all' ? state.filter : 'all';
+		if (search) search.value = state.term;
+		syncCategoryButtons();
+		closeSuggestions();
+		updateProducts();
+		updateUrl('replaceState');
+	};
 
 	const getMatchingCards = () => {
 		const term = (search?.value || '').trim().toLowerCase();
@@ -244,17 +290,18 @@
 	tabs.forEach(tab => tab.addEventListener('click', () => {
 		selectedFilter = 'all';
 		selectedCategory = tab.dataset.category || 'all';
-		tabs.forEach(item => {
-			const selected = item === tab;
-			item.classList.toggle('active', selected);
-			item.setAttribute('aria-pressed', String(selected));
-		});
+		syncCategoryButtons();
 		updateProducts();
 		showSuggestions();
+		updateUrl();
 	}));
 
 	search?.addEventListener('input', updateProducts);
 	search?.addEventListener('input', showSuggestions);
+	search?.addEventListener('input', () => {
+		window.clearTimeout(searchHistoryTimer);
+		searchHistoryTimer = window.setTimeout(() => updateUrl(), 350);
+	});
 	search?.addEventListener('focus', showSuggestions);
 	search?.addEventListener('keydown', event => {
 		if (suggestionPanel?.hidden) {
@@ -293,13 +340,10 @@
 		sortSelect.value = 'default';
 		selectedCategory = 'all';
 		selectedFilter = 'all';
-		tabs.forEach(tab => {
-			const selected = tab.dataset.category === 'all';
-			tab.classList.toggle('active', selected);
-			tab.setAttribute('aria-pressed', String(selected));
-		});
+		syncCategoryButtons();
 		closeSuggestions();
 		updateProducts();
+		updateUrl();
 		catalogHeader?.scrollIntoView({ behavior: 'smooth' });
 		search.focus({ preventScroll: true });
 	});
@@ -314,9 +358,10 @@
 	const applyProductFilter = filter => {
 		selectedFilter = filter || 'all';
 		selectedCategory = 'all';
-		tabs.forEach(item => item.classList.toggle('active', item.dataset.category === 'all'));
+		syncCategoryButtons();
 		updateProducts();
 		showSuggestions();
+		updateUrl();
 	};
 
 	productFilterLinks.forEach(link => link.addEventListener('click', event => {
@@ -325,12 +370,10 @@
 		applyProductFilter(link.dataset.productFilter);
 	}));
 
-	const hash = window.location.hash;
-	if (hash === '#new-arrivals') applyProductFilter('new');
-	if (hash === '#offers') {
-		applyProductFilter('sale');
+	restoreUrlState();
+	window.addEventListener('popstate', restoreUrlState);
+	if (window.location.hash === '#new-arrivals' || window.location.hash === '#offers')
 		catalogHeader?.scrollIntoView();
-	}
 
 	document.querySelectorAll('.cart-quantity-form').forEach(form => form.addEventListener('submit', async event => {
 		event.preventDefault();
