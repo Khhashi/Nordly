@@ -2,6 +2,7 @@
 @model PrivacyModel
 @{
     ViewData["Title"] = "Personvern";
+    ViewData["PageMetadata"] = PageMetadataBuilder.Create(Configuration["PublicBaseUrl"], "Personvern – NORDLY", "Les hvordan NORDLY håndterer personopplysninger og ivaretar personvernet ditt når du bruker nettbutikken.", "/Privacy");
 }
 
 <div class="info-page">

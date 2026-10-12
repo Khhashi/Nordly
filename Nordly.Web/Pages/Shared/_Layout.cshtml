@@ -3,7 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - NORDLY</title>
+    @{
+        var metadata = ViewData["PageMetadata"] as PageMetadata
+            ?? PageMetadataBuilder.Create(
+                Configuration["PublicBaseUrl"],
+                $"{ViewData["Title"]} | NORDLY",
+                null,
+                ViewContext.RouteData.Values["page"]?.ToString());
+    }
+    <title>@metadata.Title</title>
+    @PageMetadataBuilder.RenderTags(metadata)
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..800&family=Fraunces:ital,wght@0,400;1,400&display=swap" />
