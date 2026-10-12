@@ -2,6 +2,10 @@
 @model DetailsModel
 @{
     ViewData["Title"] = Model.Product?.Name ?? "Produkt";
+    if (Model.Product is not null)
+    {
+        ViewData["PageMetadata"] = PageMetadataBuilder.CreateProduct(Configuration["PublicBaseUrl"], Model.Product);
+    }
 }
 
 @if (Model.Product is not null)

@@ -17,3 +17,5 @@ services:
         sync: false
       - key: Email__FromName
         sync: false
+      - key: PublicBaseUrl
+        value: https://ordermanager-8ym2.onrender.com
