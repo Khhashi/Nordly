@@ -4,6 +4,10 @@
 	ViewData["Title"] = "Butikk";
 	var hero = Model.Products[0];
 	string TileImage(string category) => Model.Products.First(product => product.Category == category).ImageUrl;
+	ViewData["PageMetadata"] = PageMetadataBuilder.CreateStorefront(
+		Configuration["PublicBaseUrl"], Model.Products,
+		ViewContext.HttpContext.Request.Query["category"].ToString(),
+		ViewContext.HttpContext.Request.Query["filter"].ToString());
 }
 
 <div class="store-shell">
