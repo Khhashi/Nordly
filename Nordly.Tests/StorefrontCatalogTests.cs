@@ -39,6 +39,26 @@ public class StorefrontCatalogTests
     }
 
     [Test]
+    public void Product_Without_Original_Price_Should_Not_Show_Sale_Or_Savings()
+    {
+        var product = StoreProduct.Create("Produkt", "Kategori", "Beskrivelse", 100, "bilde.jpg");
+
+        Assert.That(product.IsOnSale, Is.False);
+        Assert.That(product.Savings, Is.Zero);
+        Assert.That(product.SavingsPercentage, Is.Zero);
+    }
+
+    [Test]
+    public void Product_With_Original_Price_Should_Calculate_Savings_And_Percentage()
+    {
+        var product = StorefrontCatalog.Products.Single(item => item.Name == "Forma ullteppe");
+
+        Assert.That(product.IsOnSale, Is.True);
+        Assert.That(product.Savings, Is.EqualTo(200m));
+        Assert.That(product.SavingsPercentage, Is.EqualTo(22));
+    }
+
+    [Test]
     public void Product_Image_Urls_Should_Keep_Additional_Images_In_Order()
     {
         var product = StoreProduct.Create(
