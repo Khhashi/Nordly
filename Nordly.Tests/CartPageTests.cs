@@ -46,6 +46,25 @@ public class CartPageTests
         Assert.That(Cart.Load(session).Items, Is.Empty);
     }
 
+    [Test]
+    public void Sale_Product_Uses_Current_Price_For_Cart_Total_And_Shipping()
+    {
+        var session = new FakeSession();
+        var saleProduct = StorefrontCatalog.Products.Single(product => product.Name == "Forma ullteppe");
+        var cart = Cart.Empty();
+        cart.Add(saleProduct.Id);
+        cart.Save(session);
+        var model = CreateModel(session);
+
+        model.OnGet();
+
+        Assert.That(saleProduct.OriginalPrice, Is.EqualTo(899m));
+        Assert.That(saleProduct.Price, Is.EqualTo(699m));
+        Assert.That(model.Total, Is.EqualTo(699m));
+        Assert.That(model.ShippingCost, Is.EqualTo(ShippingPolicy.StandardShippingCost));
+        Assert.That(model.GrandTotal, Is.EqualTo(699m + ShippingPolicy.StandardShippingCost));
+    }
+
     private static CartModel CreateModel(FakeSession session)
     {
         var httpContext = new DefaultHttpContext { Session = session };
