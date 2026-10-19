@@ -1,4 +1,4 @@
-namespace Nordly.Web;
+namespace Nordly.Infrastructure.Data;
 
 public static class DatabaseConnectionString
 {
