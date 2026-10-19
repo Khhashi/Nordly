@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Nordly.Web;
+using Nordly.Infrastructure.Data;
 
 namespace Nordly.Tests;
 

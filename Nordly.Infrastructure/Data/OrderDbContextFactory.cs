@@ -7,8 +7,9 @@ public sealed class OrderDbContextFactory : IDesignTimeDbContextFactory<OrderDbC
 {
     public OrderDbContext CreateDbContext(string[] args)
     {
-        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-            ?? "Host=localhost;Database=nordly_design;Username=nordly;Password=design-time-only";
+        var connectionString = DatabaseConnectionString.Normalize(
+            Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                ?? "Host=localhost;Database=nordly_design;Username=nordly;Password=design-time-only");
         var options = new DbContextOptionsBuilder<OrderDbContext>()
             .UseNpgsql(connectionString)
             .Options;
