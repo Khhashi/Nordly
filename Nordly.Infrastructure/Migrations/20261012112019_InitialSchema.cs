@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Nordly.Infrastructure.Data;
 
 #nullable disable
 
 namespace Nordly.Infrastructure.Migrations
 {
+    [DbContext(typeof(OrderDbContext))]
+    [Migration("20261012112019_InitialSchema")]
     /// <inheritdoc />
-    public partial class InitialSchema : Migration
+    public class InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
