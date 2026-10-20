@@ -68,7 +68,7 @@ Krever .NET 8 SDK og Docker.
 ```bash
 docker compose up -d
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" --project Nordly.Web
-dotnet tool install --global dotnet-ef --version 8.0.31
+dotnet tool install --global dotnet-ef --version 8.0.32
 ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" dotnet ef database update --project Nordly.Infrastructure --startup-project Nordly.Web
 dotnet user-secrets set "Stripe:SecretKey" "sk_test_..." --project Nordly.Web
 dotnet user-secrets set "Stripe:WebhookSecret" "whsec_..." --project Nordly.Web
