@@ -12,6 +12,20 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: nordly_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d nordly_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Check out repository
@@ -30,6 +44,8 @@ jobs:
 
       - name: Run tests
         run: dotnet test Nordly.sln --configuration Release --no-build --verbosity normal
+        env:
+          NORDLY_TEST_MIGRATION_CONNECTION: Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres
 
   docker-build:
     runs-on: ubuntu-latest
