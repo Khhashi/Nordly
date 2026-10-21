@@ -55,7 +55,7 @@ Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for diagrammer, betalingsflyt og
 
 ## Tester og CI
 
-66 automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, at samme Stripe-betaling bare gir én ordre, lagring i databasen og at krypteringsnøklene overlever omstart. GitHub Actions bygger løsningen, kjører testene og bygger Docker-imaget på hver pull request.
+Automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, betaling, databaseoppgraderinger og at krypteringsnøklene overlever omstart. GitHub Actions bygger løsningen, kjører testene mot PostgreSQL og bygger Docker-imaget på hver pull request.
 
 ## Arbeidsflyt
 
@@ -68,9 +68,21 @@ Krever .NET 8 SDK og Docker.
 ```bash
 docker compose up -d
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" --project Nordly.Web
+dotnet tool install --global dotnet-ef --version 8.0.32
+ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" dotnet ef database update --project Nordly.Infrastructure --startup-project Nordly.Web
 dotnet user-secrets set "Stripe:SecretKey" "sk_test_..." --project Nordly.Web
 dotnet user-secrets set "Stripe:WebhookSecret" "whsec_..." --project Nordly.Web
 dotnet run --project Nordly.Web
 ```
 
 Kjør testene med `dotnet test`. Bruk Stripe-testkortet `4242 4242 4242 4242`.
+
+## Databaseskjema og utrulling
+
+Databaseskjemaet styres av EF Core-migreringer i `Nordly.Infrastructure/Migrations`. Appen kjører ikke migreringer automatisk ved oppstart; den stopper med en tydelig feilmelding dersom databasen har ventende migreringer. Dette hindrer at flere app-instanser endrer skjema samtidig.
+
+Før en ny appversjon rulles ut, kjør `dotnet ef database update --project Nordly.Infrastructure --startup-project Nordly.Web` én gang mot produksjonens `ConnectionStrings__DefaultConnection`. Bruk en sikker, midlertidig deploy-jobb eller migreringsrunner med samme bygde commit og databasehemmelighet; ikke legg tilkoblingsstrengen i repoet eller byggelogger. Start/utrull appinstansene etter at kommandoen er fullført. For første oppsett kjøres samme kommando mot en tom database.
+
+Den første migreringen er en additiv baseline: den oppretter manglende tabeller og kolonner, men sletter ikke eksisterende data. Dermed kan den brukes både på en tom database og på den eksisterende databasen som tidligere ble opprettet med `EnsureCreated` og oppstarts-SQL.
+
+PostgreSQL-migreringstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon.
