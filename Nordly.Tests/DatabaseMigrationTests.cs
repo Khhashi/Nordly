@@ -46,6 +46,12 @@ public class DatabaseMigrationTests
             var lineId = Guid.NewGuid();
             var subscriberId = Guid.NewGuid();
             const string email = "migration@example.test";
+            const string customerName = "Existing customer";
+            const string customerEmail = "customer@example.test";
+            const string customerPhone = "+47 12345678";
+            const string shippingAddress = "Example Street 1, Oslo";
+            const string keyXml = "<key>existing-material</key>";
+            const decimal shippingCost = 79m;
 
             await using (var connection = new NpgsqlConnection(scopedConnection))
             {
@@ -60,6 +66,11 @@ public class DatabaseMigrationTests
                         "Id" uuid PRIMARY KEY,
                         "CreatedAt" timestamp with time zone NOT NULL,
                         "PaymentStatus" character varying(40) NOT NULL,
+                        "CustomerName" character varying(200) NULL,
+                        "CustomerEmail" character varying(320) NULL,
+                        "CustomerPhone" character varying(40) NULL,
+                        "ShippingAddress" character varying(1000) NULL,
+                        "ShippingCost" numeric(18,2) NOT NULL DEFAULT 0,
                         "StripeCheckoutSessionId" character varying(200) NULL,
                         "StripePaymentIntentId" character varying(200) NULL
                     );
@@ -80,17 +91,23 @@ public class DatabaseMigrationTests
                         "SubscribedAt" timestamp with time zone NOT NULL
                     );
                     INSERT INTO "Products" ("Id", "Name", "Price") VALUES (@productId, 'Existing product', 75.50);
-                    INSERT INTO "Orders" ("Id", "CreatedAt", "PaymentStatus", "StripeCheckoutSessionId", "StripePaymentIntentId")
-                        VALUES (@orderId, '2026-01-01T00:00:00Z', 'Paid', 'cs_legacy', 'pi_legacy');
+                    INSERT INTO "Orders" ("Id", "CreatedAt", "PaymentStatus", "CustomerName", "CustomerEmail", "CustomerPhone", "ShippingAddress", "ShippingCost", "StripeCheckoutSessionId", "StripePaymentIntentId")
+                        VALUES (@orderId, '2026-01-01T00:00:00Z', 'Paid', @customerName, @customerEmail, @customerPhone, @shippingAddress, @shippingCost, 'cs_legacy', 'pi_legacy');
                     INSERT INTO "OrderLines" ("Id", "OrderId", "ProductId", "Quantity") VALUES (@lineId, @orderId, @productId, 2);
-                    INSERT INTO "DataProtectionKeys" ("FriendlyName", "Xml") VALUES ('legacy-key', '<key />');
+                    INSERT INTO "DataProtectionKeys" ("FriendlyName", "Xml") VALUES ('legacy-key', @keyXml);
                     INSERT INTO "NewsletterSubscribers" ("Id", "Email", "SubscribedAt") VALUES (@subscriberId, @email, '2026-01-01T00:00:00Z');
                     """, connection);
                 command.Parameters.AddWithValue("productId", productId);
                 command.Parameters.AddWithValue("orderId", orderId);
+                command.Parameters.AddWithValue("customerName", customerName);
+                command.Parameters.AddWithValue("customerEmail", customerEmail);
+                command.Parameters.AddWithValue("customerPhone", customerPhone);
+                command.Parameters.AddWithValue("shippingAddress", shippingAddress);
+                command.Parameters.AddWithValue("shippingCost", shippingCost);
                 command.Parameters.AddWithValue("lineId", lineId);
                 command.Parameters.AddWithValue("subscriberId", subscriberId);
                 command.Parameters.AddWithValue("email", email);
+                command.Parameters.AddWithValue("keyXml", keyXml);
                 await command.ExecuteNonQueryAsync();
             }
 
@@ -103,12 +120,16 @@ public class DatabaseMigrationTests
             var savedOrder = await upgradedDb.Orders.Include(order => order.OrderLines).SingleAsync();
             Assert.That(savedOrder.Id, Is.EqualTo(orderId));
             Assert.That(savedOrder.PaymentStatus, Is.EqualTo("Paid"));
-            Assert.That(savedOrder.CustomerEmail, Is.Null);
-            Assert.That(savedOrder.ShippingCost, Is.Zero);
+            Assert.That(savedOrder.CustomerName, Is.EqualTo(customerName));
+            Assert.That(savedOrder.CustomerEmail, Is.EqualTo(customerEmail));
+            Assert.That(savedOrder.CustomerPhone, Is.EqualTo(customerPhone));
+            Assert.That(savedOrder.ShippingAddress, Is.EqualTo(shippingAddress));
+            Assert.That(savedOrder.ShippingCost, Is.EqualTo(shippingCost));
             Assert.That(savedOrder.OrderLines.Single().Quantity, Is.EqualTo(2));
             Assert.That(await upgradedDb.Products.Select(product => product.Name).SingleAsync(), Is.EqualTo("Existing product"));
             Assert.That(await upgradedDb.NewsletterSubscribers.Select(item => item.Email).SingleAsync(), Is.EqualTo(email));
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.FriendlyName).SingleAsync(), Is.EqualTo("legacy-key"));
+            Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.Xml).SingleAsync(), Is.EqualTo(keyXml));
         });
     }
 
