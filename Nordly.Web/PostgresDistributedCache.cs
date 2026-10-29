@@ -29,16 +29,19 @@ public sealed class PostgresDistributedCache : IDistributedCache
 
         var now = DateTimeOffset.UtcNow;
         if (IsExpired(entry, now))
-        {
-            db.DistributedCacheEntries.Remove(entry);
-            await db.SaveChangesAsync(token);
             return null;
-        }
 
         if (entry.SlidingExpiration is not null)
         {
             entry.LastAccessed = now;
-            await db.SaveChangesAsync(token);
+            try
+            {
+                await db.SaveChangesAsync(token);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return null;
+            }
         }
 
         return entry.Value;
@@ -58,16 +61,19 @@ public sealed class PostgresDistributedCache : IDistributedCache
 
         var now = DateTimeOffset.UtcNow;
         if (IsExpired(entry, now))
-        {
-            db.DistributedCacheEntries.Remove(entry);
-            await db.SaveChangesAsync(token);
             return;
-        }
 
         if (entry.SlidingExpiration is not null)
         {
             entry.LastAccessed = now;
-            await db.SaveChangesAsync(token);
+            try
+            {
+                await db.SaveChangesAsync(token);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return;
+            }
         }
     }
 
@@ -84,7 +90,13 @@ public sealed class PostgresDistributedCache : IDistributedCache
             return;
 
         db.DistributedCacheEntries.Remove(entry);
-        await db.SaveChangesAsync(token);
+        try
+        {
+            await db.SaveChangesAsync(token);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+        }
     }
 
     public void Set(string key, byte[] value, DistributedCacheEntryOptions options)
@@ -117,6 +129,9 @@ public sealed class PostgresDistributedCache : IDistributedCache
             {
                 await db.SaveChangesAsync(token);
                 return;
+            }
+            catch (DbUpdateConcurrencyException) when (attempt == 0)
+            {
             }
             catch (DbUpdateException exception) when (attempt == 0 && IsUniqueConstraintViolation(exception))
             {
@@ -155,6 +170,6 @@ public sealed class PostgresDistributedCache : IDistributedCache
     {
         return options.AbsoluteExpirationRelativeToNow is not null
             ? now.Add(options.AbsoluteExpirationRelativeToNow.Value)
-            : options.AbsoluteExpiration;
+            : options.AbsoluteExpiration?.ToUniversalTime();
     }
 }

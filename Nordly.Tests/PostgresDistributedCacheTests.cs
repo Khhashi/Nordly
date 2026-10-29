@@ -106,6 +106,11 @@ public class PostgresDistributedCacheTests
             {
                 SlidingExpiration = TimeSpan.FromMinutes(5)
             });
+            var explicitExpiration = new DateTimeOffset(2040, 1, 1, 12, 0, 0, TimeSpan.FromHours(2));
+            await cache.SetAsync("offset-expiration", new byte[] { 4 }, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpiration = explicitExpiration
+            });
 
             var now = DateTimeOffset.UtcNow;
             var priorActiveAccess = now.AddMinutes(-4);
@@ -123,6 +128,12 @@ public class PostgresDistributedCacheTests
             {
                 var activeAfterRefresh = await db.DistributedCacheEntries.SingleAsync(entry => entry.Key == "active-sliding");
                 Assert.That(activeAfterRefresh.LastAccessed, Is.GreaterThan(priorActiveAccess));
+                var savedExpiration = await db.DistributedCacheEntries
+                    .Where(entry => entry.Key == "offset-expiration")
+                    .Select(entry => entry.AbsoluteExpiration)
+                    .SingleAsync();
+                Assert.That(savedExpiration!.Value.Offset, Is.EqualTo(TimeSpan.Zero));
+                Assert.That(savedExpiration.Value, Is.EqualTo(explicitExpiration.ToUniversalTime()));
             }
 
             Assert.That(await cache.CleanupExpiredEntriesAsync(), Is.EqualTo(2));
