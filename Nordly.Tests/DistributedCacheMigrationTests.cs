@@ -50,6 +50,8 @@ public class DistributedCacheMigrationTests
         await InIsolatedSchema(async scopedConnection =>
         {
             var now = DateTimeOffset.UtcNow;
+            // PostgreSQL timestamptz stores microseconds, not .NET 100-nanosecond ticks.
+            now = now.AddTicks(-(now.Ticks % 10));
             var absoluteExpiration = now.AddHours(3);
             var slidingExpiration = TimeSpan.FromHours(2);
 
