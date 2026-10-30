@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Nordly.Infrastructure.Data;
 using Npgsql;
 using Nordly.Web;
@@ -178,6 +179,45 @@ public class PostgresDistributedCacheTests
             Assert.That(updatedResult![0], Is.InRange((byte)16, (byte)31));
             await using var verifyDb = await factory.CreateDbContextAsync();
             Assert.That(await verifyDb.DistributedCacheEntries.CountAsync(entry => entry.Key == "shared-session-cart"), Is.EqualTo(1));
+        });
+    }
+
+    [Test]
+    public async Task Cleanup_Service_Removes_Expired_Entries_On_Start()
+    {
+        await InIsolatedSchema(async connectionString =>
+        {
+            var factory = new PostgresDbContextFactory(connectionString);
+            await using (var db = await factory.CreateDbContextAsync())
+                await db.Database.MigrateAsync();
+
+            var cache = new PostgresDistributedCache(factory);
+            await cache.SetAsync("expired-cleanup", new byte[] { 1 }, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(-1)
+            });
+
+            var cleanupService = new DistributedCacheCleanupService(
+                cache,
+                NullLogger<DistributedCacheCleanupService>.Instance);
+            await cleanupService.StartAsync(CancellationToken.None);
+
+            try
+            {
+                using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                while (true)
+                {
+                    await using var db = await factory.CreateDbContextAsync(timeout.Token);
+                    if (!await db.DistributedCacheEntries.AnyAsync(entry => entry.Key == "expired-cleanup", timeout.Token))
+                        break;
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(50), timeout.Token);
+                }
+            }
+            finally
+            {
+                await cleanupService.StopAsync(CancellationToken.None);
+            }
         });
     }
 

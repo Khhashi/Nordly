@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Caching.Distributed;
 using Nordly.Domain.Services;
 using Nordly.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,14 @@ builder.Services.AddRazorPages();
 var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                           ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is required.");
 var connectionString = DatabaseConnectionString.Normalize(rawConnectionString);
-builder.Services.AddDbContext<OrderDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContextFactory<OrderDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<OrderDbContext>()
     .SetApplicationName("Nordly");
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSingleton<PostgresDistributedCache>();
+builder.Services.AddSingleton<IDistributedCache>(serviceProvider =>
+    serviceProvider.GetRequiredService<PostgresDistributedCache>());
+builder.Services.AddHostedService<DistributedCacheCleanupService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(2);

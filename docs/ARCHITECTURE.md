@@ -208,4 +208,4 @@ erDiagram
 - **Databaseskjema:** `EnsureCreated` brukes i stedet for EF-migrasjoner. Endringer i modellen krever derfor manuell håndtering. Neste steg er å gå over til migrasjoner.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
 - **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.
-- **Handlekurv i minnet:** Sesjonen ligger i minnet, så handlekurven tømmes når appen starter på nytt. Neste steg er å lagre sesjonen i Postgres.
+- **Gjestekurv:** ASP.NET-sesjonen lagres i en Postgres-basert distribuert cache og overlever derfor omstarter og nye appinstanser. Ubrukte entries utløper etter sesjonens to timers inaktivitet og ryddes periodisk.
