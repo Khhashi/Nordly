@@ -17,7 +17,7 @@ namespace Nordly.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.32")
+                .HasAnnotation("ProductVersion", "8.0.31")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -38,7 +38,7 @@ namespace Nordly.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys");
+                    b.ToTable("DataProtectionKeys", (string)null);
                 });
 
             modelBuilder.Entity("Nordly.Domain.Entities.NewsletterSubscriber", b =>
@@ -60,7 +60,7 @@ namespace Nordly.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("NewsletterSubscribers");
+                    b.ToTable("NewsletterSubscribers", (string)null);
                 });
 
             modelBuilder.Entity("Nordly.Domain.Entities.Order", b =>
@@ -110,7 +110,7 @@ namespace Nordly.Infrastructure.Migrations
                     b.HasIndex("StripeCheckoutSessionId")
                         .IsUnique();
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Nordly.Domain.Entities.OrderLine", b =>
@@ -134,7 +134,7 @@ namespace Nordly.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderLines");
+                    b.ToTable("OrderLines", (string)null);
                 });
 
             modelBuilder.Entity("Nordly.Domain.Entities.Product", b =>
@@ -154,33 +154,7 @@ namespace Nordly.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Nordly.Infrastructure.Data.DistributedCacheEntry", b =>
-                {
-                    b.Property<string>("Key")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
-
-                    b.Property<DateTimeOffset?>("AbsoluteExpiration")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("LastAccessed")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<TimeSpan?>("SlidingExpiration")
-                        .HasColumnType("interval");
-
-                    b.Property<byte[]>("Value")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.HasKey("Key");
-
-                    b.HasIndex("AbsoluteExpiration");
-
-                    b.ToTable("DistributedCacheEntries");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Nordly.Domain.Entities.OrderLine", b =>
