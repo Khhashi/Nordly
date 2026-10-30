@@ -10,7 +10,7 @@
 Nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
 
 **[Live demo ↗](https://ordermanager-8ym2.onrender.com)**<br>
-<sub>En gratis ping holder demoen våken hele døgnet. Gratisplanen kan likevel gi kaldstart hvis tjenesten har vært utilgjengelig.</sub>
+<sub>En gratis ping holder demoen vanligvis våken på hverdager kl. 06–21. Utenfor dette tidsrommet kan gratisplanen gi kaldstart.</sub>
 
 ## Hvorfor jeg bygde det
 

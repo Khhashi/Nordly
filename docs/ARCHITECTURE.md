@@ -188,9 +188,9 @@ erDiagram
 - *Hvorfor:* Render sin gratis database slettes etter en periode. Neon er permanent og skalerer til null når den ikke brukes.
 
 **ADR-5: cron-job.org mot kaldstart**
-- *Valg:* cron-job.org kaller `/health` hvert 10. minutt hele døgnet (`*/10 * * * *`).
+- *Valg:* cron-job.org kaller `/health` hvert 10. minutt på hverdager fra kl. 06:00 til 20:50 Oslo-tid (`*/10 6-20 * * 1-5`).
 - *Alternativ:* Betalt plan hos Render.
-- *Hvorfor:* Render sin gratisplan sover etter 15 minutter uten innkommende trafikk. Pingen holder normalt appen våken, men gir ingen oppetidsgaranti. Kontroller forbruket: kontinuerlig drift bruker omtrent 720 timer i en 30-dagersmåned, av den delte gratisrammen på 750 timer.
+- *Hvorfor:* Render sin gratisplan sover etter 15 minutter uten innkommende trafikk. Pingen holder normalt appen våken til rundt kl. 21 på hverdager, men gir ingen oppetidsgaranti. Kontroller forbruket: dette bruker omtrent 320–330 timer i måneden, av den delte gratisrammen på 750 timer.
 
 **ADR-6: E-post via Brevo sitt HTTP-API**
 - *Valg:* Ordrebekreftelser og velkomst-e-post for nyhetsbrevet sendes med Brevo sitt API over HTTPS. SMTP-senderen brukes bare når ingen API-nøkkel er satt, for eksempel lokalt.
