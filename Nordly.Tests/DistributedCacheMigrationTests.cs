@@ -10,7 +10,7 @@ public class DistributedCacheMigrationTests
     private readonly string? _connectionString = Environment.GetEnvironmentVariable("NORDLY_TEST_MIGRATION_CONNECTION");
 
     [Test]
-    public async Task Empty_Database_Creates_Distributed_Cache_Table_And_Absolute_Expiration_Index()
+    public async Task Empty_Database_Creates_Distributed_Cache_Table_And_Expiry_Index()
     {
         if (string.IsNullOrWhiteSpace(_connectionString))
             Assert.Ignore("Set NORDLY_TEST_MIGRATION_CONNECTION to run PostgreSQL migration integration tests.");
@@ -31,7 +31,7 @@ public class DistributedCacheMigrationTests
                 FROM pg_indexes
                 WHERE schemaname = current_schema()
                   AND tablename = 'DistributedCacheEntries'
-                  AND indexname = 'IX_DistributedCacheEntries_AbsoluteExpiration'
+                  AND indexname = 'IX_DistributedCacheEntries_ExpiresAt'
                 """, connection);
 
             Assert.That((long)(await command.ExecuteScalarAsync())!, Is.EqualTo(1));
