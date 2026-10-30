@@ -2,7 +2,7 @@ services:
   - type: web
     name: nordly
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /health
     envVars:
       - key: ConnectionStrings__DefaultConnection
