@@ -68,9 +68,10 @@ public class OrderDbContext : DbContext, IDataProtectionKeyContext
             entity.Property(entry => entry.Key).IsRequired().HasMaxLength(512);
             entity.Property(entry => entry.Value).IsRequired();
             entity.Property(entry => entry.AbsoluteExpiration);
+            entity.Property(entry => entry.ExpiresAt);
             entity.Property(entry => entry.SlidingExpiration);
             entity.Property(entry => entry.LastAccessed).IsRequired();
-            entity.HasIndex(entry => entry.AbsoluteExpiration);
+            entity.HasIndex(entry => entry.ExpiresAt);
         });
     }
 }
