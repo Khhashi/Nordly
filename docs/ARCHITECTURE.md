@@ -188,9 +188,9 @@ erDiagram
 - *Hvorfor:* Render sin gratis database slettes etter en periode. Neon er permanent og skalerer til null når den ikke brukes.
 
 **ADR-5: cron-job.org mot kaldstart**
-- *Valg:* Kall `/health` hvert 10. minutt på hverdager kl. 07–20.
+- *Valg:* cron-job.org kaller `/health` hvert 10. minutt hele døgnet (`*/10 * * * *`).
 - *Alternativ:* Betalt plan hos Render.
-- *Hvorfor:* Render sin gratisplan sover etter 15 minutter. Pingen holder appen våken når den mest sannsynlig besøkes, og holder seg innenfor 750 gratis timer i måneden.
+- *Hvorfor:* Render sin gratisplan sover etter 15 minutter uten innkommende trafikk. Pingen holder normalt appen våken, men gir ingen oppetidsgaranti. Kontroller forbruket: kontinuerlig drift bruker omtrent 720 timer i en 30-dagersmåned, av den delte gratisrammen på 750 timer.
 
 **ADR-6: E-post via Brevo sitt HTTP-API**
 - *Valg:* Ordrebekreftelser og velkomst-e-post for nyhetsbrevet sendes med Brevo sitt API over HTTPS. SMTP-senderen brukes bare når ingen API-nøkkel er satt, for eksempel lokalt.
@@ -204,7 +204,7 @@ erDiagram
 
 ## 8. Begrensninger og videre arbeid
 
-- **Kaldstart:** Utenom hverdager 07–20 kan første besøk ta opptil ett minutt.
+- **Kaldstart:** Gratisplanen kan fortsatt gi kaldstart hvis ping-jobben feiler, tjenesten restartes eller gratisrammen er brukt opp.
 - **Databaseskjema:** `EnsureCreated` brukes i stedet for EF-migrasjoner. Endringer i modellen krever derfor manuell håndtering. Neste steg er å gå over til migrasjoner.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
 - **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.
