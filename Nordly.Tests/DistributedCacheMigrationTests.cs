@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Nordly.Infrastructure.Data;
 using Npgsql;
 
@@ -8,6 +10,7 @@ namespace Nordly.Tests;
 public class DistributedCacheMigrationTests
 {
     private readonly string? _connectionString = Environment.GetEnvironmentVariable("NORDLY_TEST_MIGRATION_CONNECTION");
+    private const string InitialCacheMigration = "20261028111042_PersistDistributedCache";
 
     [Test]
     public async Task Empty_Database_Creates_Distributed_Cache_Table_And_Expiry_Index()
@@ -35,6 +38,76 @@ public class DistributedCacheMigrationTests
                 """, connection);
 
             Assert.That((long)(await command.ExecuteScalarAsync())!, Is.EqualTo(1));
+        });
+    }
+
+    [Test]
+    public async Task Expiry_Migration_Backfills_Existing_Absolute_And_Sliding_Entries()
+    {
+        if (string.IsNullOrWhiteSpace(_connectionString))
+            Assert.Ignore("Set NORDLY_TEST_MIGRATION_CONNECTION to run PostgreSQL migration integration tests.");
+
+        await InIsolatedSchema(async scopedConnection =>
+        {
+            var now = DateTimeOffset.UtcNow;
+            // PostgreSQL timestamptz stores microseconds, not .NET 100-nanosecond ticks.
+            now = now.AddTicks(-(now.Ticks % 10));
+            var absoluteExpiration = now.AddHours(3);
+            var slidingExpiration = TimeSpan.FromHours(2);
+
+            await using (var db = CreateDbContext(scopedConnection))
+                await db.GetService<IMigrator>().MigrateAsync(InitialCacheMigration);
+
+            await using (var connection = new NpgsqlConnection(scopedConnection))
+            {
+                await connection.OpenAsync();
+                await using var command = new NpgsqlCommand("""
+                    INSERT INTO "DistributedCacheEntries"
+                        ("Key", "Value", "AbsoluteExpiration", "SlidingExpiration", "LastAccessed")
+                    VALUES
+                        ('absolute-and-sliding', @value, @absoluteExpiration, @slidingExpiration, @lastAccessed),
+                        ('absolute-only', @value, @absoluteExpiration, NULL, @lastAccessed),
+                        ('sliding-only', @value, NULL, @slidingExpiration, @lastAccessed),
+                        ('no-expiration', @value, NULL, NULL, @lastAccessed)
+                    """, connection);
+                command.Parameters.AddWithValue("value", new byte[] { 1, 2, 3 });
+                command.Parameters.AddWithValue("absoluteExpiration", absoluteExpiration);
+                command.Parameters.AddWithValue("slidingExpiration", slidingExpiration);
+                command.Parameters.AddWithValue("lastAccessed", now);
+                await command.ExecuteNonQueryAsync();
+            }
+
+            await using (var db = CreateDbContext(scopedConnection))
+                await db.Database.MigrateAsync();
+
+            await using var verifyDb = CreateDbContext(scopedConnection);
+            var entries = await verifyDb.DistributedCacheEntries.ToDictionaryAsync(entry => entry.Key);
+
+            foreach (var entry in entries.Values)
+                CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, entry.Value);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(entries["absolute-and-sliding"].AbsoluteExpiration, Is.EqualTo(absoluteExpiration));
+                Assert.That(entries["absolute-and-sliding"].SlidingExpiration, Is.EqualTo(slidingExpiration));
+                Assert.That(entries["absolute-and-sliding"].LastAccessed, Is.EqualTo(now));
+                Assert.That(entries["absolute-and-sliding"].ExpiresAt, Is.EqualTo(now.Add(slidingExpiration)));
+
+                Assert.That(entries["absolute-only"].AbsoluteExpiration, Is.EqualTo(absoluteExpiration));
+                Assert.That(entries["absolute-only"].SlidingExpiration, Is.Null);
+                Assert.That(entries["absolute-only"].LastAccessed, Is.EqualTo(now));
+                Assert.That(entries["absolute-only"].ExpiresAt, Is.EqualTo(absoluteExpiration));
+
+                Assert.That(entries["sliding-only"].AbsoluteExpiration, Is.Null);
+                Assert.That(entries["sliding-only"].SlidingExpiration, Is.EqualTo(slidingExpiration));
+                Assert.That(entries["sliding-only"].LastAccessed, Is.EqualTo(now));
+                Assert.That(entries["sliding-only"].ExpiresAt, Is.EqualTo(now.Add(slidingExpiration)));
+
+                Assert.That(entries["no-expiration"].AbsoluteExpiration, Is.Null);
+                Assert.That(entries["no-expiration"].SlidingExpiration, Is.Null);
+                Assert.That(entries["no-expiration"].LastAccessed, Is.EqualTo(now));
+                Assert.That(entries["no-expiration"].ExpiresAt, Is.Null);
+            });
         });
     }
 
