@@ -15,6 +15,7 @@ public class OrderDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
     public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
+    public DbSet<DistributedCacheEntry> DistributedCacheEntries => Set<DistributedCacheEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +60,18 @@ public class OrderDbContext : DbContext, IDataProtectionKeyContext
             entity.Property(subscriber => subscriber.Email).IsRequired().HasMaxLength(320);
             entity.HasIndex(subscriber => subscriber.Email).IsUnique();
             entity.Property(subscriber => subscriber.SubscribedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<DistributedCacheEntry>(entity =>
+        {
+            entity.HasKey(entry => entry.Key);
+            entity.Property(entry => entry.Key).IsRequired().HasMaxLength(512);
+            entity.Property(entry => entry.Value).IsRequired();
+            entity.Property(entry => entry.AbsoluteExpiration);
+            entity.Property(entry => entry.ExpiresAt);
+            entity.Property(entry => entry.SlidingExpiration);
+            entity.Property(entry => entry.LastAccessed).IsRequired();
+            entity.HasIndex(entry => entry.ExpiresAt);
         });
     }
 }
