@@ -166,6 +166,9 @@ namespace Nordly.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("AbsoluteExpiration")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTimeOffset>("LastAccessed")
                         .HasColumnType("timestamp with time zone");
 
@@ -178,7 +181,7 @@ namespace Nordly.Infrastructure.Migrations
 
                     b.HasKey("Key");
 
-                    b.HasIndex("AbsoluteExpiration");
+                    b.HasIndex("ExpiresAt");
 
                     b.ToTable("DistributedCacheEntries");
                 });
