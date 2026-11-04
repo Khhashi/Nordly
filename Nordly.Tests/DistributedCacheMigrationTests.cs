@@ -54,6 +54,7 @@ public class DistributedCacheMigrationTests
             now = now.AddTicks(-(now.Ticks % 10));
             var absoluteExpiration = now.AddHours(3);
             var slidingExpiration = TimeSpan.FromHours(2);
+            var earlierAbsoluteExpiration = now.AddHours(1);
 
             await using (var db = CreateDbContext(scopedConnection))
                 await db.GetService<IMigrator>().MigrateAsync(InitialCacheMigration);
@@ -66,12 +67,14 @@ public class DistributedCacheMigrationTests
                         ("Key", "Value", "AbsoluteExpiration", "SlidingExpiration", "LastAccessed")
                     VALUES
                         ('absolute-and-sliding', @value, @absoluteExpiration, @slidingExpiration, @lastAccessed),
+                        ('earlier-absolute-and-sliding', @value, @earlierAbsoluteExpiration, @slidingExpiration, @lastAccessed),
                         ('absolute-only', @value, @absoluteExpiration, NULL, @lastAccessed),
                         ('sliding-only', @value, NULL, @slidingExpiration, @lastAccessed),
                         ('no-expiration', @value, NULL, NULL, @lastAccessed)
                     """, connection);
                 command.Parameters.AddWithValue("value", new byte[] { 1, 2, 3 });
                 command.Parameters.AddWithValue("absoluteExpiration", absoluteExpiration);
+                command.Parameters.AddWithValue("earlierAbsoluteExpiration", earlierAbsoluteExpiration);
                 command.Parameters.AddWithValue("slidingExpiration", slidingExpiration);
                 command.Parameters.AddWithValue("lastAccessed", now);
                 await command.ExecuteNonQueryAsync();
@@ -92,6 +95,11 @@ public class DistributedCacheMigrationTests
                 Assert.That(entries["absolute-and-sliding"].SlidingExpiration, Is.EqualTo(slidingExpiration));
                 Assert.That(entries["absolute-and-sliding"].LastAccessed, Is.EqualTo(now));
                 Assert.That(entries["absolute-and-sliding"].ExpiresAt, Is.EqualTo(now.Add(slidingExpiration)));
+
+                Assert.That(entries["earlier-absolute-and-sliding"].AbsoluteExpiration, Is.EqualTo(earlierAbsoluteExpiration));
+                Assert.That(entries["earlier-absolute-and-sliding"].SlidingExpiration, Is.EqualTo(slidingExpiration));
+                Assert.That(entries["earlier-absolute-and-sliding"].LastAccessed, Is.EqualTo(now));
+                Assert.That(entries["earlier-absolute-and-sliding"].ExpiresAt, Is.EqualTo(earlierAbsoluteExpiration));
 
                 Assert.That(entries["absolute-only"].AbsoluteExpiration, Is.EqualTo(absoluteExpiration));
                 Assert.That(entries["absolute-only"].SlidingExpiration, Is.Null);
