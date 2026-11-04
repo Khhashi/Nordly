@@ -139,6 +139,9 @@ public class PostgresDistributedCacheTests
                 Assert.That(savedExpiration.Value, Is.EqualTo(explicitExpiration.ToUniversalTime()));
             }
 
+            Assert.That(await cache.GetAsync("expired-absolute"), Is.Null);
+            Assert.That(await cache.GetAsync("expired-sliding"), Is.Null);
+
             Assert.That(await cache.CleanupExpiredEntriesAsync(), Is.EqualTo(2));
             Assert.That(await cache.GetAsync("expired-absolute"), Is.Null);
             Assert.That(await cache.GetAsync("expired-sliding"), Is.Null);

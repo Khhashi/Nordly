@@ -99,6 +99,11 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
+app.Use(async (context, next) =>
+{
+    await context.Session.LoadAsync(context.RequestAborted);
+    await next();
+});
 app.UseAuthorization();
 app.MapGet("/health", async (OrderDbContext db) =>
     await db.Database.CanConnectAsync()
