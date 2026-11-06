@@ -8,6 +8,22 @@ namespace Nordly.Tests;
 public class BrevoWelcomeEmailSenderTests
 {
     [Test]
+    public async Task Missing_Mail_Configuration_Is_Reported()
+    {
+        INewsletterWelcomeSender sender = new NoWelcomeEmailSender(NullLogger<NoWelcomeEmailSender>.Instance);
+        Assert.That(await sender.SendWithResultAsync("kunde@example.com", "https://nordly.example/unsubscribe"), Is.False);
+    }
+
+    [Test]
+    public async Task Missing_Brevo_Key_Is_Reported()
+    {
+        var handler = new CapturingHandler();
+        INewsletterWelcomeSender sender = CreateSender(handler, apiKey: null);
+        Assert.That(await sender.SendWithResultAsync("kunde@example.com", "https://nordly.example/unsubscribe"), Is.False);
+        Assert.That(handler.Request, Is.Null);
+    }
+
+    [Test]
     public async Task SendWithResultAsync_Includes_Unsubscribe_Link()
     {
         var handler = new CapturingHandler();
