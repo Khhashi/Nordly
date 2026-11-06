@@ -7,6 +7,39 @@ namespace Nordly.Tests;
 
 public class NewsletterSignupStoreTests
 {
+    [TestCase(true)]
+    [TestCase(false)]
+    public async Task Saves_Prepared_New_Or_Inactive_Subscription(bool isNew)
+    {
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+        var oldVersion = Guid.NewGuid();
+        var subscriber = new NewsletterSubscriber { Email = "customer@example.com" };
+        if (!isNew)
+        {
+            subscriber.UnsubscribeVersion = oldVersion;
+            await using var seed = new OrderDbContext(options);
+            seed.NewsletterSubscribers.Add(subscriber);
+            await seed.SaveChangesAsync();
+        }
+
+        var previousVersion = subscriber.UnsubscribeVersion;
+        Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
+        var prepared = new PreparedNewsletterSignup(
+            NewsletterSignupStatus.Ready, subscriber, previousVersion, isNew, "https://example.com");
+        await using var db = new OrderDbContext(options);
+
+        await new NewsletterSignupStore(db).SaveAsync(prepared);
+
+        await using var check = new OrderDbContext(options);
+        var saved = await check.NewsletterSubscribers.SingleAsync();
+        Assert.That(saved.Id, Is.EqualTo(subscriber.Id));
+        Assert.That(saved.IsSubscribed, Is.True);
+        Assert.That(saved.ConsentText, Is.EqualTo(NewsletterSignupInput.ConsentText));
+        Assert.That(saved.UnsubscribeVersion, Is.EqualTo(subscriber.UnsubscribeVersion));
+        Assert.That(saved.UnsubscribeVersion, Is.Not.EqualTo(previousVersion));
+    }
+
     [Test]
     public async Task Stale_Preparation_Cannot_Overwrite_Concurrent_Activation()
     {
