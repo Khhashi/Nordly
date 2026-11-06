@@ -124,7 +124,9 @@ namespace Nordly.Infrastructure.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
-                    b.HasIndex("StripeCheckoutSessionId").IsUnique();
+                    b.HasIndex("StripeCheckoutSessionId")
+                        .IsUnique();
+
                     b.ToTable("Orders");
                 });
 
@@ -144,8 +146,11 @@ namespace Nordly.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
                     b.HasIndex("OrderId");
+
                     b.HasIndex("ProductId");
+
                     b.ToTable("OrderLines");
                 });
 
@@ -195,6 +200,30 @@ namespace Nordly.Infrastructure.Migrations
                     b.HasIndex("ExpiresAt");
 
                     b.ToTable("DistributedCacheEntries");
+                });
+
+            modelBuilder.Entity("Nordly.Domain.Entities.OrderLine", b =>
+                {
+                    b.HasOne("Nordly.Domain.Entities.Order", "Order")
+                        .WithMany("OrderLines")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Nordly.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Nordly.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderLines");
                 });
 #pragma warning restore 612, 618
         }
