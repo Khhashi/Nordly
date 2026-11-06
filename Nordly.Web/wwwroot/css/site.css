@@ -564,7 +564,7 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .editorial-copy .eyebrow { color: #f3d4ae; }
 .editorial-copy p { color: rgba(255,255,255,0.75); }
 .product-card:hover { box-shadow: 0 18px 30px rgba(28,28,27,0.08); }
-.product-image-wrap, .detail-image-panel { background: #f0eadf; }
+.product-image-wrap, .detail-image-panel { background: #f2f1ec; }
 .product-category { color: #355143; }
 .product-info h3 a:hover { color: var(--blue); }
 .product-detail-shell .breadcrumb a, .text-link { color: #355143; }
@@ -611,15 +611,12 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .section-intro h2 { color: var(--ink); font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; margin: 0.35rem 0; }
 .section-intro p { color: var(--muted); margin: 0; }
 .category-tiles { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
-.category-tile { border-radius: 18px; display: flex; flex-direction: column; padding: 1.25rem; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 12px 24px rgba(28,28,27,0.04); }
-.category-tile:hover { transform: translateY(-4px); box-shadow: 0 16px 28px rgba(28,28,27,0.08); }
+.category-tile { border-radius: 14px; display: flex; flex-direction: column; padding: 1.25rem; text-decoration: none; transition: transform 0.2s ease; box-shadow: none; }
+.category-tile:hover { transform: translateY(-2px); box-shadow: none; }
 .category-tile > span { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .category-tile strong { letter-spacing: -0.02em; }
 .category-tile strong span { font-size: 1rem; margin-left: 0.25rem; }
-.product-badge { background: var(--coral); border-radius: 999px; color: #fff; font-size: 0.64rem; font-weight: 800; left: 0.75rem; letter-spacing: 0.05em; padding: 0.35rem 0.55rem; position: absolute; text-transform: uppercase; top: 2.9rem; }
-.product-card:nth-child(3n + 1) .product-badge { background: var(--blue); }
-.product-card:nth-child(3n + 2) .product-badge { background: #6c4fd6; }
-.product-card:nth-child(3n) .product-badge { background: var(--coral); }
+.product-badge { background: #23463b; border-radius: 999px; color: #fff; font-size: 0.64rem; font-weight: 800; left: 0.75rem; letter-spacing: 0.05em; padding: 0.35rem 0.55rem; position: absolute; text-transform: uppercase; top: 2.9rem; }
 .price-stack { align-items: baseline; display: flex; gap: 0.45rem; }
 .price-stack del { color: #9a9a97; font-size: 0.75rem; }
 .service-grid { border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); display: grid; gap: 1.5rem; grid-template-columns: repeat(3, 1fr); margin-top: 5rem; padding: 2rem 0; }
@@ -783,7 +780,7 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .category-tile img { height: 100%; inset: 0; object-fit: cover; position: absolute; transition: transform 0.4s ease; width: 100%; z-index: -2; }
 .category-tile::after { background: linear-gradient(180deg, rgba(20,20,18,0) 40%, rgba(20,20,18,0.7) 100%); content: ""; inset: 0; position: absolute; z-index: -1; }
 .category-tile:hover img { transform: scale(1.04); }
-.category-tile .tile-label { background: rgba(255,253,249,0.92); border-radius: 999px; color: var(--ink); left: 1.25rem; padding: 0.35rem 0.7rem; position: absolute; top: 1.25rem; }
+.category-tile .tile-label { background: rgba(255,253,249,0.96); border-radius: 8px; color: var(--ink); left: 1.25rem; padding: 0.35rem 0.7rem; position: absolute; top: 1.25rem; }
 .category-tile strong { font-size: 1.5rem; max-width: 75%; }
 .category-tile .tile-arrow { bottom: 1.25rem; font-size: 1.3rem; position: absolute; right: 1.25rem; }
 @media (max-width: 800px) {
@@ -850,16 +847,17 @@ button, input, select, textarea { font-family: inherit; }
 
 /* Kategorifaner: grønn aktiv fane i stedet for svart */
 .category-tab:hover, .category-tab.active { background: #23463b; border-color: #23463b; color: #fff; }
+.category-tab:focus-visible { outline-color: #23463b; }
 
-/* Tjenester: fargede kort og ikoner i samme palett */
+/* Tjenester: lyse flater og dempede ikoner */
 .service-grid { border: 0; gap: 1rem; padding: 0; }
 .service-card { border-radius: 18px; padding: 1.5rem; }
-.service-card:nth-child(1) { background: #e3ebdf; }
-.service-card:nth-child(2) { background: #f3e3d6; }
-.service-card:nth-child(3) { background: #f4e7c9; }
+.service-card:nth-child(1) { background: #f1f2ed; }
+.service-card:nth-child(2) { background: #f1f2ed; }
+.service-card:nth-child(3) { background: #f1f2ed; }
 .service-card:nth-child(1) .service-icon { color: #23463b; }
-.service-card:nth-child(2) .service-icon { color: var(--terracotta); }
-.service-card:nth-child(3) .service-icon { color: #a8742f; }
+.service-card:nth-child(2) .service-icon { color: #23463b; }
+.service-card:nth-child(3) .service-icon { color: #23463b; }
 @media (max-width: 800px) {
   .service-card { border-bottom: 0; padding: 1.25rem; }
 }
@@ -892,11 +890,13 @@ button, input, select, textarea { font-family: inherit; }
 
 /* Én grønnfarge: knapper og merker bruker samme skogsgrønne som resten av siden */
 :root { --blue: #23463b; }
-.primary-btn, .add-btn { box-shadow: 0 12px 22px rgba(35,70,59,0.18); }
+.primary-btn, .add-btn { box-shadow: none; }
 
-/* Produktkort: lettere uttrykk uten kant, skygge bare ved hover */
-.product-card { border-color: transparent; border-radius: 14px; box-shadow: 0 1px 2px rgba(28,28,27,0.05); }
-.product-card:hover { box-shadow: 0 16px 32px rgba(28,28,27,0.09); }
+/* Produktkort med diskret kant og mindre skygge */
+.product-card { border-color: #e8e7e1; border-radius: 14px; box-shadow: none; }
+.product-card:hover { box-shadow: 0 8px 20px rgba(28,28,27,0.06); }
+.product-card .product-info h3 { color: #243d35; }
+.product-card .product-detail-link { color: #4a5f54; }
 
 /* #184 Roligere produkttittel */
 .product-detail-copy h1 { font-size: clamp(2.2rem, 3.6vw, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 0.75rem; text-wrap: balance; }
