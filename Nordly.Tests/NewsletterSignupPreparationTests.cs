@@ -11,6 +11,38 @@ namespace Nordly.Tests;
 public class NewsletterSignupPreparationTests
 {
     [Test]
+    public async Task Inactive_Subscription_Is_Prepared_With_New_Consent_But_Not_Yet_Saved()
+    {
+        await using var db = CreateDatabase();
+        var oldVersion = Guid.NewGuid();
+        var subscriber = new NewsletterSubscriber
+        {
+            Email = "customer@example.com",
+            IsSubscribed = false,
+            UnsubscribeVersion = oldVersion,
+            ConsentText = "Tidligere samtykke",
+            UnsubscribedAt = DateTime.UtcNow.AddDays(-1)
+        };
+        db.NewsletterSubscribers.Add(subscriber);
+        await db.SaveChangesAsync();
+
+        var result = await CreatePreparation(db).PrepareAsync("customer@example.com", true);
+
+        Assert.That(result.Status, Is.EqualTo(NewsletterSignupStatus.Ready));
+        Assert.That(result.IsNew, Is.False);
+        Assert.That(result.PreviousVersion, Is.EqualTo(oldVersion));
+        Assert.That(result.Subscriber!.Id, Is.EqualTo(subscriber.Id));
+        Assert.That(result.Subscriber.UnsubscribeVersion, Is.Not.EqualTo(oldVersion));
+        Assert.That(result.Subscriber.ConsentText, Is.EqualTo(NewsletterSignupInput.ConsentText));
+        Assert.That(result.Subscriber.UnsubscribedAt, Is.Null);
+        Assert.That(subscriber.IsSubscribed, Is.False);
+        Assert.That(subscriber.ConsentText, Is.EqualTo("Tidligere samtykke"));
+        Assert.That(db.ChangeTracker.HasChanges(), Is.False);
+        db.ChangeTracker.Clear();
+        Assert.That((await db.NewsletterSubscribers.SingleAsync()).IsSubscribed, Is.False);
+    }
+
+    [Test]
     public async Task Valid_Signup_Prepares_Consent_And_Link_Without_Saving()
     {
         await using var db = CreateDatabase();
