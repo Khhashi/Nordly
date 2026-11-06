@@ -7,6 +7,27 @@ namespace Nordly.Tests;
 
 public class BrevoWelcomeEmailSenderTests
 {
+    [Test]
+    public async Task SendWithResultAsync_Includes_Unsubscribe_Link()
+    {
+        var handler = new CapturingHandler();
+        var sender = CreateSender(handler);
+
+        var sent = await sender.SendWithResultAsync("kunde@example.com", "https://nordly.example/unsubscribe");
+
+        Assert.That(sent, Is.True);
+        Assert.That(handler.Body, Does.Contain("https://nordly.example/unsubscribe"));
+    }
+
+    [Test]
+    public async Task SendWithResultAsync_Reports_Rejection()
+    {
+        var handler = new CapturingHandler { StatusCode = HttpStatusCode.BadRequest };
+        var sender = CreateSender(handler);
+
+        Assert.That(await sender.SendWithResultAsync("kunde@example.com", "https://nordly.example/unsubscribe"), Is.False);
+    }
+
     private sealed class CapturingHandler : HttpMessageHandler
     {
         public HttpRequestMessage? Request { get; private set; }
