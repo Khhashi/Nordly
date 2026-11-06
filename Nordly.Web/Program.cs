@@ -32,11 +32,13 @@ if (!string.IsNullOrWhiteSpace(builder.Configuration["Email:BrevoApiKey"]))
 {
     builder.Services.AddHttpClient<IOrderConfirmationEmailSender, BrevoOrderConfirmationEmailSender>();
     builder.Services.AddHttpClient<IWelcomeEmailSender, BrevoWelcomeEmailSender>();
+    builder.Services.AddHttpClient<INewsletterWelcomeSender, BrevoWelcomeEmailSender>();
 }
 else
 {
     builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
     builder.Services.AddScoped<IWelcomeEmailSender, NoWelcomeEmailSender>();
+    builder.Services.AddScoped<INewsletterWelcomeSender, NoWelcomeEmailSender>();
 }
 builder.Services.AddScoped<CheckoutOrderProcessor>();
 
