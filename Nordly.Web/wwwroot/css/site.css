@@ -819,10 +819,33 @@ button, input, select, textarea { font-family: inherit; }
 /* Hero: litt luft mellom bokstavene med DM Sans */
 .store-hero h1 { letter-spacing: -0.02em; }
 
-/* Fordel-stripen: grønn bakgrunn i stedet for tynne streker */
-.benefit-strip { background: #23463b; border: 0; border-radius: 18px; padding: 1.4rem 1rem; }
-.benefit-strip strong { color: #f0b48f; }
-.benefit-strip span { color: #e8efe9; }
+/* Kundefordeler i en roligere, lys palett */
+.benefit-strip {
+  background: #f3ece4;
+  border: 1px solid #e8ded3;
+  border-radius: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: stretch;
+  padding: 1.3rem 0;
+}
+.benefit-strip > div {
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0 0.75rem;
+  text-align: center;
+}
+.benefit-strip > div + div { border-left: 1px solid #ded2c6; }
+.benefit-strip strong {
+  color: #23463b;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.benefit-strip span {
+  color: #655b51;
+  font-size: 0.8rem;
+  text-transform: none;
+}
 
 /* Kategorifaner: grønn aktiv fane i stedet for svart */
 .category-tab:hover, .category-tab.active { background: #23463b; border-color: #23463b; color: #fff; }
