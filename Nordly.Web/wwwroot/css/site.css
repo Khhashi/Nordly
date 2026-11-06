@@ -550,9 +550,9 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 .alert-danger { background: #fff2ed; border-color: #f4d0c4; color: #9f4935; }
 .footer { background: #1d2a24; border-top-color: rgba(255,255,255,0.08); color: #d6d0c8; }
-.store-hero { background: linear-gradient(135deg, #f4e3cf 0%, #f8f1ea 100%); }
+.store-hero { background: #f3f1eb; }
 .store-hero::after { background: radial-gradient(circle at center, rgba(255,255,255,0.55), rgba(202,127,90,0.8)); }
-.store-hero h1 em { color: var(--terracotta); }
+.store-hero h1 em { color: var(--forest); }
 .benefit-strip { border-color: var(--line); }
 .benefit-strip strong, .search-field span { color: var(--terracotta); }
 .benefit-strip span, .catalog-count { color: var(--muted); }
@@ -585,20 +585,20 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 
 /* Modern light navigation */
 .topbar {
-  background: rgba(255,255,255,0.9);
+  background: #fffdf9;
   border-bottom: 1px solid rgba(28,28,27,0.08);
-  box-shadow: 0 6px 20px rgba(28,28,27,0.04);
+  box-shadow: none;
   margin-bottom: 0;
   position: relative;
   z-index: 5;
 }
 .brand { color: var(--ink); font-size: 1.02rem; letter-spacing: 0.08em; text-transform: uppercase; }
-.brand span { color: var(--terracotta); }
+.brand span { color: #53665b; }
 .nav-links { gap: 0.25rem; }
 .nav-links a { color: #5b584f; font-size: 0.85rem; padding: 0.55rem 0.8rem; }
 .nav-links a:hover { background: #f5efe8; color: var(--ink); }
 .nav-links a.active { background: #edf1ea; color: #355143; }
-.nav-badge { background: var(--terracotta); color: #fff; height: 18px; width: 18px; }
+.nav-badge { background: #23463b; color: #fff; height: 18px; width: 18px; }
 
 @media (max-width: 480px) {
   .topbar { align-items: center; }
@@ -763,7 +763,7 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .store-hero { align-items: stretch; display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); min-height: 0; }
 .store-hero::after { display: none; }
 .store-hero > div:first-child { align-self: center; }
-.store-hero h1 { font-size: clamp(2.8rem, 5.6vw, 5.4rem); }
+.store-hero h1 { font-size: clamp(2.8rem, 5vw, 4.8rem); }
 .hero-visual { border-radius: 14px; margin: 0; min-height: 400px; overflow: hidden; position: relative; }
 .hero-visual img { display: block; height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; }
 @media (max-width: 800px) {
@@ -772,9 +772,9 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 }
 
 /* Hero: produktlenke i stedet for nummer */
-.hero-product { backdrop-filter: blur(8px); background: rgba(255,253,249,0.94); border-radius: 12px; bottom: 1rem; color: var(--ink); display: grid; gap: 0.15rem; left: 1rem; padding: 0.7rem 1rem; position: absolute; text-decoration: none; transition: transform 0.2s ease; }
+.hero-product { background: rgba(255,253,249,0.96); border-radius: 10px; bottom: 1rem; color: var(--ink); display: grid; gap: 0.15rem; left: 1rem; padding: 0.7rem 1rem; position: absolute; text-decoration: none; transition: transform 0.2s ease; }
 .hero-product:hover { color: var(--ink); transform: translateY(-2px); }
-.hero-product > span { color: var(--terracotta); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.hero-product > span { color: #5a625b; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .hero-product strong { font-size: 0.95rem; }
 
 /* Kategoribokser med bilde */
@@ -812,17 +812,18 @@ button, input, select, textarea { font-family: inherit; }
   .product-card-quantity:not(.has-quantity) .add-btn { flex: 1; width: 100%; }
 }
 
-/* Hero: grønn overskrift i stedet for svart */
+/* Rolig kontrast i hero */
 :root { --forest: #23463b; }
 .store-hero h1 { color: var(--forest); }
+.store-hero .eyebrow { color: #5a625b; }
 
 /* Hero: litt luft mellom bokstavene med DM Sans */
 .store-hero h1 { letter-spacing: -0.02em; }
 
 /* Kundefordeler i en roligere, lys palett */
 .benefit-strip {
-  background: #f3ece4;
-  border: 1px solid #e8ded3;
+  background: #f5f4ef;
+  border: 1px solid #e5e6df;
   border-radius: 16px;
   grid-template-columns: repeat(3, 1fr);
   justify-items: stretch;
@@ -834,7 +835,7 @@ button, input, select, textarea { font-family: inherit; }
   padding: 0 0.75rem;
   text-align: center;
 }
-.benefit-strip > div + div { border-left: 1px solid #ded2c6; }
+.benefit-strip > div + div { border-left: 1px solid #dedfd8; }
 .benefit-strip strong {
   color: #23463b;
   font-family: inherit;
@@ -842,7 +843,7 @@ button, input, select, textarea { font-family: inherit; }
   font-weight: 700;
 }
 .benefit-strip span {
-  color: #655b51;
+  color: #59635b;
   font-size: 0.8rem;
   text-transform: none;
 }
@@ -884,10 +885,10 @@ button, input, select, textarea { font-family: inherit; }
 /* Like runde hjørner på store flater */
 .editorial-panel { border-radius: 18px; }
 
-/* Hovedknappen i hero: terrakotta så den blir det første øyet ser */
-.hero-primary { background: var(--terracotta); box-shadow: 0 12px 22px rgba(185,100,70,0.28); }
-.hero-primary:hover { background: #a3553a; box-shadow: 0 18px 30px rgba(185,100,70,0.32); }
-.hero-primary:focus-visible { background: #a3553a; }
+/* Tydelig handling uten kraftig skygge */
+.hero-primary { background: #23463b; box-shadow: none; }
+.hero-primary:hover { background: #18332b; box-shadow: none; }
+.hero-primary:focus-visible { background: #18332b; }
 
 /* Én grønnfarge: knapper og merker bruker samme skogsgrønne som resten av siden */
 :root { --blue: #23463b; }
