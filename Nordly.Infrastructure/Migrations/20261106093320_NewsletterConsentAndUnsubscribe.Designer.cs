@@ -126,6 +126,46 @@ namespace Nordly.Infrastructure.Migrations
                     b.HasIndex("StripeCheckoutSessionId").IsUnique();
                     b.ToTable("Orders");
                 });
+
+            modelBuilder.Entity("Nordly.Domain.Entities.OrderLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+                    b.HasIndex("OrderId");
+                    b.HasIndex("ProductId");
+                    b.ToTable("OrderLines");
+                });
+
+            modelBuilder.Entity("Nordly.Domain.Entities.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+                    b.ToTable("Products");
+                });
 #pragma warning restore 612, 618
         }
     }
