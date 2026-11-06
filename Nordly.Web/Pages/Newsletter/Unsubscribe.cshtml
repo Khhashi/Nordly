@@ -1,0 +1,26 @@
+@page
+@model Nordly.Web.Pages.Newsletter.UnsubscribeModel
+@{
+    ViewData["Title"] = "Meld av nyhetsbrev";
+}
+
+<div class="info-page">
+    <span class="eyebrow">Nyhetsbrev</span>
+    <h1>Meld av nyhetsbrev</h1>
+    @if (Model.IsUnsubscribed)
+    {
+        <p>Du er nå meldt av nyhetsbrevet. Du vil ikke motta flere nyhetsbrev fra oss.</p>
+    }
+    else if (Model.CanUnsubscribe)
+    {
+        <p>Bekreft at du vil melde deg av nyhetsbrevet fra NORDLY.</p>
+        <form method="post">
+            <input type="hidden" asp-for="Token" />
+            <button class="primary-btn" type="submit">Meld meg av</button>
+        </form>
+    }
+    else
+    {
+        <p>Avmeldingslenken er ugyldig eller allerede brukt.</p>
+    }
+</div>
