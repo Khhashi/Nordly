@@ -96,11 +96,11 @@ public class NewsletterSignupPreparationTests
         Assert.That(db.ChangeTracker.HasChanges(), Is.False);
     }
 
-    private static OrderDbContext CreateDatabase() =>
+    internal static OrderDbContext CreateDatabase() =>
         new(new DbContextOptionsBuilder<OrderDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
 
-    private static NewsletterSignupPreparation CreatePreparation(OrderDbContext db, string? baseUrl = "https://example.com")
+    internal static NewsletterSignupPreparation CreatePreparation(OrderDbContext db, string? baseUrl = "https://example.com")
     {
         var config = new ConfigurationBuilder().AddInMemoryCollection(
             new Dictionary<string, string?> { ["PublicBaseUrl"] = baseUrl }).Build();
