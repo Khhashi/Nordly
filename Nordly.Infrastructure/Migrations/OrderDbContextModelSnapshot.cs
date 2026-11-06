@@ -47,12 +47,29 @@ namespace Nordly.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("ConsentGivenAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ConsentText")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
 
+                    b.Property<bool>("IsSubscribed")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UnsubscribeVersion")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UnsubscribedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
