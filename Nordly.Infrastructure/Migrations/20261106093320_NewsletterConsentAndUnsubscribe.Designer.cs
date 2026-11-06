@@ -13,6 +13,7 @@ namespace Nordly.Infrastructure.Migrations
 {
     abstract partial class NewsletterConsentAndUnsubscribe : Migration
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -165,6 +166,35 @@ namespace Nordly.Infrastructure.Migrations
 
                     b.HasKey("Id");
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Nordly.Infrastructure.Data.DistributedCacheEntry", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTimeOffset?>("AbsoluteExpiration")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("LastAccessed")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<TimeSpan?>("SlidingExpiration")
+                        .HasColumnType("interval");
+
+                    b.Property<byte[]>("Value")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Key");
+
+                    b.HasIndex("ExpiresAt");
+
+                    b.ToTable("DistributedCacheEntries");
                 });
 #pragma warning restore 612, 618
         }
