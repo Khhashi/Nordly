@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Nordly.Infrastructure.Data;
 using Nordly.Web.Services;
 
@@ -6,6 +7,35 @@ namespace Nordly.Tests;
 
 public class NewsletterSignupServiceTests
 {
+    [Test]
+    public async Task Database_Failure_Does_Not_Send_A_Welcome_Email()
+    {
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .AddInterceptors(new FailSaveInterceptor())
+            .Options;
+        await using var db = new OrderDbContext(options);
+        var sender = new RecordingSender(true);
+        var service = CreateService(db, sender);
+
+        Assert.ThrowsAsync<DbUpdateException>(async () =>
+            await service.SubscribeAsync("customer@example.com", true));
+
+        Assert.That(sender.Calls, Is.Zero);
+        Assert.That(sender.Url, Is.Null);
+        Assert.That(db.ChangeTracker.HasChanges(), Is.True);
+        await using var check = new OrderDbContext(options);
+        Assert.That(await check.NewsletterSubscribers.CountAsync(), Is.Zero);
+    }
+
+    private sealed class FailSaveInterceptor : SaveChangesInterceptor
+    {
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData, InterceptionResult<int> result,
+            CancellationToken cancellationToken = default) =>
+            throw new DbUpdateException("Database unavailable.");
+    }
+
     [TestCase("customer@example.com", false, NewsletterSignupOutcome.ConsentRequired)]
     [TestCase("not-an-address", true, NewsletterSignupOutcome.InvalidEmail)]
     public async Task Rejected_Input_Does_Not_Save_Or_Send(
