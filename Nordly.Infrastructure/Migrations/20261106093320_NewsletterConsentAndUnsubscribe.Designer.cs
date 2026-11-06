@@ -11,7 +11,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Nordly.Infrastructure.Migrations
 {
-    abstract partial class NewsletterConsentAndUnsubscribe : Migration
+    [DbContext(typeof(OrderDbContext))]
+    [Migration("20261106093320_NewsletterConsentAndUnsubscribe")]
+    partial class NewsletterConsentAndUnsubscribe : Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
