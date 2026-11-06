@@ -31,11 +31,10 @@ namespace Nordly.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AddColumn<string>(
-                name: "UnsubscribeTokenHash",
+            migrationBuilder.AddColumn<Guid>(
+                name: "UnsubscribeVersion",
                 table: "NewsletterSubscribers",
-                type: "character varying(64)",
-                maxLength: 64,
+                type: "uuid",
                 nullable: true);
 
             migrationBuilder.AddColumn<DateTime>(
@@ -43,21 +42,11 @@ namespace Nordly.Infrastructure.Migrations
                 table: "NewsletterSubscribers",
                 type: "timestamp with time zone",
                 nullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NewsletterSubscribers_UnsubscribeTokenHash",
-                table: "NewsletterSubscribers",
-                column: "UnsubscribeTokenHash",
-                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_NewsletterSubscribers_UnsubscribeTokenHash",
-                table: "NewsletterSubscribers");
-
             migrationBuilder.DropColumn(
                 name: "ConsentGivenAt",
                 table: "NewsletterSubscribers");
@@ -71,7 +60,7 @@ namespace Nordly.Infrastructure.Migrations
                 table: "NewsletterSubscribers");
 
             migrationBuilder.DropColumn(
-                name: "UnsubscribeTokenHash",
+                name: "UnsubscribeVersion",
                 table: "NewsletterSubscribers");
 
             migrationBuilder.DropColumn(

@@ -65,9 +65,9 @@ namespace Nordly.Infrastructure.Migrations
                     b.Property<DateTime>("SubscribedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UnsubscribeTokenHash")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                    b.Property<Guid?>("UnsubscribeVersion")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UnsubscribedAt")
                         .HasColumnType("timestamp with time zone");
@@ -75,9 +75,6 @@ namespace Nordly.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("UnsubscribeTokenHash")
                         .IsUnique();
 
                     b.ToTable("NewsletterSubscribers");

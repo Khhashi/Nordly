@@ -132,6 +132,7 @@ public class DatabaseMigrationTests
             Assert.That(legacySubscriber.IsSubscribed, Is.False);
             Assert.That(legacySubscriber.ConsentGivenAt, Is.Null);
             Assert.That(legacySubscriber.ConsentText, Is.Null);
+            Assert.That(legacySubscriber.UnsubscribeVersion, Is.Null);
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.FriendlyName).SingleAsync(), Is.EqualTo("legacy-key"));
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.Xml).SingleAsync(), Is.EqualTo(keyXml));
         });

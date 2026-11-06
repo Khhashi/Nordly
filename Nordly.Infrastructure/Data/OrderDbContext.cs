@@ -61,8 +61,7 @@ public class OrderDbContext : DbContext, IDataProtectionKeyContext
             entity.HasIndex(subscriber => subscriber.Email).IsUnique();
             entity.Property(subscriber => subscriber.SubscribedAt).IsRequired();
             entity.Property(subscriber => subscriber.ConsentText).HasMaxLength(500);
-            entity.Property(subscriber => subscriber.UnsubscribeTokenHash).HasMaxLength(64);
-            entity.HasIndex(subscriber => subscriber.UnsubscribeTokenHash).IsUnique();
+            entity.Property(subscriber => subscriber.UnsubscribeVersion).IsConcurrencyToken();
         });
 
         modelBuilder.Entity<DistributedCacheEntry>(entity =>

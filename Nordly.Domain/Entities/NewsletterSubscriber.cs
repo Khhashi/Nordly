@@ -9,5 +9,5 @@ public class NewsletterSubscriber
     public string? ConsentText { get; set; }
     public bool IsSubscribed { get; set; }
     public DateTime? UnsubscribedAt { get; set; }
-    public string? UnsubscribeTokenHash { get; set; }
+    public Guid? UnsubscribeVersion { get; set; }
 }
