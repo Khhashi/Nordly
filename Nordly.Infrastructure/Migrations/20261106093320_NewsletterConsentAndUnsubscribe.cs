@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Nordly.Infrastructure.Migrations
 {
-    abstract partial class NewsletterConsentAndUnsubscribe
+    partial class NewsletterConsentAndUnsubscribe
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
