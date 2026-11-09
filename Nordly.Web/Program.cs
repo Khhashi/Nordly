@@ -18,6 +18,7 @@ builder.Services.AddDbContext<OrderDbContext>(options => options.UseNpgsql(conne
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<OrderDbContext>()
     .SetApplicationName("Nordly");
+builder.Services.AddSingleton<NewsletterUnsubscribeToken>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {

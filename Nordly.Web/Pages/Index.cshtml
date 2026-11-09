@@ -156,8 +156,14 @@
 		<div>
 			<p>Få nyheter om nye produkter, gode tips og utvalgte favoritter.</p>
 			<form class="newsletter-form" method="post" asp-page-handler="SubscribeNewsletter">
-				<input type="email" name="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" autocomplete="email" required />
-				<button type="submit">Meld meg på</button>
+				<div class="newsletter-fields">
+					<input type="email" name="email" placeholder="Din e-postadresse" aria-label="Din e-postadresse" autocomplete="email" required />
+					<button type="submit">Meld meg på</button>
+				</div>
+				<label class="newsletter-consent">
+					<input type="checkbox" name="consent" value="true" required />
+					<span>@Model.NewsletterConsentText Les <a asp-page="/Privacy">personvernerklæringen</a>.</span>
+				</label>
 			</form>
 			@if (TempData["NewsletterSuccess"] is string newsletterSuccess)
 			{
