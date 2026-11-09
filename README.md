@@ -20,10 +20,16 @@ Jeg bygde Nordly for å bli bedre på backend, og på det som faktisk er vanskel
 
 Her er fire skjermbilder av grensesnittet, fra forsiden og produktsiden til handlekurven og Stripe Checkout.
 
-<p><img src="docs/screenshots/readme/homepage.jpg" alt="Forsiden til Nordly" width="100%" /></p>
-<p><img src="docs/screenshots/readme/product.jpg" alt="Produktside for Alba keramikk kopp" width="100%" /></p>
-<p><img src="docs/screenshots/readme/cart.jpg" alt="Handlekurv med Alba keramikk kopp og frakt" width="100%" /></p>
-<p><img src="docs/screenshots/readme/checkout.jpg" alt="Stripe Checkout med ordreoppsummering" width="100%" /></p>
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/readme/homepage.jpg" alt="Forsiden til Nordly" width="100%" /></td>
+    <td width="50%"><img src="docs/screenshots/readme/product.jpg" alt="Produktside for Alba keramikk kopp" width="100%" /></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/readme/cart.jpg" alt="Handlekurv med Alba keramikk kopp og frakt" width="100%" /></td>
+    <td width="50%"><img src="docs/screenshots/readme/checkout.jpg" alt="Stripe Checkout med ordreoppsummering" width="100%" /></td>
+  </tr>
+</table>
 
 ## Funksjoner
 
