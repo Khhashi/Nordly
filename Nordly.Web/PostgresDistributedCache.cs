@@ -22,7 +22,10 @@ public sealed class PostgresDistributedCache : IDistributedCache
     public async Task<byte[]?> GetAsync(string key, CancellationToken token = default)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync(token);
-        var entry = await db.DistributedCacheEntries.SingleOrDefaultAsync(item => item.Key == key, token);
+        await using var transaction = db.Database.IsNpgsql()
+            ? await db.Database.BeginTransactionAsync(token)
+            : null;
+        var entry = await FindEntryForUpdateAsync(db, key, token);
 
         if (entry is null)
             return null;
@@ -38,6 +41,8 @@ public sealed class PostgresDistributedCache : IDistributedCache
             try
             {
                 await db.SaveChangesAsync(token);
+                if (transaction is not null)
+                    await transaction.CommitAsync(token);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -56,7 +61,10 @@ public sealed class PostgresDistributedCache : IDistributedCache
     public async Task RefreshAsync(string key, CancellationToken token = default)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync(token);
-        var entry = await db.DistributedCacheEntries.SingleOrDefaultAsync(item => item.Key == key, token);
+        await using var transaction = db.Database.IsNpgsql()
+            ? await db.Database.BeginTransactionAsync(token)
+            : null;
+        var entry = await FindEntryForUpdateAsync(db, key, token);
         if (entry is null)
             return;
 
@@ -71,6 +79,8 @@ public sealed class PostgresDistributedCache : IDistributedCache
             try
             {
                 await db.SaveChangesAsync(token);
+                if (transaction is not null)
+                    await transaction.CommitAsync(token);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -166,6 +176,18 @@ public sealed class PostgresDistributedCache : IDistributedCache
     private static bool IsExpired(DistributedCacheEntry entry, DateTimeOffset now)
     {
         return entry.ExpiresAt <= now;
+    }
+
+    private static Task<DistributedCacheEntry?> FindEntryForUpdateAsync(
+        OrderDbContext db,
+        string key,
+        CancellationToken token)
+    {
+        return db.Database.IsNpgsql()
+            ? db.DistributedCacheEntries
+                .FromSqlInterpolated($"SELECT * FROM \"DistributedCacheEntries\" WHERE \"Key\" = {key} FOR UPDATE")
+                .SingleOrDefaultAsync(token)
+            : db.DistributedCacheEntries.SingleOrDefaultAsync(item => item.Key == key, token);
     }
 
     private static DateTimeOffset? GetEffectiveExpiration(
