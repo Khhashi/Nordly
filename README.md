@@ -18,16 +18,16 @@ Jeg bygde Nordly for å bli bedre på backend, og på det som faktisk er vanskel
 
 ## Grensesnitt
 
-Her er fire skjermbilder av grensesnittet, fra forsiden og produktsiden til handlekurven og bekreftelsen etter betaling.
+Her er fire skjermbilder av grensesnittet, fra forsiden og produktsiden til handlekurven og Stripe Checkout.
 
 <table>
   <tr>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/14e054b3-d045-4a3d-a2b2-c3858c033dca" alt="Forsiden til Nordly med hero, produktbilde og kategorier" width="420" /></td>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/e9088ecd-ec0d-4b25-ba66-2ade201f0362" alt="Produktside i Nordly med antallsvelger" width="420" /></td>
+    <td width="50%"><img src="docs/screenshots/readme/homepage.jpg" alt="Forsiden til Nordly" width="420" height="263" /></td>
+    <td width="50%"><img src="docs/screenshots/readme/product.jpg" alt="Produktside for Alba keramikk kopp" width="420" height="263" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/21eb5807-0b39-4130-b2e7-e3ac207fbd60" alt="Handlekurv med frakt og Stripe-betaling i Nordly" width="420" /></td>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/98f19559-a8e0-41e5-b766-d724ce6ea6d5" alt="Ordrebekreftelse etter betaling i Nordly" width="420" /></td>
+    <td width="50%"><img src="docs/screenshots/readme/cart.jpg" alt="Handlekurv med Alba keramikk kopp og frakt" width="420" height="263" /></td>
+    <td width="50%"><img src="docs/screenshots/readme/checkout.jpg" alt="Stripe Checkout med ordreoppsummering" width="420" height="263" /></td>
   </tr>
 </table>
 
