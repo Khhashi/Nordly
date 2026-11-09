@@ -228,7 +228,7 @@ h1 {
 .search-field { align-items: center; border-bottom: 1px solid #9cb5ab; display: flex; gap: 0.4rem; }
 .search-field span { color: #bb6b38; font-size: 1.25rem; }
 .search-field input { background: transparent; border: 0; outline: 0; padding: 0.45rem 0; width: 160px; }
-.search-field input#product-search { scroll-margin-top: 6rem; }
+.search-field input#product-search { scroll-margin-top: 13rem; }
 .search-field input::placeholder { color: #8da19a; }
 .product-suggestion-panel { background: #fff; border: 1px solid var(--line); border-radius: 0 0 10px 10px; box-shadow: 0 14px 28px rgba(28, 28, 27, 0.12); left: 0; min-width: min(24rem, 90vw); position: absolute; top: calc(100% + 0.35rem); z-index: 30; }
 .product-suggestion-panel[hidden], .product-suggestion-all[hidden] { display: none; }
@@ -586,6 +586,15 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .nav-badge { background: #23463b; color: #fff; height: 18px; width: 18px; }
 
 @media (max-width: 480px) {
+  .product-detail-grid { gap: 1.5rem; }
+  .detail-image-panel { aspect-ratio: 4 / 3; }
+  .detail-image-label { display: none; }
+  .compact-heading { gap: 0.5rem; margin-bottom: 1.25rem; }
+  .store-heading.compact-heading h1 { font-size: 2rem; }
+  .empty-cart { padding: 2rem 1rem; }
+  .empty-mark { font-size: 2rem; }
+  .empty-cart h2 { font-size: 1.25rem; }
+  .empty-cart-recommendations { margin-top: 2rem; }
   .topbar { align-items: center; }
   .brand { font-size: 0.9rem; }
   .nav-links a { padding: 0.5rem 0.55rem; }
@@ -685,6 +694,12 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .faq-item summary { align-items: center; color: var(--ink); cursor: pointer; display: flex; font-weight: 700; justify-content: space-between; gap: 1rem; list-style: none; padding: 1rem 0; }
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-item summary::after { color: var(--accent); content: "+"; flex: 0 0 auto; font-size: 1.35rem; font-weight: 400; }
+
+@media (max-width: 480px) {
+  .faq-page, .support-page { padding-top: 2.5rem; }
+  .faq-page h1, .support-page h1 { font-size: 2rem; line-height: 1.1; margin-bottom: 1rem; }
+  .faq-page .info-lead, .support-page .info-lead { font-size: 1rem; margin-bottom: 2rem; }
+}
 .faq-item[open] summary::after { content: "−"; }
 .faq-item summary:focus-visible { border-radius: 4px; outline-offset: 2px; }
 .faq-item p { color: var(--muted); line-height: 1.7; margin: -0.15rem 2.25rem 1rem 0; }
