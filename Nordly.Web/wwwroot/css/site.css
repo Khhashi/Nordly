@@ -626,9 +626,12 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .newsletter-panel .section-kicker { color: #b9c8ff; }
 .newsletter-panel h2 { font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.95; margin: 0.5rem 0 0; }
 .newsletter-panel p { color: #e3e8ff; line-height: 1.5; margin: 0 0 1rem; max-width: 350px; }
-.newsletter-form { border-bottom: 1px solid rgba(255,255,255,0.6); display: flex; }
-.newsletter-form input { background: transparent; border: 0; flex: 1; outline: 0; }
-.newsletter-form button { border: 0; cursor: pointer; font-weight: 800; }
+.newsletter-fields { border-bottom: 1px solid rgba(255,255,255,0.6); display: flex; }
+.newsletter-fields input { background: transparent; border: 0; flex: 1; min-width: 0; outline: 0; }
+.newsletter-fields button { border: 0; cursor: pointer; font-weight: 800; }
+.newsletter-consent { align-items: flex-start; display: flex; font-size: 0.78rem; gap: 0.6rem; line-height: 1.45; margin-top: 1rem; max-width: 460px; }
+.newsletter-consent input { flex: 0 0 auto; margin: 0.15rem 0 0; }
+.newsletter-consent a { color: inherit; text-decoration: underline; }
 .newsletter-panel small { color: #c4d0ff; display: block; font-size: 0.72rem; margin-top: 0.8rem; }
 .hero-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
 .hero-primary, .hero-secondary { font-size: 0.82rem; font-weight: 800; text-decoration: none; }
@@ -741,15 +744,15 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .newsletter-error { background: #fff2ed; color: #9f4935; }
 
 /* Nyhetsbrev: hvitt felt med tydelig knapp */
-.newsletter-form { background: #fff; border: 0; border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,0.12); gap: 0.4rem; max-width: 460px; padding: 0.35rem; }
-.newsletter-form input { color: #1c1c1b; padding: 0.75rem 1rem; }
-.newsletter-form input::placeholder { color: #8a8a85; }
-.newsletter-form button { background: #1c1c1b; border-radius: 999px; color: #fff; padding: 0.75rem 1.3rem; transition: background 0.2s ease; white-space: nowrap; }
-.newsletter-form button:hover { background: #000; }
-.newsletter-form:focus-within { box-shadow: 0 0 0 3px rgba(255,255,255,0.45), 0 10px 24px rgba(0,0,0,0.12); }
+.newsletter-fields { background: #fff; border: 0; border-radius: 999px; box-shadow: 0 10px 24px rgba(0,0,0,0.12); gap: 0.4rem; max-width: 460px; padding: 0.35rem; }
+.newsletter-fields input { color: #1c1c1b; padding: 0.75rem 1rem; }
+.newsletter-fields input::placeholder { color: #8a8a85; }
+.newsletter-fields button { background: #1c1c1b; border-radius: 999px; color: #fff; padding: 0.75rem 1.3rem; transition: background 0.2s ease; white-space: nowrap; }
+.newsletter-fields button:hover { background: #000; }
+.newsletter-fields:focus-within { box-shadow: 0 0 0 3px rgba(255,255,255,0.45), 0 10px 24px rgba(0,0,0,0.12); }
 @media (max-width: 520px) {
-  .newsletter-form { border-radius: 16px; flex-direction: column; }
-  .newsletter-form button { width: 100%; }
+  .newsletter-fields { border-radius: 16px; flex-direction: column; }
+  .newsletter-fields button { width: 100%; }
 }
 
 /* Nyhetsbrev: meldingen må vinne over .newsletter-panel p */
@@ -832,16 +835,15 @@ button, input, select, textarea { font-family: inherit; }
   .service-card { border-bottom: 0; padding: 1.25rem; }
 }
 
-/* Nyhetsbrev: terrakotta i stedet for grønt, og ingen blåtoner igjen fra gammelt tema */
 /* Nyhetsbrev i en rolig, lys palett */
 .newsletter-panel { background: #eeece4; border-radius: 18px; color: #23463b; }
 .newsletter-panel .section-kicker { color: #3e5a4f; }
 .newsletter-panel p { color: #3e4b43; }
 .newsletter-panel small { color: #4b5a50; }
 .newsletter-panel .newsletter-success { background: #dce8dd; color: #23463b; }
-.newsletter-form button { background: #23463b; }
-.newsletter-form button:hover { background: #18332b; }
-.newsletter-form:focus-within { box-shadow: 0 0 0 3px #8da99c, 0 10px 24px rgba(0,0,0,0.12); }
+.newsletter-fields button { background: #23463b; }
+.newsletter-fields button:hover { background: #18332b; }
+.newsletter-fields:focus-within { box-shadow: 0 0 0 3px #8da99c, 0 10px 24px rgba(0,0,0,0.12); }
 .newsletter-panel h2 { font-size: clamp(2rem, 3.4vw, 3.2rem); }
 
 /* Footer: mørk grønn ramme nederst, som toppstripen */
