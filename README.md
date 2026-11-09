@@ -18,15 +18,15 @@ Jeg bygde Nordly for å bli bedre på backend, og på det som faktisk er vanskel
 
 ## Grensesnitt
 
-Her er grensesnittet fra live-demoen, fra forsiden og produktsiden til handlekurven og bekreftelsen etter betaling.
+Her er fire skjermbilder av grensesnittet, fra forsiden og produktsiden til handlekurven og bekreftelsen etter betaling.
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshots/homepage.jpg" alt="Forsiden til Nordly fra live-demoen" width="420" /></td>
-    <td width="50%"><img src="docs/screenshots/product.jpg" alt="Produktside for Alba keramikk kopp med antallsvelger" width="420" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/14e054b3-d045-4a3d-a2b2-c3858c033dca" alt="Forsiden til Nordly med hero, produktbilde og kategorier" width="420" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/e9088ecd-ec0d-4b25-ba66-2ade201f0362" alt="Produktside i Nordly med antallsvelger" width="420" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/screenshots/cart.jpg" alt="Handlekurv med Alba keramikk kopp, frakt og Stripe-betaling" width="420" /></td>
+    <td width="50%"><img src="https://github.com/user-attachments/assets/21eb5807-0b39-4130-b2e7-e3ac207fbd60" alt="Handlekurv med frakt og Stripe-betaling i Nordly" width="420" /></td>
     <td width="50%"><img src="https://github.com/user-attachments/assets/98f19559-a8e0-41e5-b766-d724ce6ea6d5" alt="Ordrebekreftelse etter betaling i Nordly" width="420" /></td>
   </tr>
 </table>
