@@ -800,34 +800,6 @@ button, input, select, textarea { font-family: inherit; }
 /* Hero: litt luft mellom bokstavene med DM Sans */
 .store-hero h1 { letter-spacing: -0.02em; }
 
-/* Kundefordeler i en roligere, lys palett */
-.benefit-strip {
-  background: #f5f4ef;
-  border: 1px solid #e5e6df;
-  border-radius: 16px;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: stretch;
-  padding: 1.3rem 0;
-}
-.benefit-strip > div {
-  flex-direction: column;
-  gap: 0.2rem;
-  padding: 0 0.75rem;
-  text-align: center;
-}
-.benefit-strip > div + div { border-left: 1px solid #dedfd8; }
-.benefit-strip strong {
-  color: #23463b;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-.benefit-strip span {
-  color: #59635b;
-  font-size: 0.8rem;
-  text-transform: none;
-}
-
 /* Kategorifaner: grønn aktiv fane i stedet for svart */
 .category-tab:hover, .category-tab.active { background: #23463b; border-color: #23463b; color: #fff; }
 .category-tab:focus-visible { outline-color: #23463b; }
