@@ -18,15 +18,15 @@ Jeg bygde Nordly for å bli bedre på backend, og på det som faktisk er vanskel
 
 ## Grensesnitt
 
-Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurven og bekreftelsen etter betaling.
+Her er grensesnittet fra live-demoen, fra forsiden og produktsiden til handlekurven og bekreftelsen etter betaling.
 
 <table>
   <tr>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/14e054b3-d045-4a3d-a2b2-c3858c033dca" alt="Forsiden til Nordly med hero, produktbilde og kategorier" width="420" /></td>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/e9088ecd-ec0d-4b25-ba66-2ade201f0362" alt="Produktside i Nordly med antallsvelger" width="420" /></td>
+    <td width="50%"><img src="docs/screenshots/homepage.jpg" alt="Forsiden til Nordly fra live-demoen" width="420" /></td>
+    <td width="50%"><img src="docs/screenshots/product.jpg" alt="Produktside for Alba keramikk kopp med antallsvelger" width="420" /></td>
   </tr>
   <tr>
-    <td width="50%"><img src="https://github.com/user-attachments/assets/21eb5807-0b39-4130-b2e7-e3ac207fbd60" alt="Handlekurv med frakt og Stripe-betaling i Nordly" width="420" /></td>
+    <td width="50%"><img src="docs/screenshots/cart.jpg" alt="Handlekurv med Alba keramikk kopp, frakt og Stripe-betaling" width="420" /></td>
     <td width="50%"><img src="https://github.com/user-attachments/assets/98f19559-a8e0-41e5-b766-d724ce6ea6d5" alt="Ordrebekreftelse etter betaling i Nordly" width="420" /></td>
   </tr>
 </table>
@@ -38,7 +38,7 @@ Her er grensesnittet til nettsiden, fra forsiden og produktsiden til handlekurve
 - Stripe Checkout med signert webhook for betalingsstatus
 - Fraktvalg med gratis frakt fra 800 kr
 - Ordrebekreftelse på e-post via Brevo sitt API
-- Nyhetsbrev lagret i PostgreSQL, med velkomst-e-post første gang en adresse meldes på
+- Nyhetsbrev lagret i PostgreSQL med aktivt samtykke og avmelding via lenke i velkomst-e-posten
 
 ## Teknologi
 
@@ -86,3 +86,9 @@ Før en ny appversjon rulles ut, kjør `dotnet ef database update --project Nord
 Den første migreringen er en additiv baseline: den oppretter manglende tabeller og kolonner, men sletter ikke eksisterende data. Dermed kan den brukes både på en tom database og på den eksisterende databasen som tidligere ble opprettet med `EnsureCreated` og oppstarts-SQL.
 
 PostgreSQL-migreringstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon.
+
+## Nyhetsbrev
+
+Påmelding krever aktivt samtykke og en konfigurert Brevo-avsender (`Email:BrevoApiKey` og `Email:FromAddress`). `PublicBaseUrl` må være butikkens offentlige HTTPS-adresse, slik at velkomst-e-posten inneholder en gyldig avmeldingslenke. Hvis e-posten ikke kan sendes, får kunden en feilmelding og påmeldingen deaktiveres slik at kunden kan prøve igjen.
+
+Eksisterende adresser uten dokumentert samtykke markeres som inaktive ved migreringen og må melde seg på på nytt. En fremtidig utsendelsesfunksjon må bare sende til aktive abonnenter og bruke `NewsletterUnsubscribeToken` til å lage en avmeldingslenke for hver e-post. Lenken er knyttet til abonnementsversjonen og slutter å virke etter avmelding eller ny påmelding. Data Protection-nøklene må bevares for at utsendte lenker skal fortsette å virke.
