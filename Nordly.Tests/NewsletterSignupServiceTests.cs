@@ -28,7 +28,7 @@ public class NewsletterSignupServiceTests
         Assert.That(await check.NewsletterSubscribers.CountAsync(), Is.Zero);
     }
 
-    private sealed class FailSaveInterceptor : SaveChangesInterceptor
+    internal sealed class FailSaveInterceptor : SaveChangesInterceptor
     {
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
             DbContextEventData eventData, InterceptionResult<int> result,
@@ -85,11 +85,11 @@ public class NewsletterSignupServiceTests
         Assert.That(sender.Url, Does.StartWith("https://example.com/Newsletter/Unsubscribe?token="));
     }
 
-    private static NewsletterSignupService CreateService(OrderDbContext db, RecordingSender sender) =>
+    internal static NewsletterSignupService CreateService(OrderDbContext db, RecordingSender sender) =>
         new(NewsletterSignupPreparationTests.CreatePreparation(db),
             new NewsletterSignupStore(db), new NewsletterSignupDelivery(sender));
 
-    private sealed class RecordingSender(bool sent) : INewsletterWelcomeSender
+    internal sealed class RecordingSender(bool sent) : INewsletterWelcomeSender
     {
         public int Calls { get; private set; }
         public string? Url { get; private set; }
