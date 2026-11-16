@@ -13,6 +13,39 @@ namespace Nordly.Tests;
 public class NewsletterUnsubscribeTests
 {
     [Test]
+    public async Task Resubscription_Revokes_Old_Link_And_Accepts_New_Link()
+    {
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+        await using var db = new OrderDbContext(options);
+        var tokens = new NewsletterUnsubscribeToken(new EphemeralDataProtectionProvider());
+        var subscriber = new NewsletterSubscriber { Email = "customer@example.com" };
+        Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
+        db.NewsletterSubscribers.Add(subscriber);
+        await db.SaveChangesAsync();
+        var oldToken = tokens.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
+        var model = new UnsubscribeModel(db, tokens, NullLogger<UnsubscribeModel>.Instance)
+        {
+            PageContext = new PageContext { HttpContext = new DefaultHttpContext() }
+        };
+        await model.OnGetAsync(oldToken);
+        await model.OnPostAsync();
+        Assert.That(model.IsUnsubscribed, Is.True);
+
+        Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
+        await db.SaveChangesAsync();
+        var newToken = tokens.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
+        await model.OnGetAsync(oldToken);
+        Assert.That(model.CanUnsubscribe, Is.False);
+        await model.OnPostAsync();
+        Assert.That(subscriber.IsSubscribed, Is.True);
+        await model.OnGetAsync(newToken);
+        Assert.That(model.CanUnsubscribe, Is.True);
+        await model.OnPostAsync();
+        Assert.That(subscriber.IsSubscribed, Is.False);
+    }
+
+    [Test]
     public async Task Outdated_Link_Cannot_Overwrite_New_Subscription()
     {
         var options = new DbContextOptionsBuilder<OrderDbContext>()
