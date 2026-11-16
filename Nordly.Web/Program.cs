@@ -19,6 +19,12 @@ builder.Services.AddDataProtection()
     .PersistKeysToDbContext<OrderDbContext>()
     .SetApplicationName("Nordly");
 builder.Services.AddSingleton<NewsletterUnsubscribeToken>();
+builder.Services.AddScoped<NewsletterUnsubscribeLink>();
+builder.Services.AddScoped<NewsletterSignupPreparation>();
+builder.Services.AddScoped<NewsletterSignupStore>();
+builder.Services.AddScoped<NewsletterSignupDelivery>();
+builder.Services.AddScoped<NewsletterSignupService>();
+builder.Services.AddScoped<NewsletterSignupRequest>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -32,11 +38,13 @@ if (!string.IsNullOrWhiteSpace(builder.Configuration["Email:BrevoApiKey"]))
 {
     builder.Services.AddHttpClient<IOrderConfirmationEmailSender, BrevoOrderConfirmationEmailSender>();
     builder.Services.AddHttpClient<IWelcomeEmailSender, BrevoWelcomeEmailSender>();
+    builder.Services.AddHttpClient<INewsletterWelcomeSender, BrevoWelcomeEmailSender>();
 }
 else
 {
     builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
     builder.Services.AddScoped<IWelcomeEmailSender, NoWelcomeEmailSender>();
+    builder.Services.AddScoped<INewsletterWelcomeSender, NoWelcomeEmailSender>();
 }
 builder.Services.AddScoped<CheckoutOrderProcessor>();
 

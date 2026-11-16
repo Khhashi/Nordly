@@ -8,13 +8,24 @@ public interface IWelcomeEmailSender
     Task SendAsync(string email, CancellationToken cancellationToken = default);
 }
 
-// Brukes når Brevo ikke er satt opp, for eksempel lokalt. Påmeldingen lagres uansett.
-public sealed class NoWelcomeEmailSender : IWelcomeEmailSender
+public interface INewsletterWelcomeSender
 {
-    public Task SendAsync(string email, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default);
 }
 
-public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender
+// Brukes når Brevo ikke er satt opp, for eksempel lokalt. Påmeldingen lagres uansett.
+public sealed class NoWelcomeEmailSender(ILogger<NoWelcomeEmailSender> logger) : IWelcomeEmailSender, INewsletterWelcomeSender
+{
+    public Task SendAsync(string email, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+    public Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+    {
+        logger.LogWarning("Welcome email could not be sent because Brevo is not configured.");
+        return Task.FromResult(false);
+    }
+}
+
+public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender, INewsletterWelcomeSender
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
