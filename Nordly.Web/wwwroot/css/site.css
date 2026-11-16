@@ -846,6 +846,44 @@ button, input, select, textarea { font-family: inherit; }
 .newsletter-fields:focus-within { box-shadow: 0 0 0 3px #8da99c, 0 10px 24px rgba(0,0,0,0.12); }
 .newsletter-panel h2 { font-size: clamp(2rem, 3.4vw, 3.2rem); }
 
+.newsletter-form.has-consent {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
+  padding: 0;
+}
+.newsletter-form.has-consent:focus-within { box-shadow: none; }
+.newsletter-fields {
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.35rem;
+}
+.newsletter-form .newsletter-fields input {
+  min-width: 0;
+}
+.newsletter-consent {
+  align-items: flex-start;
+  display: flex;
+  font-size: 0.78rem;
+  gap: 0.6rem;
+  line-height: 1.45;
+  margin-top: 1rem;
+}
+.newsletter-form .newsletter-consent input {
+  flex: 0 0 auto;
+  margin: 0.15rem 0 0;
+  padding: 0;
+}
+.newsletter-form .newsletter-consent input:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.newsletter-consent a { color: inherit; text-decoration: underline; }
+@media (max-width: 520px) {
+  .newsletter-fields { border-radius: 16px; flex-direction: column; }
+}
+
 /* Footer: mørk grønn ramme nederst, som toppstripen */
 .site-footer { background: #1d2a24; border-top: 0; color: #c9d3cd; margin-top: 4rem; }
 .footer-brand strong, .footer-payment strong { color: #fff; }
