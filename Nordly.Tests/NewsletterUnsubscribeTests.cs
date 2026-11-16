@@ -14,6 +14,35 @@ public class NewsletterUnsubscribeTests
     private static readonly NewsletterUnsubscribeToken TokenService = new(new EphemeralDataProtectionProvider());
 
     [Test]
+    public async Task Resubscription_Revokes_Old_Link_And_Accepts_New_Link()
+    {
+        await using var db = CreateDatabase();
+        var subscriber = new NewsletterSubscriber { Email = "customer@example.com" };
+        Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
+        db.NewsletterSubscribers.Add(subscriber);
+        await db.SaveChangesAsync();
+        var oldToken = TokenService.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
+        var oldLink = CreateModel(db);
+        await oldLink.OnGetAsync(oldToken);
+        await oldLink.OnPostAsync();
+        Assert.That(oldLink.IsUnsubscribed, Is.True);
+
+        Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
+        await db.SaveChangesAsync();
+        var newToken = TokenService.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
+        var reusedLink = CreateModel(db);
+        await reusedLink.OnGetAsync(oldToken);
+        Assert.That(reusedLink.CanUnsubscribe, Is.False);
+        await reusedLink.OnPostAsync();
+        Assert.That(subscriber.IsSubscribed, Is.True);
+        var currentLink = CreateModel(db);
+        await currentLink.OnGetAsync(newToken);
+        Assert.That(currentLink.CanUnsubscribe, Is.True);
+        await currentLink.OnPostAsync();
+        Assert.That(subscriber.IsSubscribed, Is.False);
+    }
+
+    [Test]
     public async Task Unsubscribe_Requires_Confirmation_And_Disables_The_Subscription()
     {
         await using var db = CreateDatabase();
