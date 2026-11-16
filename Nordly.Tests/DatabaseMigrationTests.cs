@@ -138,7 +138,7 @@ public class DatabaseMigrationTests
         });
     }
 
-    private static OrderDbContext CreateDbContext(string connectionString)
+    internal static OrderDbContext CreateDbContext(string connectionString)
     {
         var schema = new NpgsqlConnectionStringBuilder(connectionString).SearchPath;
         var options = new DbContextOptionsBuilder<OrderDbContext>()
@@ -148,7 +148,7 @@ public class DatabaseMigrationTests
         return new OrderDbContext(options);
     }
 
-    private static async Task InIsolatedSchema(Func<string, Task> test)
+    internal static async Task InIsolatedSchema(Func<string, Task> test)
     {
         var baseConnectionString = Environment.GetEnvironmentVariable("NORDLY_TEST_MIGRATION_CONNECTION");
         if (string.IsNullOrWhiteSpace(baseConnectionString))
