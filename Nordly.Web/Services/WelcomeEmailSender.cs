@@ -17,7 +17,7 @@ public sealed class NoWelcomeEmailSender(ILogger<NoWelcomeEmailSender> logger) :
     }
 }
 
-public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender, INewsletterWelcomeSender
+public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
