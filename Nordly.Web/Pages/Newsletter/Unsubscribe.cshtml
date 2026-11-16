@@ -9,8 +9,7 @@
     <h1>Meld av nyhetsbrev</h1>
     @if (Model.IsUnsubscribed)
     {
-        <p>Du er nå meldt av nyhetsbrevet.</p>
-        <p>Du vil ikke motta flere nyhetsbrev fra oss.</p>
+        <p>Du er nå meldt av nyhetsbrevet. Du vil ikke motta flere nyhetsbrev fra oss.</p>
     }
     else if (Model.CanUnsubscribe)
     {
@@ -23,9 +22,5 @@
     else
     {
         <p>Avmeldingslenken er ugyldig eller allerede brukt.</p>
-        <p>Kontakt kundeservice hvis du trenger hjelp med avmelding.</p>
     }
-    <p>
-        <a class="text-link" asp-page="/Info/Support">Gå til kundeservice</a>
-    </p>
 </div>
