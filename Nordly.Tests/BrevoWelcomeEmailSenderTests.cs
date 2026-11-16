@@ -41,13 +41,15 @@ public class BrevoWelcomeEmailSenderTests
         var handler = new CapturingHandler();
         var sender = CreateSender(handler);
 
-        await sender.SendAsync("kunde@example.com");
+        var sent = await sender.SendAsync("kunde@example.com", "https://nordly.example/Newsletter/Unsubscribe?token=abc");
 
+        Assert.That(sent, Is.True);
         Assert.That(handler.Request, Is.Not.Null);
         Assert.That(handler.Request!.RequestUri!.ToString(), Is.EqualTo(BrevoOrderConfirmationEmailSender.Endpoint));
         Assert.That(handler.Request.Headers.GetValues("api-key").Single(), Is.EqualTo("test-key"));
         Assert.That(handler.Body, Does.Contain("kunde@example.com"));
         Assert.That(handler.Body, Does.Contain("Velkommen til Nordly"));
+        Assert.That(handler.Body, Does.Contain("https://nordly.example/Newsletter/Unsubscribe?token=abc"));
     }
 
     [Test]
@@ -56,17 +58,19 @@ public class BrevoWelcomeEmailSenderTests
         var handler = new CapturingHandler();
         var sender = CreateSender(handler, apiKey: null);
 
-        await sender.SendAsync("kunde@example.com");
+        var sent = await sender.SendAsync("kunde@example.com", "https://nordly.example/Newsletter/Unsubscribe?token=abc");
 
+        Assert.That(sent, Is.False);
         Assert.That(handler.Request, Is.Null);
     }
 
     [Test]
-    public void SendAsync_DoesNotThrowWhenBrevoRejects()
+    public async Task SendAsync_ReturnsFalseWhenBrevoRejects()
     {
         var handler = new CapturingHandler { StatusCode = HttpStatusCode.BadRequest };
         var sender = CreateSender(handler);
 
-        Assert.DoesNotThrowAsync(() => sender.SendAsync("kunde@example.com"));
+        var sent = await sender.SendAsync("kunde@example.com", "https://nordly.example/Newsletter/Unsubscribe?token=abc");
+        Assert.That(sent, Is.False);
     }
 }
