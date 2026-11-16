@@ -5,20 +5,12 @@ namespace Nordly.Web.Services;
 
 public interface IWelcomeEmailSender
 {
-    Task SendAsync(string email, CancellationToken cancellationToken = default);
+    Task<bool> SendAsync(string email, string unsubscribeUrl, CancellationToken cancellationToken = default);
 }
 
-public interface INewsletterWelcomeSender
+public sealed class NoWelcomeEmailSender(ILogger<NoWelcomeEmailSender> logger) : IWelcomeEmailSender
 {
-    Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default);
-}
-
-// Brukes når Brevo ikke er satt opp, for eksempel lokalt. Påmeldingen lagres uansett.
-public sealed class NoWelcomeEmailSender(ILogger<NoWelcomeEmailSender> logger) : IWelcomeEmailSender, INewsletterWelcomeSender
-{
-    public Task SendAsync(string email, CancellationToken cancellationToken = default) => Task.CompletedTask;
-
-    public Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+    public Task<bool> SendAsync(string email, string unsubscribeUrl, CancellationToken cancellationToken = default)
     {
         logger.LogWarning("Welcome email could not be sent because Brevo is not configured.");
         return Task.FromResult(false);
@@ -41,10 +33,7 @@ public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender, INewsletterWe
         _logger = logger;
     }
 
-    public Task SendAsync(string email, CancellationToken cancellationToken = default) =>
-        SendWithResultAsync(email, null, cancellationToken);
-
-    public async Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+    public async Task<bool> SendAsync(string email, string unsubscribeUrl, CancellationToken cancellationToken = default)
     {
         var apiKey = _configuration["Email:BrevoApiKey"];
         var fromAddress = _configuration["Email:FromAddress"];
@@ -87,7 +76,7 @@ public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender, INewsletterWe
         }
     }
 
-    internal static string BuildBody(string? unsubscribeUrl)
+    internal static string BuildBody(string unsubscribeUrl)
     {
         var body = new StringBuilder();
         body.AppendLine("Hei,");
@@ -95,11 +84,8 @@ public sealed class BrevoWelcomeEmailSender : IWelcomeEmailSender, INewsletterWe
         body.AppendLine("Takk for at du meldte deg på nyhetsbrevet til Nordly.");
         body.AppendLine("Du får høre om nye produkter og tilbud før alle andre.");
         body.AppendLine();
-        if (unsubscribeUrl is not null)
-        {
-            body.AppendLine($"Du kan når som helst melde deg av her: {unsubscribeUrl}");
-            body.AppendLine();
-        }
+        body.AppendLine($"Du kan når som helst melde deg av her: {unsubscribeUrl}");
+        body.AppendLine();
         body.AppendLine("Vennlig hilsen");
         body.AppendLine("Nordly");
         return body.ToString();
