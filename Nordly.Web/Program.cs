@@ -19,6 +19,12 @@ builder.Services.AddDataProtection()
     .PersistKeysToDbContext<OrderDbContext>()
     .SetApplicationName("Nordly");
 builder.Services.AddSingleton<NewsletterUnsubscribeToken>();
+builder.Services.AddScoped<NewsletterUnsubscribeLink>();
+builder.Services.AddScoped<NewsletterSignupPreparation>();
+builder.Services.AddScoped<NewsletterSignupStore>();
+builder.Services.AddScoped<NewsletterSignupDelivery>();
+builder.Services.AddScoped<NewsletterSignupService>();
+builder.Services.AddScoped<NewsletterSignupRequest>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
