@@ -128,12 +128,17 @@ public class DatabaseMigrationTests
             Assert.That(savedOrder.OrderLines.Single().Quantity, Is.EqualTo(2));
             Assert.That(await upgradedDb.Products.Select(product => product.Name).SingleAsync(), Is.EqualTo("Existing product"));
             Assert.That(await upgradedDb.NewsletterSubscribers.Select(item => item.Email).SingleAsync(), Is.EqualTo(email));
+            var legacySubscriber = await upgradedDb.NewsletterSubscribers.SingleAsync();
+            Assert.That(legacySubscriber.IsSubscribed, Is.False);
+            Assert.That(legacySubscriber.ConsentGivenAt, Is.Null);
+            Assert.That(legacySubscriber.ConsentText, Is.Null);
+            Assert.That(legacySubscriber.UnsubscribeVersion, Is.Null);
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.FriendlyName).SingleAsync(), Is.EqualTo("legacy-key"));
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.Xml).SingleAsync(), Is.EqualTo(keyXml));
         });
     }
 
-    private static OrderDbContext CreateDbContext(string connectionString)
+    internal static OrderDbContext CreateDbContext(string connectionString)
     {
         var schema = new NpgsqlConnectionStringBuilder(connectionString).SearchPath;
         var options = new DbContextOptionsBuilder<OrderDbContext>()
@@ -143,7 +148,7 @@ public class DatabaseMigrationTests
         return new OrderDbContext(options);
     }
 
-    private static async Task InIsolatedSchema(Func<string, Task> test)
+    internal static async Task InIsolatedSchema(Func<string, Task> test)
     {
         var baseConnectionString = Environment.GetEnvironmentVariable("NORDLY_TEST_MIGRATION_CONNECTION");
         if (string.IsNullOrWhiteSpace(baseConnectionString))
