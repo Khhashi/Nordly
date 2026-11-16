@@ -32,10 +32,10 @@ public class NewsletterSignupPostgresTests
         });
     }
 
-    private sealed class FailedSender : INewsletterWelcomeSender
+    private sealed class FailedSender : IWelcomeEmailSender
     {
         public int Calls { get; private set; }
-        public Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+        public Task<bool> SendAsync(string email, string unsubscribeUrl, CancellationToken cancellationToken = default)
         {
             Calls++;
             return Task.FromResult(false);
