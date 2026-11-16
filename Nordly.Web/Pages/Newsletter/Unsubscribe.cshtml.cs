@@ -7,10 +7,7 @@ using Nordly.Web.Services;
 
 namespace Nordly.Web.Pages.Newsletter;
 
-public partial class UnsubscribeModel(
-    OrderDbContext db,
-    NewsletterUnsubscribeToken tokenService,
-    ILogger<UnsubscribeModel> logger) : PageModel
+public class UnsubscribeModel(OrderDbContext db, NewsletterUnsubscribeToken tokenService) : PageModel
 {
     [BindProperty]
     public string? Token { get; set; }
@@ -44,7 +41,6 @@ public partial class UnsubscribeModel(
         }
         catch (DbUpdateConcurrencyException)
         {
-            logger.LogInformation("Newsletter subscription changed before unsubscribe could be confirmed.");
             CanUnsubscribe = false;
             return Page();
         }
@@ -57,7 +53,9 @@ public partial class UnsubscribeModel(
     private async Task<NewsletterSubscriber?> FindSubscribedSubscriberAsync(string? token)
     {
         if (!tokenService.TryRead(token, out var subscriberId, out var version))
+        {
             return null;
+        }
 
         return await db.NewsletterSubscribers.SingleOrDefaultAsync(subscriber =>
             subscriber.Id == subscriberId && subscriber.IsSubscribed && subscriber.UnsubscribeVersion == version);
