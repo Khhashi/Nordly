@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
 using Nordly.Domain.Entities;
 using Nordly.Infrastructure.Data;
 using Nordly.Web.Pages.Newsletter;
@@ -12,100 +11,151 @@ namespace Nordly.Tests;
 
 public class NewsletterUnsubscribeTests
 {
+    private static readonly NewsletterUnsubscribeToken TokenService = new(new EphemeralDataProtectionProvider());
+
     [Test]
     public async Task Resubscription_Revokes_Old_Link_And_Accepts_New_Link()
     {
-        var options = new DbContextOptionsBuilder<OrderDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-        await using var db = new OrderDbContext(options);
-        var tokens = new NewsletterUnsubscribeToken(new EphemeralDataProtectionProvider());
+        await using var db = CreateDatabase();
         var subscriber = new NewsletterSubscriber { Email = "customer@example.com" };
         Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
         db.NewsletterSubscribers.Add(subscriber);
         await db.SaveChangesAsync();
-        var oldToken = tokens.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
-        var model = new UnsubscribeModel(db, tokens, NullLogger<UnsubscribeModel>.Instance)
-        {
-            PageContext = new PageContext { HttpContext = new DefaultHttpContext() }
-        };
-        await model.OnGetAsync(oldToken);
-        await model.OnPostAsync();
-        Assert.That(model.IsUnsubscribed, Is.True);
+        var oldToken = TokenService.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
+        var oldLink = CreateModel(db);
+        await oldLink.OnGetAsync(oldToken);
+        await oldLink.OnPostAsync();
+        Assert.That(oldLink.IsUnsubscribed, Is.True);
 
         Assert.That(NewsletterSubscriptionState.TryActivate(subscriber), Is.True);
         await db.SaveChangesAsync();
-        var newToken = tokens.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
-        await model.OnGetAsync(oldToken);
-        Assert.That(model.CanUnsubscribe, Is.False);
-        await model.OnPostAsync();
+        var newToken = TokenService.Create(subscriber.Id, subscriber.UnsubscribeVersion!.Value);
+        var reusedLink = CreateModel(db);
+        await reusedLink.OnGetAsync(oldToken);
+        Assert.That(reusedLink.CanUnsubscribe, Is.False);
+        await reusedLink.OnPostAsync();
         Assert.That(subscriber.IsSubscribed, Is.True);
-        await model.OnGetAsync(newToken);
-        Assert.That(model.CanUnsubscribe, Is.True);
-        await model.OnPostAsync();
+        var currentLink = CreateModel(db);
+        await currentLink.OnGetAsync(newToken);
+        Assert.That(currentLink.CanUnsubscribe, Is.True);
+        await currentLink.OnPostAsync();
         Assert.That(subscriber.IsSubscribed, Is.False);
     }
 
     [Test]
-    public async Task Outdated_Link_Cannot_Overwrite_New_Subscription()
+    public async Task Unsubscribe_Requires_Confirmation_And_Disables_The_Subscription()
     {
-        var options = new DbContextOptionsBuilder<OrderDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-        var tokens = new NewsletterUnsubscribeToken(new EphemeralDataProtectionProvider());
-        await using var oldContext = new OrderDbContext(options);
+        await using var db = CreateDatabase();
         var subscriber = new NewsletterSubscriber
         {
-            Email = "customer@example.com", IsSubscribed = true, UnsubscribeVersion = Guid.NewGuid()
+            Email = "customer@example.com",
+            IsSubscribed = true,
+            UnsubscribeVersion = Guid.NewGuid()
         };
-        oldContext.NewsletterSubscribers.Add(subscriber);
-        await oldContext.SaveChangesAsync();
-        var token = tokens.Create(subscriber.Id, subscriber.UnsubscribeVersion.Value);
-        var model = new UnsubscribeModel(oldContext, tokens, NullLogger<UnsubscribeModel>.Instance)
-        {
-            PageContext = new PageContext { HttpContext = new DefaultHttpContext() }
-        };
-        await model.OnGetAsync(token);
-        await using var newContext = new OrderDbContext(options);
-        var renewed = await newContext.NewsletterSubscribers.SingleAsync();
-        renewed.UnsubscribeVersion = Guid.NewGuid();
-        await newContext.SaveChangesAsync();
-
-        await model.OnPostAsync();
-
-        Assert.That(model.IsUnsubscribed, Is.False);
-        Assert.That(model.CanUnsubscribe, Is.False);
-        await using var check = new OrderDbContext(options);
-        Assert.That((await check.NewsletterSubscribers.SingleAsync()).IsSubscribed, Is.True);
-    }
-
-    [Test]
-    public async Task Valid_Link_Requires_Confirmation_And_Is_Revoked_Afterward()
-    {
-        var options = new DbContextOptionsBuilder<OrderDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-        await using var db = new OrderDbContext(options);
-        var tokens = new NewsletterUnsubscribeToken(new EphemeralDataProtectionProvider());
-        var subscriber = new NewsletterSubscriber
-        {
-            Email = "customer@example.com", IsSubscribed = true, UnsubscribeVersion = Guid.NewGuid()
-        };
+        var token = TokenService.Create(subscriber.Id, subscriber.UnsubscribeVersion.Value);
         db.NewsletterSubscribers.Add(subscriber);
         await db.SaveChangesAsync();
-        var token = tokens.Create(subscriber.Id, subscriber.UnsubscribeVersion.Value);
-        var model = new UnsubscribeModel(db, tokens, NullLogger<UnsubscribeModel>.Instance)
-        {
-            PageContext = new PageContext { HttpContext = new DefaultHttpContext() }
-        };
+        var model = CreateModel(db);
+
         await model.OnGetAsync(token);
         Assert.That(model.CanUnsubscribe, Is.True);
         Assert.That(subscriber.IsSubscribed, Is.True);
         Assert.That(model.Response.Headers.CacheControl.ToString(), Is.EqualTo("no-store"));
         Assert.That(model.Response.Headers["Referrer-Policy"].ToString(), Is.EqualTo("no-referrer"));
+
         await model.OnPostAsync();
+
         Assert.That(model.IsUnsubscribed, Is.True);
         Assert.That(subscriber.IsSubscribed, Is.False);
         Assert.That(subscriber.UnsubscribedAt, Is.Not.Null);
         Assert.That(subscriber.UnsubscribeVersion, Is.Null);
-        await model.OnGetAsync(token);
+        var reusedLink = CreateModel(db);
+        await reusedLink.OnGetAsync(token);
+        Assert.That(reusedLink.CanUnsubscribe, Is.False);
+    }
+
+    [Test]
+    public async Task Invalid_Or_Revoked_Token_Cannot_Unsubscribe()
+    {
+        await using var db = CreateDatabase();
+        var subscriber = new NewsletterSubscriber
+        {
+            Email = "customer@example.com",
+            IsSubscribed = true,
+            UnsubscribeVersion = Guid.NewGuid()
+        };
+        db.NewsletterSubscribers.Add(subscriber);
+        await db.SaveChangesAsync();
+        var model = CreateModel(db);
+
+        await model.OnGetAsync("invalid-token");
+
         Assert.That(model.CanUnsubscribe, Is.False);
+        Assert.That(await db.NewsletterSubscribers.AnyAsync(item => item.IsSubscribed), Is.True);
+    }
+
+    [Test]
+    public async Task Reissued_Link_For_Active_Subscription_Works()
+    {
+        await using var db = CreateDatabase();
+        var subscriber = new NewsletterSubscriber
+        {
+            Email = "customer@example.com",
+            IsSubscribed = true,
+            UnsubscribeVersion = Guid.NewGuid()
+        };
+        db.NewsletterSubscribers.Add(subscriber);
+        await db.SaveChangesAsync();
+        var token = TokenService.Create(subscriber.Id, subscriber.UnsubscribeVersion.Value);
+        var model = CreateModel(db);
+
+        await model.OnGetAsync(token);
+        await model.OnPostAsync();
+
+        Assert.That(model.IsUnsubscribed, Is.True);
+        Assert.That(subscriber.IsSubscribed, Is.False);
+    }
+
+    [Test]
+    public async Task Old_Tracked_Subscription_Cannot_Overwrite_New_Subscription_Version()
+    {
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        var subscriber = new NewsletterSubscriber
+        {
+            Email = "customer@example.com",
+            IsSubscribed = true,
+            UnsubscribeVersion = Guid.NewGuid()
+        };
+        await using var oldContext = new OrderDbContext(options);
+        oldContext.NewsletterSubscribers.Add(subscriber);
+        await oldContext.SaveChangesAsync();
+        await using var newContext = new OrderDbContext(options);
+        var renewedSubscriber = await newContext.NewsletterSubscribers.SingleAsync();
+        renewedSubscriber.UnsubscribeVersion = Guid.NewGuid();
+        await newContext.SaveChangesAsync();
+
+        subscriber.IsSubscribed = false;
+        subscriber.UnsubscribeVersion = null;
+        Assert.ThrowsAsync<DbUpdateConcurrencyException>(async () => await oldContext.SaveChangesAsync());
+        Assert.That((await newContext.NewsletterSubscribers.SingleAsync()).IsSubscribed, Is.True);
+    }
+
+    private static OrderDbContext CreateDatabase()
+    {
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        return new OrderDbContext(options);
+    }
+
+    private static UnsubscribeModel CreateModel(OrderDbContext db)
+    {
+        var httpContext = new DefaultHttpContext();
+        return new UnsubscribeModel(db, TokenService)
+        {
+            PageContext = new PageContext { HttpContext = httpContext }
+        };
     }
 }
