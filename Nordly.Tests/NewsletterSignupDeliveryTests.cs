@@ -21,11 +21,11 @@ public class NewsletterSignupDeliveryTests
         Assert.That(sender.Url, Is.EqualTo("https://example.com/unsubscribe"));
     }
 
-    private sealed class RecordingSender(bool result) : INewsletterWelcomeSender
+    private sealed class RecordingSender(bool result) : IWelcomeEmailSender
     {
         public string? Email { get; private set; }
         public string? Url { get; private set; }
-        public Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+        public Task<bool> SendAsync(string email, string unsubscribeUrl, CancellationToken cancellationToken = default)
         {
             Email = email;
             Url = unsubscribeUrl;
