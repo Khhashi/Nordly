@@ -8,6 +8,41 @@ namespace Nordly.Tests;
 public class NewsletterSignupPostgresTests
 {
     [Test]
+    public async Task Failed_Welcome_Email_Does_Not_Remove_Postgres_Subscription()
+    {
+        await DatabaseMigrationTests.InIsolatedSchema(async connectionString =>
+        {
+            await using var db = DatabaseMigrationTests.CreateDbContext(connectionString);
+            await db.Database.MigrateAsync();
+            var sender = new FailedSender();
+            var service = new NewsletterSignupService(
+                NewsletterSignupPreparationTests.CreatePreparation(db),
+                new NewsletterSignupStore(db), new NewsletterSignupDelivery(sender));
+
+            var outcome = await service.SubscribeAsync("customer@example.com", true);
+
+            Assert.That(outcome, Is.EqualTo(NewsletterSignupOutcome.SubscribedEmailFailed));
+            Assert.That(sender.Calls, Is.EqualTo(1));
+            await using var check = DatabaseMigrationTests.CreateDbContext(connectionString);
+            var saved = await check.NewsletterSubscribers.SingleAsync();
+            Assert.That(saved.IsSubscribed, Is.True);
+            Assert.That(saved.ConsentText, Is.EqualTo(NewsletterSignupInput.ConsentText));
+            Assert.That(saved.ConsentGivenAt, Is.Not.Null);
+            Assert.That(saved.UnsubscribeVersion, Is.Not.Null);
+        });
+    }
+
+    private sealed class FailedSender : INewsletterWelcomeSender
+    {
+        public int Calls { get; private set; }
+        public Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+        {
+            Calls++;
+            return Task.FromResult(false);
+        }
+    }
+
+    [Test]
     public async Task Concurrent_New_Subscriptions_Respect_Unique_Email_Index()
     {
         await DatabaseMigrationTests.InIsolatedSchema(async connectionString =>
