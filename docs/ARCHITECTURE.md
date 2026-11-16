@@ -23,7 +23,8 @@ Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stri
 | Funksjonelt | Betalt ordre lagres med kunde, adresse, varer og frakt |
 | Funksjonelt | Kunden får ordrebekreftelse på e-post |
 | Funksjonelt | Fri frakt fra 800 kr, ellers 79 kr |
-| Funksjonelt | Kunden kan melde seg på nyhetsbrev, samme e-post lagres bare én gang og får én velkomst-e-post |
+| Funksjonelt | Kunden kan melde seg på nyhetsbrev med dokumentert samtykke og får én velkomst-e-post med avmeldingslenke |
+| Funksjonelt | Avmelding krever bekreftelse, og en tidligere avmeldt kunde kan melde seg på igjen med nytt samtykke |
 | Ikke-funksjonelt | Idempotent ordreopprettelse (én betaling = én ordre) |
 | Ikke-funksjonelt | Ingen hemmeligheter i koden, kun miljøvariabler |
 | Ikke-funksjonelt | Webhooks fra Stripe må være signert og verifisert |
@@ -53,6 +54,7 @@ flowchart TB
         Webhook[Stripe webhook]
         Processor[CheckoutOrderProcessor]
         Email[OrderConfirmationEmailSender]
+        Newsletter[Nyhetsbrev<br/>påmelding og avmelding]
     end
     subgraph Domain[Nordly.Domain]
         Entities[Order, OrderLine, Product]
@@ -65,6 +67,7 @@ flowchart TB
     end
     Pages --> Cart
     Pages --> Processor
+    Pages --> Newsletter
     Webhook --> Processor
     Processor --> Services
     Processor --> Email
@@ -157,6 +160,11 @@ erDiagram
         guid Id
         string Email "unik"
         datetime SubscribedAt
+        bool IsSubscribed
+        datetime ConsentGivenAt
+        string ConsentText
+        datetime UnsubscribedAt
+        guid UnsubscribeVersion
     }
     DATA_PROTECTION_KEY {
         int Id
@@ -165,7 +173,32 @@ erDiagram
     }
 ```
 
-## 7. Designbeslutninger
+## 7. Nyhetsbrevflyt
+
+Påmeldingsskjemaet krever aktivt samtykke. E-postadressen normaliseres før lagring, og databasen håndhever at hver adresse bare finnes én gang. Ved ny påmelding eller reaktivering lagres tidspunktet og teksten for samtykket, og det opprettes en ny abonnementsversjon.
+
+```mermaid
+sequenceDiagram
+    actor Kunde
+    participant Web as Nordly.Web
+    participant DB as PostgreSQL
+    participant Mail as Brevo
+
+    Kunde->>Web: Sender e-post og aktivt samtykke
+    Web->>DB: Lagre aktivt abonnement, samtykke og ny versjon
+    Web->>Web: Lag beskyttet token fra abonnent-ID og versjon
+    Web->>Mail: Send velkomst-e-post med avmeldingslenke
+    Mail-->>Kunde: Velkomst-e-post
+    Kunde->>Web: Åpne lenken
+    Web-->>Kunde: Vis bekreftelse, uten å endre abonnementet
+    Kunde->>Web: Bekreft avmelding
+    Web->>DB: Deaktiver abonnement og fjern aktiv versjon
+    Web-->>Kunde: Vis bekreftelse på avmelding
+```
+
+Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke abonnementet ved GET; kunden må bekrefte med POST. Tokenet kan bare brukes mens abonnenten er aktiv og versjonen fortsatt stemmer. En ny påmelding får en ny versjon, slik at eldre lenker ikke kan melde av det nye abonnementet. Hvis velkomst-e-posten ikke kan sendes, deaktiveres påmeldingen slik at kunden kan prøve igjen.
+
+## 8. Designbeslutninger
 
 **ADR-1: Lagdelt arkitektur (Web, Domain, Infrastructure)**
 - *Valg:* Tre prosjekter der Domain ikke avhenger av noe.
@@ -202,7 +235,7 @@ erDiagram
 - *Alternativ:* Standard lagring på disk i containeren.
 - *Hvorfor:* Containeren hos Render mister disken ved hver omstart og deploy. Da ble nøklene nye, og skjemaer som var åpne i nettleseren feilet med 400. Med nøklene i databasen overlever de omstart.
 
-## 8. Begrensninger og videre arbeid
+## 9. Begrensninger og videre arbeid
 
 - **Kaldstart:** Gratisplanen kan fortsatt gi kaldstart hvis ping-jobben feiler, tjenesten restartes eller gratisrammen er brukt opp.
 - **Databaseskjema:** `EnsureCreated` brukes i stedet for EF-migrasjoner. Endringer i modellen krever derfor manuell håndtering. Neste steg er å gå over til migrasjoner.

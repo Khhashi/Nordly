@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Distributed;
 using Nordly.Domain.Services;
 using Nordly.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,13 @@ builder.Services.AddSingleton<PostgresDistributedCache>();
 builder.Services.AddSingleton<IDistributedCache>(serviceProvider =>
     serviceProvider.GetRequiredService<PostgresDistributedCache>());
 builder.Services.AddHostedService<DistributedCacheCleanupService>();
+builder.Services.AddSingleton<NewsletterUnsubscribeToken>();
+builder.Services.AddScoped<NewsletterUnsubscribeLink>();
+builder.Services.AddScoped<NewsletterSignupPreparation>();
+builder.Services.AddScoped<NewsletterSignupStore>();
+builder.Services.AddScoped<NewsletterSignupDelivery>();
+builder.Services.AddScoped<NewsletterSignupService>();
+builder.Services.AddScoped<NewsletterSignupRequest>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(2);
