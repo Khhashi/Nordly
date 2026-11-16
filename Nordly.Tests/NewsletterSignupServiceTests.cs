@@ -89,11 +89,11 @@ public class NewsletterSignupServiceTests
         new(NewsletterSignupPreparationTests.CreatePreparation(db),
             new NewsletterSignupStore(db), new NewsletterSignupDelivery(sender));
 
-    internal sealed class RecordingSender(bool sent) : INewsletterWelcomeSender
+    internal sealed class RecordingSender(bool sent) : IWelcomeEmailSender
     {
         public int Calls { get; private set; }
         public string? Url { get; private set; }
-        public Task<bool> SendWithResultAsync(string email, string? unsubscribeUrl, CancellationToken cancellationToken = default)
+        public Task<bool> SendAsync(string email, string unsubscribeUrl, CancellationToken cancellationToken = default)
         {
             Calls++;
             Url = unsubscribeUrl;
