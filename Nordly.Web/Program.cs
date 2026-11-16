@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Distributed;
 using Nordly.Domain.Services;
 using Nordly.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
