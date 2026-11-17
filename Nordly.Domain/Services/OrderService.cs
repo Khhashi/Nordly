@@ -53,6 +53,14 @@ public class OrderService
         return _repository.GetByStripeCheckoutSessionId(sessionId);
     }
 
+    public List<Order> GetOrdersByCustomerEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Customer email is required.", nameof(email));
+
+        return _repository.GetByCustomerEmail(email);
+    }
+
     public List<Order> GetAllOrders()
     {
         return _repository.GetAll();

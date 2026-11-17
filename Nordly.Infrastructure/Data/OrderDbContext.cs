@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Nordly.Domain.Entities;
 
 namespace Nordly.Infrastructure.Data;
 
-public class OrderDbContext : DbContext, IDataProtectionKeyContext
+public class OrderDbContext : IdentityUserContext<CustomerAccount>, IDataProtectionKeyContext
 {
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
@@ -14,11 +15,32 @@ public class OrderDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
     public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+    public DbSet<PasswordlessLoginChallenge> PasswordlessLoginChallenges => Set<PasswordlessLoginChallenge>();
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
     public DbSet<DistributedCacheEntry> DistributedCacheEntries => Set<DistributedCacheEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<CustomerAccount>(entity =>
+        {
+            entity.HasIndex(user => user.NormalizedEmail)
+                .HasDatabaseName("EmailIndex")
+                .IsUnique();
+        });
+
+        modelBuilder.Entity<PasswordlessLoginChallenge>(entity =>
+        {
+            entity.HasKey(challenge => challenge.NormalizedEmail);
+            entity.Property(challenge => challenge.NormalizedEmail).HasMaxLength(256);
+            entity.Property(challenge => challenge.CodeHash).IsRequired().HasMaxLength(512);
+            entity.Property(challenge => challenge.CreatedAt).IsRequired();
+            entity.Property(challenge => challenge.ExpiresAt).IsRequired();
+            entity.Property(challenge => challenge.FailedAttempts).IsRequired();
+            entity.HasIndex(challenge => challenge.ExpiresAt);
+        });
+
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(product => product.Id);
