@@ -22,6 +22,14 @@ public class FakeOrderRepository : IOrderRepository
         return _orders.Values.SingleOrDefault(order => order.StripeCheckoutSessionId == sessionId);
     }
 
+    public List<Order> GetByCustomerEmail(string email)
+    {
+        return _orders.Values
+            .Where(order => string.Equals(order.CustomerEmail?.Trim(), email.Trim(), StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(order => order.CreatedAt)
+            .ToList();
+    }
+
     public List<Order> GetAll()
     {
         return _orders.Values.ToList();

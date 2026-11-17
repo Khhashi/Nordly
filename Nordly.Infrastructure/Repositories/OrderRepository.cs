@@ -46,6 +46,21 @@ public class OrderRepository : IOrderRepository
             .SingleOrDefault(order => order.StripeCheckoutSessionId == sessionId);
     }
 
+    public List<Order> GetByCustomerEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Customer email is required.", nameof(email));
+
+        var normalizedEmail = email.Trim().ToUpperInvariant();
+        return _db.Orders
+            .Where(order => order.CustomerEmail != null
+                            && order.CustomerEmail.Trim().ToUpper() == normalizedEmail)
+            .Include(order => order.OrderLines)
+            .ThenInclude(line => line.Product)
+            .OrderByDescending(order => order.CreatedAt)
+            .ToList();
+    }
+
     public List<Order> GetAll()
     {
         return _db.Orders

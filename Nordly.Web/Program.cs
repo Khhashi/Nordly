@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Caching.Distributed;
 using Nordly.Domain.Services;
 using Nordly.Domain.Interfaces;
@@ -8,6 +10,7 @@ using Nordly.Infrastructure.Data;
 using Nordly.Infrastructure.Repositories;
 using Nordly.Web;
 using Nordly.Web.Services;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,31 @@ var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConn
                           ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is required.");
 var connectionString = DatabaseConnectionString.Normalize(rawConnectionString);
 builder.Services.AddDbContextFactory<OrderDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("passwordless-login", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
+});
+builder.Services.AddIdentityCore<CustomerAccount>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedEmail = true;
+    })
+    .AddEntityFrameworkStores<OrderDbContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddIdentityCookies();
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<OrderDbContext>()
     .SetApplicationName("Nordly");
@@ -30,6 +58,8 @@ builder.Services.AddScoped<NewsletterSignupStore>();
 builder.Services.AddScoped<NewsletterSignupDelivery>();
 builder.Services.AddScoped<NewsletterSignupService>();
 builder.Services.AddScoped<NewsletterSignupRequest>();
+builder.Services.AddScoped<PasswordlessLoginService>();
+builder.Services.AddHostedService<PasswordlessLoginCodeCleanupService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(2);
@@ -42,11 +72,13 @@ if (!string.IsNullOrWhiteSpace(builder.Configuration["Email:BrevoApiKey"]))
 {
     builder.Services.AddHttpClient<IOrderConfirmationEmailSender, BrevoOrderConfirmationEmailSender>();
     builder.Services.AddHttpClient<IWelcomeEmailSender, BrevoWelcomeEmailSender>();
+    builder.Services.AddHttpClient<IPasswordlessLoginEmailSender, BrevoPasswordlessLoginEmailSender>();
 }
 else
 {
     builder.Services.AddScoped<IOrderConfirmationEmailSender, SmtpOrderConfirmationEmailSender>();
     builder.Services.AddScoped<IWelcomeEmailSender, NoWelcomeEmailSender>();
+    builder.Services.AddScoped<IPasswordlessLoginEmailSender, NoPasswordlessLoginEmailSender>();
 }
 builder.Services.AddScoped<CheckoutOrderProcessor>();
 
@@ -105,12 +137,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseRateLimiter();
 app.UseSession();
 app.Use(async (context, next) =>
 {
     await context.Session.LoadAsync(context.RequestAborted);
     await next();
 });
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapGet("/health", async (OrderDbContext db) =>
     await db.Database.CanConnectAsync()
