@@ -13,7 +13,7 @@ Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stri
 
 **Utenfor omfang**
 - Ekte betaling. Stripe kjører i testmodus.
-- Admin-panel, lagerstyring og brukerkontoer.
+- Admin-panel og lagerstyring.
 
 ## 2. Krav
 
@@ -238,7 +238,8 @@ Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke 
 ## 9. Begrensninger og videre arbeid
 
 - **Kaldstart:** Gratisplanen kan fortsatt gi kaldstart hvis ping-jobben feiler, tjenesten restartes eller gratisrammen er brukt opp.
-- **Databaseskjema:** `EnsureCreated` brukes i stedet for EF-migrasjoner. Endringer i modellen krever derfor manuell håndtering. Neste steg er å gå over til migrasjoner.
+- **Databaseskjema:** Skjemaet versjoneres med EF Core-migreringer. Nye migreringer må brukes før appinstansene startes, slik at alle instanser kjører mot samme skjema.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
+- **Kundekontoer:** Kunden kan logge inn med en engangskode sendt på e-post og se ordre knyttet til den verifiserte e-postadressen. Kontoen opprettes først når koden bekreftes. Gjestekjøp krever fortsatt ingen konto.
 - **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.
 - **Gjestekurv:** ASP.NET-sesjonen lagres i en Postgres-basert distribuert cache og overlever derfor omstarter og nye appinstanser. Ubrukte entries utløper etter sesjonens to timers inaktivitet og ryddes periodisk.

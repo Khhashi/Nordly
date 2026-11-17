@@ -24,12 +24,32 @@ public class DatabaseMigrationTests
                 Assert.That(await db.Database.GetPendingMigrationsAsync(), Is.Empty);
 
                 db.Products.Add(new Product("Migration test product", 125m));
+                db.Users.Add(new CustomerAccount
+                {
+                    UserName = "customer@example.test",
+                    NormalizedUserName = "CUSTOMER@EXAMPLE.TEST",
+                    Email = "customer@example.test",
+                    NormalizedEmail = "CUSTOMER@EXAMPLE.TEST",
+                    EmailConfirmed = true
+                });
                 await db.SaveChangesAsync();
+
+                db.Users.Add(new CustomerAccount
+                {
+                    UserName = "duplicate@example.test",
+                    NormalizedUserName = "DUPLICATE@EXAMPLE.TEST",
+                    Email = "customer@example.test",
+                    NormalizedEmail = "CUSTOMER@EXAMPLE.TEST"
+                });
+                Assert.ThrowsAsync<DbUpdateException>(async () => await db.SaveChangesAsync());
             }
 
             await using var restartedDb = CreateDbContext(scopedConnection);
             Assert.That(await restartedDb.Products.Select(product => product.Name).SingleAsync(),
                 Is.EqualTo("Migration test product"));
+            var customer = await restartedDb.Users.SingleAsync();
+            Assert.That(customer.Email, Is.EqualTo("customer@example.test"));
+            Assert.That(customer.EmailConfirmed, Is.True);
         });
     }
 
@@ -135,6 +155,7 @@ public class DatabaseMigrationTests
             Assert.That(legacySubscriber.UnsubscribeVersion, Is.Null);
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.FriendlyName).SingleAsync(), Is.EqualTo("legacy-key"));
             Assert.That(await upgradedDb.DataProtectionKeys.Select(item => item.Xml).SingleAsync(), Is.EqualTo(keyXml));
+            Assert.That(await upgradedDb.Users.CountAsync(), Is.Zero);
         });
     }
 

@@ -77,4 +77,54 @@ public class OrderRepositoryIntegrationTests
         Assert.That(found, Is.Not.Null);
         Assert.That(found!.StripeCheckoutSessionId, Is.EqualTo("cs_test_second"));
     }
+
+    [Test]
+    public void Repository_Should_Find_Only_Orders_For_The_Matching_Email_Ignoring_Case_And_Whitespace()
+    {
+        var options = new DbContextOptionsBuilder<OrderDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        using var db = new OrderDbContext(options);
+        var repository = new OrderRepository(db);
+        var olderOrder = new Order
+        {
+            CustomerEmail = "  customer@example.com ",
+            CreatedAt = DateTime.UtcNow.AddDays(-1)
+        };
+        var newerOrder = new Order
+        {
+            CustomerEmail = "CUSTOMER@example.com",
+            CreatedAt = DateTime.UtcNow
+        };
+        repository.Add(olderOrder);
+        repository.Add(newerOrder);
+        repository.Add(new Order { CustomerEmail = "other@example.com" });
+
+        var orders = repository.GetByCustomerEmail("Customer@example.com");
+
+        Assert.That(orders.Select(order => order.Id), Is.EqualTo(new[] { newerOrder.Id, olderOrder.Id }));
+    }
+
+    [Test]
+    public async Task Repository_Should_Filter_Customer_Orders_In_PostgreSql()
+    {
+        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("NORDLY_TEST_MIGRATION_CONNECTION")))
+            Assert.Ignore("Set NORDLY_TEST_MIGRATION_CONNECTION to run PostgreSQL repository integration tests.");
+
+        await DatabaseMigrationTests.InIsolatedSchema(async connectionString =>
+        {
+            await using (var migrationDb = DatabaseMigrationTests.CreateDbContext(connectionString))
+                await migrationDb.Database.MigrateAsync();
+
+            await using var db = DatabaseMigrationTests.CreateDbContext(connectionString);
+            var repository = new OrderRepository(db);
+            var matchingOrder = new Order { CustomerEmail = "Customer@example.com" };
+            repository.Add(matchingOrder);
+            repository.Add(new Order { CustomerEmail = "someone-else@example.com" });
+
+            var orders = repository.GetByCustomerEmail("customer@EXAMPLE.com");
+
+            Assert.That(orders.Select(order => order.Id), Is.EqualTo(new[] { matchingOrder.Id }));
+        });
+    }
 }

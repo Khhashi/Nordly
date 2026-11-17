@@ -1,0 +1,53 @@
+@page
+@model Nordly.Web.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Logg inn";
+}
+
+<section class="info-page account-page">
+    <span class="eyebrow">Kundekonto</span>
+    <h1>Logg inn</h1>
+    <div class="info-content">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <p>Du er logget inn som @User.Identity.Name.</p>
+            <p><a asp-page="/Account/Index">Se ordrene dine</a></p>
+            <form method="post" asp-page-handler="SignOut">
+                <button class="primary-btn" type="submit">Logg ut</button>
+            </form>
+        }
+        else
+        {
+            <p>Få en engangskode på e-post. Du trenger ikke passord, og du kan fortsatt handle som gjest.</p>
+
+            @if (Model.StatusMessage is not null)
+            {
+                <div class="alert alert-success" role="status">@Model.StatusMessage</div>
+            }
+            @if (Model.ErrorMessage is not null)
+            {
+                <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+            }
+
+            <form method="post" asp-page-handler="SendCode" class="account-auth-form">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <label asp-for="Email">E-postadresse</label>
+                <input asp-for="Email" type="email" autocomplete="email" required />
+                <span asp-validation-for="Email" class="field-validation-error"></span>
+                <button class="primary-btn" type="submit">Send kode</button>
+            </form>
+
+            @if (Model.CodeSent)
+            {
+                <form method="post" asp-page-handler="VerifyCode" class="account-auth-form">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <input type="hidden" asp-for="Email" />
+                    <label asp-for="Code">Engangskode</label>
+                    <input asp-for="Code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required />
+                    <span asp-validation-for="Code" class="field-validation-error"></span>
+                    <button class="primary-btn" type="submit">Logg inn</button>
+                </form>
+            }
+        }
+    </div>
+</section>

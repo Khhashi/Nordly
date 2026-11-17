@@ -29,6 +29,7 @@ public class OrderPersistenceTests
         public void Add(Order order) => throw new DbUpdateException("Databasen er nede.");
         public Order? GetById(Guid id) => null;
         public Order? GetByStripeCheckoutSessionId(string sessionId) => null;
+        public List<Order> GetByCustomerEmail(string email) => new();
         public List<Order> GetAll() => new();
         public void Update(Order order) { }
         public void Delete(Guid id) { }

@@ -689,6 +689,20 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
 .info-content { border-top: 1px solid var(--line); padding-top: 1.5rem; }
 .info-content h2 { color: var(--ink); font-size: 1.25rem; margin: 1.75rem 0 0.5rem; }
 .info-content p { color: var(--muted); line-height: 1.7; margin: 0; max-width: 600px; }
+.account-auth-form { display: grid; gap: 0.65rem; margin-top: 1.5rem; max-width: 32rem; }
+.account-auth-form label { color: var(--ink); font-weight: 700; }
+.account-auth-form input { border: 1px solid var(--line); border-radius: 8px; font: inherit; min-height: 48px; padding: 0.7rem 0.85rem; width: 100%; }
+.account-auth-form input:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; }
+.account-auth-form .primary-btn { margin-top: 0.25rem; }
+.account-orders { display: grid; gap: 1.5rem; margin-top: 1.5rem; }
+.account-order { border: 1px solid var(--line); border-radius: 12px; padding: 1.25rem; }
+.account-order-heading { align-items: baseline; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: space-between; }
+.account-order-heading h2 { margin: 0; }
+.account-email { margin-bottom: 1.5rem !important; }
+.account-email strong { color: var(--ink); }
+.account-order-date { margin-top: 0.5rem !important; }
+.account-order ul { color: var(--muted); line-height: 1.7; margin: 1rem 0; padding-left: 1.25rem; }
+.account-order-total { color: var(--ink) !important; font-weight: 700; }
 .info-button { margin-top: 2rem; width: auto; }
 .faq-page .info-lead a, .faq-item a { color: var(--forest); font-weight: 700; text-underline-offset: 3px; }
 .faq-group { border-top: 1px solid var(--line); padding: 1.25rem 0 0.5rem; }
@@ -724,7 +738,7 @@ h1, .catalog-header h2, .store-heading h1 { color: var(--ink); }
   .nav-optional, .topbar .nav-links { display: none; }
   .topbar { gap: 0.5rem; padding: 0.65rem 1rem; position: sticky; top: 0; z-index: 30; }
   .mobile-nav-actions { align-items: center; display: flex; gap: 0.4rem; margin-left: auto; }
-  .mobile-search-link, .topbar .mobile-cart-link { align-items: center; background: #edf1ea; border: 0; border-radius: 999px; color: var(--forest); display: inline-flex; font-size: 0.82rem; font-weight: 700; gap: 0.35rem; justify-content: center; min-height: 42px; padding: 0.45rem 0.65rem; text-decoration: none; }
+  .mobile-search-link, .mobile-account-link, .topbar .mobile-cart-link { align-items: center; background: #edf1ea; border: 0; border-radius: 999px; color: var(--forest); display: inline-flex; font-size: 0.82rem; font-weight: 700; gap: 0.35rem; justify-content: center; min-height: 42px; padding: 0.45rem 0.65rem; text-decoration: none; }
   .mobile-search-link span:first-child { font-size: 1.1rem; }
   .mobile-cart-icon { font-size: 0.75rem; font-weight: 800; }
   .mobile-nav-actions .nav-badge { font-size: 0.65rem; margin: 0; }
@@ -914,3 +928,16 @@ button, input, select, textarea { font-family: inherit; }
 /* #184 Roligere produkttittel */
 .product-detail-copy h1 { font-size: clamp(2.2rem, 3.6vw, 3.4rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 0.75rem; text-wrap: balance; }
 @media (max-width: 860px) { .product-detail-copy h1 { font-size: 2.3rem; } }
+
+@media (max-width: 420px) {
+  .brand { font-size: 0.82rem; }
+  .brand span { display: none; }
+  .mobile-nav-actions { gap: 0.2rem; }
+  .mobile-search-link, .mobile-account-link, .topbar .mobile-cart-link { font-size: 0.75rem; padding-inline: 0.45rem; }
+  .mobile-search-link { padding-inline: 0; width: 42px; }
+  .mobile-search-link span:last-child { display: none; }
+  .store-shell { padding-inline: 1rem; }
+  .product-grid { grid-template-columns: minmax(0, 1fr); }
+  .support-card { padding: 1.15rem; }
+  .support-card strong { overflow-wrap: anywhere; }
+}
