@@ -1,0 +1,39 @@
+@page
+@model Nordly.Web.Pages.Account.IndexModel
+@{
+    ViewData["Title"] = "Min konto";
+}
+
+<section class="info-page account-page">
+    <span class="eyebrow">Kundekonto</span>
+    <h1>Ordrene dine</h1>
+    <div class="info-content">
+        <p class="account-email"><strong>Verifisert e-post:</strong> @Model.VerifiedEmail</p>
+        @if (Model.Orders.Count == 0)
+        {
+            <p>Du har ingen ordre knyttet til e-postadressen din ennå.</p>
+        }
+        else
+        {
+            <div class="account-orders">
+                @foreach (var order in Model.Orders)
+                {
+                    <article class="account-order">
+                        <div class="account-order-heading">
+                            <h2>Ordre @order.Number</h2>
+                            <span>@(order.PaymentStatus == "Paid" ? "Betalt" : order.PaymentStatus)</span>
+                        </div>
+                        <p class="account-order-date">Bestilt @order.CreatedAt.ToString("dd.MM.yyyy")</p>
+                        <ul>
+                            @foreach (var line in order.OrderLines)
+                            {
+                                <li>@line.Product.Name × @line.Quantity</li>
+                            }
+                        </ul>
+                        <p class="account-order-total">Totalt: @order.GetGrandTotal().ToString("N2") kr</p>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>
