@@ -294,5 +294,6 @@ Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke 
 - **Databaseskjema:** Skjemaet versjoneres med EF Core-migreringer. Nye migreringer må brukes før appinstansene startes, slik at alle instanser kjører mot samme skjema.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
 - **Kundekontoer:** Passordfri innlogging krever konfigurert Brevo API-nøkkel og avsenderadresse (`Email:BrevoApiKey` og `Email:FromAddress`). Utfordringer med engangskoder lagres i PostgreSQL; ordretilgang styres av bekreftet e-postadresse.
+- **Demodata:** Kontoer, ordre og nyhetsbrevopplysninger slettes når de er eldre enn 30 dager. En periodisk bakgrunnstjeneste kjører oppryddingen omtrent hver time; leverandørenes eventuelle egne kopier og logger omfattes ikke av denne oppryddingen.
 - **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.
 - **Gjestekurv:** ASP.NET-sesjonen lagres i en Postgres-basert distribuert cache og overlever derfor omstarter og nye appinstanser. Ubrukte entries utløper etter sesjonens to timers inaktivitet og ryddes periodisk.
