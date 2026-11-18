@@ -45,7 +45,7 @@ public static class PageMetadataBuilder
             $"{product.Name} – kjøp hos NORDLY",
             product.Description,
             $"/Products/Details/{product.Id}",
-            product.ImageUrl,
+            ResolveImageUrl(publicBaseUrl, product.ImageUrl),
             "product",
             product.Price);
 
@@ -151,6 +151,18 @@ public static class PageMetadataBuilder
         Uri.TryCreate(value, UriKind.Absolute, out var uri)
         && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp)
         && string.IsNullOrEmpty(uri.UserInfo);
+
+    private static string? ResolveImageUrl(string? publicBaseUrl, string? imageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl)
+            || !imageUrl.StartsWith("/", StringComparison.Ordinal)
+            || imageUrl.StartsWith("//", StringComparison.Ordinal))
+        {
+            return imageUrl;
+        }
+
+        return new Uri(new Uri(BuildCanonicalUrl(publicBaseUrl, "/")), imageUrl).AbsoluteUri;
+    }
 
     private static void AddMeta(HtmlContentBuilder html, string keyAttribute, string key, string value)
     {

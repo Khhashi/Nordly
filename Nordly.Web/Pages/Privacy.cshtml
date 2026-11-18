@@ -2,15 +2,16 @@
 @model PrivacyModel
 @{
     ViewData["Title"] = "Personvern";
-    ViewData["PageMetadata"] = PageMetadataBuilder.Create(Configuration["PublicBaseUrl"], "Personvern – NORDLY", "Les hvordan NORDLY håndterer personopplysninger og ivaretar personvernet ditt når du bruker nettbutikken.", "/Privacy");
+    ViewData["PageMetadata"] = PageMetadataBuilder.Create(Configuration["PublicBaseUrl"], "Personvern – NORDLY demo", "Informasjon om testdata som behandles i NORDLYs portefølje- og testdemo.", "/Privacy");
 }
 
 <div class="info-page">
     <span class="eyebrow">Personvern</span>
     <h1>Hvordan vi håndterer dine opplysninger</h1>
     <div class="info-content">
-        <p>Vi samler bare inn opplysninger som er nødvendige for å levere en trygg og god handleopplevelse.</p>
-        <p>Vi bruker e-postadressen din til ordreinformasjon og passordfri innlogging. Ved innlogging sender vi en tidsbegrenset kode som utløper etter 10 minutter. Nyhetsbrev sendes bare dersom du har gitt et aktivt samtykke, og du kan melde deg av via lenken i e-postene våre.</p>
-        <p>Du kan når som helst kontakte oss for å be om å få oppdatert, slettet eller få innsyn i opplysningene vi har lagret om deg.</p>
+        <p><strong>NORDLY er en portefølje- og testdemo, ikke en faktisk nettbutikk.</strong> Ingen varer selges eller sendes, og Stripe Checkout er låst til testmodus. Ikke oppgi reelle person- eller kortopplysninger.</p>
+        <p>For å demonstrere funksjonene lagres e-post for kontoer, hasher av engangskoder, testordre med navn, e-post, telefon, leveringsadresse og ordrelinjer, samt eventuelle nyhetsbrevopplysninger med samtykke. Handlekurv og sesjon lagres i en PostgreSQL-basert cache og utløper etter to timers inaktivitet. Den hostede demoen kjører på Render med PostgreSQL hos Neon.</p>
+        <p>Engangskoder utløper etter 10 minutter og slettes av en periodisk opprydding. Brevo brukes til e-post når det er konfigurert; Stripe Checkout er låst til testmodus og håndterer kortopplysninger. Nordly lagrer ikke kortnummer.</p>
+        <p>Demoen har ingen godkjent oppbevarings- eller sletterutine for kontoer, ordre eller nyhetsbrevopplysninger og skal derfor ikke brukes med ekte kundeopplysninger.</p>
     </div>
 </div>

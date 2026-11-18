@@ -48,6 +48,8 @@ public static class StorefrontCatalog
     public static IReadOnlyList<StoreProduct> Products { get; } = new[]
     {
         StoreProduct.Create("Alba keramikk kopp", "Kjøkken", "En håndlagd kopp til rolige morgener og lange måltider.", 249, "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=900&q=85", "Bestselger", specifications: new(Material: "Keramikk", Highlights: new[] { "Håndlaget", "Til rolige morgener og lange måltider" })),
+        StoreProduct.Create("Sora serveringsskål (demo)", "Kjøkken", "Illustrativt demoprodukt; ikke en faktisk vare for salg.", 279, "/images/demo/kitchen-bowl.svg", "Demo"),
+        StoreProduct.Create("Mira kjøkkenhåndkle (demo)", "Kjøkken", "Illustrativt demoprodukt; ikke en faktisk vare for salg.", 149, "/images/demo/kitchen-towel.svg", "Demo"),
         StoreProduct.Create("Linen hverdagstaske", "Tilbehør", "En robust og avslappet taske til hverdagens små plikter.", 399, "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=85", "Ny", specifications: new(Highlights: new[] { "Robust til hverdagens små plikter", "Avslappet stil" })),
         StoreProduct.Create("Kompakt handlenett", "Tilbehør", "Et lett handlenett til ærender og ekstra plass på farten.", 249, "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=900&q=85", "Ny"),
         StoreProduct.Create("Flettet skulderveske", "Tilbehør", "En kompakt veske for de viktigste småtingene på farten.", 449, "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=85"),
