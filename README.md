@@ -35,10 +35,13 @@ Her er fire skjermbilder av grensesnittet, fra forsiden og produktsiden til hand
 
 - Produktkatalog med kategorifiltre og produktsider
 - Handlekurv med antallsstyring (maks 10 per produkt)
+- Passordfri kundekonto med verifisert e-post og oversikt over egne ordre
 - Stripe Checkout med signert webhook for betalingsstatus
 - Fraktvalg med gratis frakt fra 800 kr
 - Ordrebekreftelse på e-post via Brevo sitt API
 - Nyhetsbrev lagret i PostgreSQL med aktivt samtykke og avmelding via lenke i velkomst-e-posten
+
+Kunden logger inn med en engangskode på e-post. Kontoen opprettes først når koden er bekreftet. Innloggede kunder ser ordre knyttet til den verifiserte e-postadressen sin; gjestekjøp krever ikke konto.
 
 ## Teknologi
 
@@ -72,10 +75,22 @@ dotnet tool install --global dotnet-ef --version 8.0.32
 ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=nordly;Username=postgres;Password=postgres" dotnet ef database update --project Nordly.Infrastructure --startup-project Nordly.Web
 dotnet user-secrets set "Stripe:SecretKey" "sk_test_..." --project Nordly.Web
 dotnet user-secrets set "Stripe:WebhookSecret" "whsec_..." --project Nordly.Web
+dotnet user-secrets set "Email:BrevoApiKey" "<brevo-api-key>" --project Nordly.Web
+dotnet user-secrets set "Email:FromAddress" "<verified-sender-address>" --project Nordly.Web
 dotnet run --project Nordly.Web
 ```
 
-Kjør testene med `dotnet test`. Bruk Stripe-testkortet `4242 4242 4242 4242`.
+Legg hemmelige verdier i User Secrets eller miljøvariabler, aldri i repoet. Brevo-nøkkel og avsenderadresse må være konfigurert for passordfri innlogging og nyhetsbrev. Uten Brevo kan ordrebekreftelser bruke SMTP når SMTP-innstillinger finnes, men innloggingskoder sendes ikke. Bruk Stripe-testkortet `4242 4242 4242 4242`.
+
+Kjør testene med `dotnet test`. PostgreSQL-integrasjonstestene blir hoppet over dersom `NORDLY_TEST_MIGRATION_CONNECTION` ikke er satt. Opprett testdatabasen én gang, og kjør testene mot den – aldri mot produksjonsdatabasen:
+
+```bash
+docker compose exec postgres createdb -U postgres nordly_test
+```
+
+```bash
+NORDLY_TEST_MIGRATION_CONNECTION="Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres" dotnet test
+```
 
 ## Databaseskjema og utrulling
 
@@ -85,7 +100,7 @@ Før en ny appversjon rulles ut, kjør `dotnet ef database update --project Nord
 
 Den første migreringen er en additiv baseline: den oppretter manglende tabeller og kolonner, men sletter ikke eksisterende data. Dermed kan den brukes både på en tom database og på den eksisterende databasen som tidligere ble opprettet med `EnsureCreated` og oppstarts-SQL.
 
-PostgreSQL-migreringstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon.
+PostgreSQL-integrasjonstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon.
 
 ## Nyhetsbrev
 
