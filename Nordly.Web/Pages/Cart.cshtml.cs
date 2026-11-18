@@ -31,7 +31,19 @@ public class CartModel : PageModel
     public decimal GrandTotal => Total + ShippingCost;
     public bool StripeConfigured => !string.IsNullOrWhiteSpace(_configuration["Stripe:SecretKey"]);
 
-    public void OnGet() => LoadCart();
+    public void OnGet(string? restoreCart = null)
+    {
+        var cart = Cart.Load(HttpContext.Session);
+        if (cart.Count == 0 && !string.IsNullOrWhiteSpace(restoreCart))
+        {
+            if (TryRestoreCart(restoreCart, out cart))
+                cart.Save(HttpContext.Session);
+            else
+                TempData["Error"] = "Handlekurven kunne ikke gjenopprettes.";
+        }
+
+        LoadCart();
+    }
 
     public IActionResult OnPostIncrease(Guid productId)
     {
@@ -91,6 +103,7 @@ public class CartModel : PageModel
         }
 
         StripeConfiguration.ApiKey = secretKey;
+        var cartSnapshot = string.Join(",", Items.Select(item => $"{item.Product.Id:N}:{item.Quantity}"));
         var options = new SessionCreateOptions
         {
             Mode = "payment",
@@ -155,7 +168,7 @@ public class CartModel : PageModel
                 ["quantities"] = string.Join(",", Items.Select(item => item.Quantity))
             },
             SuccessUrl = $"{Request.Scheme}://{Request.Host}/Checkout/Success?session_id={{CHECKOUT_SESSION_ID}}",
-            CancelUrl = $"{Request.Scheme}://{Request.Host}/Cart"
+            CancelUrl = $"{Request.Scheme}://{Request.Host}/Cart?restoreCart={Uri.EscapeDataString(cartSnapshot)}"
         };
 
         try
@@ -181,6 +194,28 @@ public class CartModel : PageModel
             .Where(item => item != null)
             .Cast<CartViewItem>()
             .ToList();
+    }
+
+    private static bool TryRestoreCart(string snapshot, out Cart cart)
+    {
+        cart = Cart.Empty();
+        foreach (var item in snapshot.Split(',', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var parts = item.Split(':');
+            if (parts.Length != 2
+                || !Guid.TryParseExact(parts[0], "N", out var productId)
+                || !int.TryParse(parts[1], out var quantity)
+                || quantity is < 1 or > Cart.MaxQuantityPerProduct
+                || !StorefrontCatalog.Products.Any(product => product.Id == productId))
+            {
+                cart = Cart.Empty();
+                return false;
+            }
+
+            cart.Add(productId, quantity);
+        }
+
+        return cart.Count > 0;
     }
 }
 
