@@ -1,0 +1,70 @@
+name: Production database migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_production_migration:
+        description: Confirm that the production database should be migrated
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nordly-production-database-migration
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require main branch
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: |
+          echo "::error::Run this workflow from main."
+          exit 1
+
+      - name: Require explicit production confirmation
+        if: ${{ !inputs.confirm_production_migration }}
+        run: |
+          echo "::error::Confirm the production migration before running this workflow."
+          exit 1
+
+  migrate:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Nordly.sln
+
+      - name: Build solution
+        run: dotnet build Nordly.sln --configuration Release --no-restore
+
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef --version 8.0.32
+
+      - name: Verify production database secret
+        env:
+          CONNECTION_STRING: ${{ secrets.NORDLY_PRODUCTION_CONNECTION_STRING }}
+        run: |
+          if [ -z "$CONNECTION_STRING" ]; then
+            echo "::error::Configure NORDLY_PRODUCTION_CONNECTION_STRING in the production environment."
+            exit 1
+          fi
+
+      - name: Apply database migrations
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.NORDLY_PRODUCTION_CONNECTION_STRING }}
+        run: dotnet ef database update --project Nordly.Infrastructure --startup-project Nordly.Web --configuration Release --no-build
