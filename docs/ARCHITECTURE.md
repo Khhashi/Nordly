@@ -138,6 +138,7 @@ sequenceDiagram
 5. E-post sendes bare av den som faktisk opprettet ordren.
 
 Webhooken håndterer `checkout.session.completed` og `checkout.session.async_payment_succeeded`.
+Fordi Nordly er en demo, avviser appen Stripe-hemmeligheter uten `sk_test_`-prefiks i alle miljøer. Utenfor Development må både testnøkkel og webhook-hemmelighet være konfigurert.
 
 ## 6. Passordfri innlogging og kundeordre
 

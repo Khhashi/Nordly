@@ -7,7 +7,7 @@
 ![Stripe](https://img.shields.io/badge/Stripe-635BFF?logo=stripe&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
-Nettbutikk bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Kunden kan bla i produkter, legge varer i handlekurven, betale med Stripe og få ordrebekreftelse på e-post.
+Portefølje- og testdemo bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Katalog, priser og tilbud er illustrative; ingen varer selges eller sendes, og Checkout bruker bare Stripe testmodus. Ikke oppgi reelle person- eller kortopplysninger.
 
 **[Live demo ↗](https://ordermanager-8ym2.onrender.com)**<br>
 <sub>En gratis ping holder demoen vanligvis våken på hverdager kl. 06–21. Utenfor dette tidsrommet kan gratisplanen gi kaldstart.</sub>
@@ -81,6 +81,7 @@ dotnet run --project Nordly.Web
 ```
 
 Legg hemmelige verdier i User Secrets eller miljøvariabler, aldri i repoet. Brevo-nøkkel og avsenderadresse må være konfigurert for passordfri innlogging og nyhetsbrev. Uten Brevo kan ordrebekreftelser bruke SMTP når SMTP-innstillinger finnes, men innloggingskoder sendes ikke. Bruk Stripe-testkortet `4242 4242 4242 4242`.
+Appen avviser Stripe-nøkler som ikke er i testmodus (`sk_test_`) i alle miljøer. Produksjonsmiljøet må ha både testnøkkel og webhook-hemmelighet konfigurert.
 
 Kjør testene med `dotnet test`. PostgreSQL-integrasjonstestene blir hoppet over dersom `NORDLY_TEST_MIGRATION_CONNECTION` ikke er satt. Opprett testdatabasen én gang, og kjør testene mot den – aldri mot produksjonsdatabasen:
 

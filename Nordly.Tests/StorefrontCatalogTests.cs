@@ -96,8 +96,17 @@ public class StorefrontCatalogTests
         Assert.That(related, Has.Count.EqualTo(4));
         Assert.That(related, Has.None.Matches<StoreProduct>(item => item.Id == product.Id));
         Assert.That(related[0].Category, Is.EqualTo(product.Category));
-        Assert.That(related.Count(item => item.Category == product.Category), Is.EqualTo(1));
+        Assert.That(related.Count(item => item.Category == product.Category), Is.EqualTo(3));
         Assert.That(related.Select(item => item.Id).Distinct().ToArray(), Has.Length.EqualTo(related.Count));
+    }
+
+    [Test]
+    public void Kitchen_Demo_Category_Has_Enough_Products_For_Related_Recommendations()
+    {
+        var kitchenProducts = StorefrontCatalog.Products.Where(item => item.Category == "Kjøkken").ToArray();
+
+        Assert.That(kitchenProducts, Has.Length.EqualTo(4));
+        Assert.That(kitchenProducts.Count(item => item.Name.Contains("(demo)", StringComparison.OrdinalIgnoreCase)), Is.EqualTo(2));
     }
 
     [Test]
