@@ -65,6 +65,49 @@ public class CartPageTests
         Assert.That(model.GrandTotal, Is.EqualTo(699m + ShippingPolicy.StandardShippingCost));
     }
 
+    [Test]
+    public void Get_Restores_Valid_Checkout_Cart_When_Session_Is_Empty()
+    {
+        var session = new FakeSession();
+        var model = CreateModel(session);
+        var product = StorefrontCatalog.Products[0];
+
+        model.OnGet($"{product.Id:N}:2");
+
+        Assert.That(model.Items.Single().Product.Id, Is.EqualTo(product.Id));
+        Assert.That(model.Items.Single().Quantity, Is.EqualTo(2));
+        Assert.That(Cart.Load(session).QuantityOf(product.Id), Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Get_Does_Not_Overwrite_Existing_Cart_With_Checkout_Snapshot()
+    {
+        var session = new FakeSession();
+        var existingProduct = StorefrontCatalog.Products[0];
+        var restoredProduct = StorefrontCatalog.Products[1];
+        var cart = Cart.Empty();
+        cart.Add(existingProduct.Id);
+        cart.Save(session);
+        var model = CreateModel(session);
+
+        model.OnGet($"{restoredProduct.Id:N}:2");
+
+        Assert.That(model.Items.Select(item => item.Product.Id), Is.EqualTo(new[] { existingProduct.Id }));
+    }
+
+    [Test]
+    public void Get_Rejects_Invalid_Checkout_Cart_Snapshot()
+    {
+        var session = new FakeSession();
+        var model = CreateModel(session);
+
+        model.OnGet($"{Guid.NewGuid():N}:1");
+
+        Assert.That(model.Items, Is.Empty);
+        Assert.That(model.TempData["Error"], Is.EqualTo("Handlekurven kunne ikke gjenopprettes."));
+        Assert.That(Cart.Load(session).Items, Is.Empty);
+    }
+
     private static CartModel CreateModel(FakeSession session)
     {
         var httpContext = new DefaultHttpContext { Session = session };
