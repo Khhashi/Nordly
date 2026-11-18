@@ -42,6 +42,7 @@ Her er fire skjermbilder av grensesnittet, fra forsiden og produktsiden til hand
 - Nyhetsbrev lagret i PostgreSQL med aktivt samtykke og avmelding via lenke i velkomst-e-posten
 
 Kunden logger inn med en engangskode på e-post. Kontoen opprettes først når koden er bekreftet. Innloggede kunder ser ordre knyttet til den verifiserte e-postadressen sin; gjestekjøp krever ikke konto.
+Demoens konto-, ordre- og nyhetsbrevdata slettes automatisk fra PostgreSQL etter 30 dager.
 
 ## Teknologi
 
