@@ -126,7 +126,8 @@ public sealed class PasswordlessLoginService(
             {
                 UserName = trimmedEmail,
                 Email = trimmedEmail,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                CreatedAt = now
             };
             var createResult = await userManager.CreateAsync(user);
             if (!createResult.Succeeded)
