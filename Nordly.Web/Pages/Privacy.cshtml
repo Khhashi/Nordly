@@ -12,6 +12,6 @@
         <p><strong>NORDLY er en portefølje- og testdemo, ikke en faktisk nettbutikk.</strong> Ingen varer selges eller sendes, og Stripe Checkout er låst til testmodus. Ikke oppgi reelle person- eller kortopplysninger.</p>
         <p>For å demonstrere funksjonene lagres e-post for kontoer, hasher av engangskoder, testordre med navn, e-post, telefon, leveringsadresse og ordrelinjer, samt eventuelle nyhetsbrevopplysninger med samtykke. Handlekurv og sesjon lagres i en PostgreSQL-basert cache og utløper etter to timers inaktivitet. Den hostede demoen kjører på Render med PostgreSQL hos Neon.</p>
         <p>Engangskoder utløper etter 10 minutter og slettes av en periodisk opprydding. Brevo brukes til e-post når det er konfigurert; Stripe Checkout er låst til testmodus og håndterer kortopplysninger. Nordly lagrer ikke kortnummer.</p>
-        <p>Demoen har ingen godkjent oppbevarings- eller sletterutine for kontoer, ordre eller nyhetsbrevopplysninger og skal derfor ikke brukes med ekte kundeopplysninger.</p>
+        <p>Kontoer, ordre og nyhetsbrevopplysninger i demoens PostgreSQL-database slettes automatisk når de er eldre enn 30 dager. Denne perioden gjelder ikke kopier eller logger som Stripe, Brevo, Render eller Neon eventuelt oppbevarer etter sine egne vilkår. Demoen skal ikke brukes med ekte kundeopplysninger.</p>
     </div>
 </div>

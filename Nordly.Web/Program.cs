@@ -60,6 +60,7 @@ builder.Services.AddScoped<NewsletterSignupService>();
 builder.Services.AddScoped<NewsletterSignupRequest>();
 builder.Services.AddScoped<PasswordlessLoginService>();
 builder.Services.AddHostedService<PasswordlessLoginCodeCleanupService>();
+builder.Services.AddHostedService<DemoDataRetentionService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(2);
