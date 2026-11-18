@@ -22,6 +22,7 @@ Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stri
 | Funksjonelt | Kunden kan legge varer i handlekurven (maks 10 per produkt) og betale |
 | Funksjonelt | Betalt ordre lagres med kunde, adresse, varer og frakt |
 | Funksjonelt | Kunden får ordrebekreftelse på e-post |
+| Funksjonelt | Kunden kan logge inn med en e-postkode og se ordre knyttet til verifisert e-post |
 | Funksjonelt | Fri frakt fra 800 kr, ellers 79 kr |
 | Funksjonelt | Kunden kan melde seg på nyhetsbrev med dokumentert samtykke og får én velkomst-e-post med avmeldingslenke |
 | Funksjonelt | Avmelding krever bekreftelse, og en tidligere avmeldt kunde kan melde seg på igjen med nytt samtykke |
@@ -51,6 +52,9 @@ flowchart TB
     subgraph Web[Nordly.Web]
         Pages[Razor Pages]
         Cart[Cart<br/>handlekurv i sesjonen]
+        Account[Account/Login og Index]
+        Login[PasswordlessLoginService]
+        LoginEmail[PasswordlessLoginEmailSender]
         Webhook[Stripe webhook]
         Processor[CheckoutOrderProcessor]
         Email[OrderConfirmationEmailSender]
@@ -64,8 +68,14 @@ flowchart TB
     subgraph Infra[Nordly.Infrastructure]
         Repo[OrderRepository]
         Ctx[OrderDbContext<br/>også DataProtection-nøkler]
+        Identity[ASP.NET Core Identity]
     end
     Pages --> Cart
+    Account --> Login
+    Login --> Identity
+    Login --> LoginEmail
+    LoginEmail --> Brevo[Brevo]
+    Account --> Services
     Pages --> Processor
     Pages --> Newsletter
     Webhook --> Processor
@@ -75,6 +85,7 @@ flowchart TB
     Services --> IRepo
     Repo -.implementerer.-> IRepo
     Repo --> Ctx
+    Identity --> Ctx
 ```
 
 | Lag | Ansvar | Avhenger av |
@@ -128,7 +139,34 @@ sequenceDiagram
 
 Webhooken håndterer `checkout.session.completed` og `checkout.session.async_payment_succeeded`.
 
-## 6. Datamodell
+## 6. Passordfri innlogging og kundeordre
+
+Kunden ber om en innloggingskode ved å oppgi e-postadressen sin. `PasswordlessLoginService` normaliserer adressen, lagrer en hashet engangskode i `PasswordlessLoginChallenges` og sender koden gjennom Brevo sitt API. Koden utløper etter 10 minutter, kan sendes på nytt etter ett minutt og godtas maksimalt fem ganger. En IP-basert rate-limit-policy tillater opptil 10 forespørsler per 15 minutter. En bakgrunnstjeneste rydder utløpte utfordringer omtrent hver time.
+
+Kontoen opprettes eller bekreftes først etter at koden er godkjent. ASP.NET Core Identity håndterer kontoen, og innloggingen bruker en ikke-persistent applikasjonscookie. Min konto-siden krever autentisering og viser bare ordre som matcher kontoens bekreftede e-postadresse. Tidligere gjestekjøp med samme e-post kan derfor vises; kjøp krever fortsatt ikke at kunden har konto.
+
+```mermaid
+sequenceDiagram
+    actor Kunde
+    participant Web as Account/Login
+    participant DB as PostgreSQL
+    participant Mail as Brevo
+    participant Identity as ASP.NET Core Identity
+    participant Orders as OrderService
+
+    Kunde->>Web: Ber om kode med e-postadresse
+    Web->>DB: Lagre hash, utløp og feilteller
+    Web->>Mail: Send engangskode
+    Mail-->>Kunde: Kode
+    Kunde->>Web: Send kode
+    Web->>DB: Kontroller kode og slett utfordring
+    Web->>Identity: Opprett/bekreft konto og logg inn
+    Kunde->>Orders: Åpne Min konto
+    Orders->>DB: Hent ordre for bekreftet e-post
+    DB-->>Kunde: Kundens ordre
+```
+
+## 7. Datamodell
 
 ```mermaid
 erDiagram
@@ -171,9 +209,23 @@ erDiagram
         string FriendlyName
         string Xml
     }
+    AspNetUsers {
+        string Id
+        string Email
+        bool EmailConfirmed
+    }
+    PasswordlessLoginChallenges {
+        string NormalizedEmail "primærnøkkel"
+        string CodeHash
+        datetime CreatedAt
+        datetime ExpiresAt
+        int FailedAttempts
+    }
 ```
 
-## 7. Nyhetsbrevflyt
+Identity bruker i tillegg ASP.NET Core Identity-tabeller for brukere og tilhørende autentiseringsdata. Ordrehistorikk ligger fortsatt i ordre-tabellene og knyttes til kontoen gjennom den bekreftede e-postadressen; ordre inneholder ikke en Identity-bruker-ID.
+
+## 8. Nyhetsbrevflyt
 
 Påmeldingsskjemaet krever aktivt samtykke. E-postadressen normaliseres før lagring, og databasen håndhever at hver adresse bare finnes én gang. Ved ny påmelding eller reaktivering lagres tidspunktet og teksten for samtykket, og det opprettes en ny abonnementsversjon.
 
@@ -198,7 +250,7 @@ sequenceDiagram
 
 Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke abonnementet ved GET; kunden må bekrefte med POST. Tokenet kan bare brukes mens abonnenten er aktiv og versjonen fortsatt stemmer. En ny påmelding får en ny versjon, slik at eldre lenker ikke kan melde av det nye abonnementet. Hvis velkomst-e-posten ikke kan sendes, deaktiveres påmeldingen slik at kunden kan prøve igjen.
 
-## 8. Designbeslutninger
+## 9. Designbeslutninger
 
 **ADR-1: Lagdelt arkitektur (Web, Domain, Infrastructure)**
 - *Valg:* Tre prosjekter der Domain ikke avhenger av noe.
@@ -235,11 +287,11 @@ Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke 
 - *Alternativ:* Standard lagring på disk i containeren.
 - *Hvorfor:* Containeren hos Render mister disken ved hver omstart og deploy. Da ble nøklene nye, og skjemaer som var åpne i nettleseren feilet med 400. Med nøklene i databasen overlever de omstart.
 
-## 9. Begrensninger og videre arbeid
+## 10. Begrensninger og videre arbeid
 
 - **Kaldstart:** Gratisplanen kan fortsatt gi kaldstart hvis ping-jobben feiler, tjenesten restartes eller gratisrammen er brukt opp.
 - **Databaseskjema:** Skjemaet versjoneres med EF Core-migreringer. Nye migreringer må brukes før appinstansene startes, slik at alle instanser kjører mot samme skjema.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
-- **Kundekontoer:** Kunden kan logge inn med en engangskode sendt på e-post og se ordre knyttet til den verifiserte e-postadressen. Kontoen opprettes først når koden bekreftes. Gjestekjøp krever fortsatt ingen konto.
+- **Kundekontoer:** Passordfri innlogging krever konfigurert Brevo API-nøkkel og avsenderadresse (`Email:BrevoApiKey` og `Email:FromAddress`). Utfordringer med engangskoder lagres i PostgreSQL; ordretilgang styres av bekreftet e-postadresse.
 - **Ingen kø for e-post:** Feiler utsendingen, logges det, men e-posten sendes ikke på nytt.
 - **Gjestekurv:** ASP.NET-sesjonen lagres i en Postgres-basert distribuert cache og overlever derfor omstarter og nye appinstanser. Ubrukte entries utløper etter sesjonens to timers inaktivitet og ryddes periodisk.
