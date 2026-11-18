@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="announcement-bar">Fri frakt på ordre fra 800 kr <span class="announcement-dot">•</span><span class="announcement-extra">Levering på 2–4 virkedager</span></div>
+    <div class="announcement-bar" role="note">DEMO · Ingen ekte salg eller levering. Varer og priser er eksempler. Ikke oppgi reelle person- eller kortopplysninger.</div>
     @{
         var cartCount = Nordly.Web.Cart.Load(Context.Session).Count;
     }
@@ -50,7 +50,7 @@
     <footer class="site-footer">
         <div class="footer-brand"><strong>NORDLY</strong><span>Ting for hverdagen.</span></div>
         <div class="footer-links"><a asp-page="/Info/Delivery">Levering & retur</a><a asp-page="/Info/Faq">Vanlige spørsmål</a><a asp-page="/Info/Support">Kundeservice</a><a asp-page="/Privacy">Personvern</a><a asp-page="/Info/Terms">Vilkår</a></div>
-        <div class="footer-payment"><span>Trygg betaling</span><strong>Stripe · Visa · Mastercard</strong></div>
+        <div class="footer-payment"><span>Kun testkjøp</span><strong>Stripe testmodus</strong></div>
     </footer>
 
     <script src="~/js/site.js" asp-append-version="true"></script>

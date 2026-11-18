@@ -40,6 +40,16 @@ public class PageMetadataTests
     }
 
     [Test]
+    public void Product_Metadata_Resolves_Local_Demo_Image_Against_Public_Base_Url()
+    {
+        var product = StorefrontCatalog.Products.Single(item => item.Name == "Sora serveringsskål (demo)");
+
+        var metadata = PageMetadataBuilder.CreateProduct(PublicBaseUrl, product);
+
+        Assert.That(metadata.ImageUrl, Is.EqualTo("https://butikk.nordly.no/images/demo/kitchen-bowl.svg"));
+    }
+
+    [Test]
     public void Information_Page_Metadata_Renders_Its_Own_Text_And_Canonical_Url()
     {
         var metadata = PageMetadataBuilder.Create(

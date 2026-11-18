@@ -93,9 +93,11 @@ forwardedHeaders.KnownNetworks.Clear();
 forwardedHeaders.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeaders);
 
+var stripeSecretKey = app.Configuration["Stripe:SecretKey"];
+StripeTestModeValidator.EnsureTestMode(stripeSecretKey);
+
 if (!app.Environment.IsDevelopment())
 {
-    var stripeSecretKey = app.Configuration["Stripe:SecretKey"];
     var stripeWebhookSecret = app.Configuration["Stripe:WebhookSecret"];
     if (string.IsNullOrWhiteSpace(stripeSecretKey) || string.IsNullOrWhiteSpace(stripeWebhookSecret))
     {
