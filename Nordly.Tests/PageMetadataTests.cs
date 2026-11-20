@@ -15,10 +15,11 @@ public class PageMetadataTests
 
         var html = Render(metadata);
 
-        AssertMeta(html, "name", "description", "Praktiske, vakre produkter som gjør hverdagen enklere. Norsk design med omtanke, små serier og rask levering.");
+        AssertMeta(html, "name", "description", "NORDLY er en butikkdemo med illustrative produkter og priser. Ingen varer selges eller sendes.");
         Assert.That(html, Does.Contain("rel=\"canonical\""));
         Assert.That(html, Does.Contain("href=\"https://butikk.nordly.no/\""));
         AssertMeta(html, "property", "og:title", "NORDLY – Norsk design til hverdagen");
+        AssertMeta(html, "property", "og:image", "https://butikk.nordly.no/images/products/alba-ceramic-mug.svg");
         AssertMeta(html, "name", "twitter:card", "summary_large_image");
         Assert.That(html, Does.Not.Contain("<h1"));
     }
@@ -33,7 +34,7 @@ public class PageMetadataTests
 
         AssertMeta(html, "property", "og:title", $"{product.Name} – kjøp hos NORDLY");
         AssertMeta(html, "property", "og:description", product.Description);
-        AssertMeta(html, "property", "og:image", product.ImageUrl);
+        AssertMeta(html, "property", "og:image", $"{PublicBaseUrl}{product.ImageUrl}");
         Assert.That(html, Does.Contain($"https://butikk.nordly.no/Products/Details/{product.Id}"));
         AssertMeta(html, "property", "product:price:amount", "699.00");
         AssertMeta(html, "property", "product:price:currency", "NOK");
@@ -92,7 +93,7 @@ public class PageMetadataTests
         var html = Render(metadata);
 
         Assert.That(metadata.CanonicalUrl, Is.EqualTo("https://ordermanager-8ym2.onrender.com/"));
-        Assert.That(metadata.ImageUrl, Is.EqualTo(PageMetadataBuilder.DefaultImageUrl));
+        Assert.That(metadata.ImageUrl, Is.EqualTo("https://ordermanager-8ym2.onrender.com/images/demo/product-placeholder.svg"));
         Assert.That(metadata.Title, Is.EqualTo("<script>alert(1)</script>"));
         Assert.That(metadata.Description.Length, Is.LessThanOrEqualTo(PageMetadataBuilder.MaximumDescriptionLength));
         Assert.That(html, Does.Not.Contain("attacker.example"));
