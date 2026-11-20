@@ -64,7 +64,8 @@ public sealed class SmtpOrderConfirmationEmailSender : IOrderConfirmationEmailSe
         var body = new StringBuilder();
         body.AppendLine($"Hei {order.CustomerName ?? "der"},");
         body.AppendLine();
-        body.AppendLine("Takk for bestillingen din hos Nordly.");
+        body.AppendLine("Takk for testbestillingen din hos Nordly.");
+        body.AppendLine("Dette er en demoordre. Ingen varer selges eller sendes.");
         body.AppendLine($"Ordrenummer: {order.Number}");
         body.AppendLine();
         body.AppendLine("Produkter:");

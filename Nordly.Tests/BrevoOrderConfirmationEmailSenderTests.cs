@@ -57,6 +57,7 @@ public class BrevoOrderConfirmationEmailSenderTests
         Assert.That(handler.Request.Headers.GetValues("api-key").Single(), Is.EqualTo("test-key"));
         Assert.That(handler.Body, Does.Contain("kunde@example.com"));
         Assert.That(handler.Body, Does.Contain("Ordrebekreftelse"));
+        Assert.That(handler.Body, Does.Contain("Dette er en demoordre. Ingen varer selges eller sendes."));
     }
 
     [Test]
