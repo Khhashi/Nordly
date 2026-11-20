@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     services:
       postgres:
         image: postgres:17
@@ -42,10 +42,14 @@ jobs:
       - name: Build solution
         run: dotnet build Nordly.sln --configuration Release --no-restore
 
+      - name: Install Chromium for browser smoke tests
+        run: pwsh Nordly.Tests/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
+
       - name: Run tests
         run: dotnet test Nordly.sln --configuration Release --no-build --verbosity normal
         env:
           NORDLY_TEST_MIGRATION_CONNECTION: Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres
+          NORDLY_BROWSER_TEST_CONNECTION: Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres
 
   docker-build:
     runs-on: ubuntu-latest
