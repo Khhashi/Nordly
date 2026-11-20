@@ -251,7 +251,15 @@ sequenceDiagram
 
 Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke abonnementet ved GET; kunden må bekrefte med POST. Tokenet kan bare brukes mens abonnenten er aktiv og versjonen fortsatt stemmer. En ny påmelding får en ny versjon, slik at eldre lenker ikke kan melde av det nye abonnementet. Hvis velkomst-e-posten ikke kan sendes, deaktiveres påmeldingen slik at kunden kan prøve igjen.
 
-## 9. Designbeslutninger
+## 9. Testing
+
+- **NUnit:** Tester domeneregler, handlekurv, ordrebehandling og PostgreSQL-integrasjon. PostgreSQL-testene isolerer databasetilstanden i egne skjemaer.
+- **Playwright:** Chromium tester produktsøk og filtrering, handlekurv gjennom navigasjon og gjenoppretting fra Checkout-retur-URL. Testappen kjører i Development mot en dedikert testdatabase uten Stripe- eller e-posthemmeligheter.
+- **CI:** GitHub Actions kjører NUnit- og nettlesertestene mot PostgreSQL og bygger Docker-imaget.
+
+Se [testguiden](TESTING.md) for oppsett, kommandoer og testdatabasekrav.
+
+## 10. Designbeslutninger
 
 **ADR-1: Lagdelt arkitektur (Web, Domain, Infrastructure)**
 - *Valg:* Tre prosjekter der Domain ikke avhenger av noe.
@@ -288,7 +296,7 @@ Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke 
 - *Alternativ:* Standard lagring på disk i containeren.
 - *Hvorfor:* Containeren hos Render mister disken ved hver omstart og deploy. Da ble nøklene nye, og skjemaer som var åpne i nettleseren feilet med 400. Med nøklene i databasen overlever de omstart.
 
-## 10. Begrensninger og videre arbeid
+## 11. Begrensninger og videre arbeid
 
 - **Kaldstart:** Gratisplanen kan fortsatt gi kaldstart hvis ping-jobben feiler, tjenesten restartes eller gratisrammen er brukt opp.
 - **Databaseskjema:** Skjemaet versjoneres med EF Core-migreringer. Nye migreringer må brukes før appinstansene startes, slik at alle instanser kjører mot samme skjema.

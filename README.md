@@ -9,7 +9,7 @@
 
 Portefølje- og testdemo bygget i .NET 8 med Razor Pages, PostgreSQL og Stripe Checkout. Katalog, priser og tilbud er illustrative; ingen varer selges eller sendes, og Checkout bruker bare Stripe testmodus. Ikke oppgi reelle person- eller kortopplysninger.
 
-**[Live demo ↗](https://ordermanager-8ym2.onrender.com)**<br>
+**[Live demo ↗](https://ordermanager-8ym2.onrender.com)** | **[Arkitektur](docs/ARCHITECTURE.md)** | **[Testguide](docs/TESTING.md)**<br>
 <sub>En gratis ping holder demoen vanligvis våken på hverdager kl. 06–21. Utenfor dette tidsrommet kan gratisplanen gi kaldstart.</sub>
 
 ## Hvorfor jeg bygde det
@@ -55,11 +55,9 @@ Demoens konto-, ordre- og nyhetsbrevdata slettes automatisk fra PostgreSQL etter
 - **Personvern:** Jeg oppdaget at ordre-API-et returnerte kundens navn, e-post og adresse uten innlogging. Først begrenset jeg hva API-et returnerte og fjernet et endepunkt som lot hvem som helst opprette ordrer. Senere fjernet jeg hele ordre-API-et, siden ingen del av nettsiden brukte det.
 - **Drift på gratisplan:** Render blokkerer utgående SMTP, så e-post sendes via Brevo sitt HTTP-API. Containeren mister disken ved omstart, så nøklene som krypterer cookies og skjemaer lagres i Postgres.
 
-Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for diagrammer, betalingsflyt og designbeslutninger.
-
 ## Tester og CI
 
-Automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, betaling, databaseoppgraderinger og at krypteringsnøklene overlever omstart. Playwright-smoketester bruker Chromium til å kontrollere butikksøk og filtrering, handlekurven og retur fra avbrutt Checkout. GitHub Actions bygger løsningen, kjører testene mot PostgreSQL og bygger Docker-imaget på hver pull request.
+NUnit dekker domeneregler, ordre, betaling og PostgreSQL-integrasjon. Playwright med Chromium tester søk og filtrering, handlekurv og retur etter avbrutt Checkout. GitHub Actions kjører testene mot PostgreSQL og bygger Docker-imaget på hver pull request. Se [testguiden](docs/TESTING.md) for lokal kjøring.
 
 ## Arbeidsflyt
 
@@ -67,7 +65,7 @@ Hver oppgave starter som et issue og utvikles på en egen feature-branch. Endrin
 
 ## Kjør lokalt
 
-Krever .NET 8 SDK og Docker. Nettlesertestene krever også PowerShell 7 (`pwsh`).
+Appen krever .NET 8 SDK og Docker. PowerShell 7 (`pwsh`) trengs bare for å installere Playwright-nettleseren til testene.
 
 ```bash
 docker compose up -d
@@ -84,20 +82,6 @@ dotnet run --project Nordly.Web
 Legg hemmelige verdier i User Secrets eller miljøvariabler, aldri i repoet. Brevo-nøkkel og avsenderadresse må være konfigurert for passordfri innlogging og nyhetsbrev. Uten Brevo kan ordrebekreftelser bruke SMTP når SMTP-innstillinger finnes, men innloggingskoder sendes ikke. Bruk Stripe-testkortet `4242 4242 4242 4242`.
 Appen avviser Stripe-nøkler som ikke er i testmodus (`sk_test_`) i alle miljøer. Produksjonsmiljøet må ha både testnøkkel og webhook-hemmelighet konfigurert.
 
-Kjør testene med `dotnet test`. PostgreSQL- og nettlesertestene blir hoppet over dersom henholdsvis `NORDLY_TEST_MIGRATION_CONNECTION` og `NORDLY_BROWSER_TEST_CONNECTION` ikke er satt. Opprett testdatabasen én gang, og kjør testene mot den – aldri mot produksjonsdatabasen:
-
-```bash
-docker compose exec postgres createdb -U postgres nordly_test
-```
-
-```bash
-dotnet build Nordly.sln
-pwsh Nordly.Tests/bin/Debug/net8.0/playwright.ps1 install chromium
-NORDLY_TEST_MIGRATION_CONNECTION="Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres" \
-NORDLY_BROWSER_TEST_CONNECTION="Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres" \
-dotnet test
-```
-
 ## Databaseskjema og utrulling
 
 Databaseskjemaet styres av EF Core-migreringer i `Nordly.Infrastructure/Migrations`. Appen kjører ikke migreringer automatisk ved oppstart; den stopper med en tydelig feilmelding dersom databasen har ventende migreringer. Dette hindrer at flere app-instanser endrer skjema samtidig.
@@ -106,10 +90,11 @@ Før en ny appversjon rulles ut, kjør den manuelle GitHub Actions-workflowen [P
 
 Den første migreringen er en additiv baseline: den oppretter manglende tabeller og kolonner, men sletter ikke eksisterende data. Dermed kan den brukes både på en tom database og på den eksisterende databasen som tidligere ble opprettet med `EnsureCreated` og oppstarts-SQL.
 
-PostgreSQL-integrasjonstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema. Nettlesertestene bruker `NORDLY_BROWSER_TEST_CONNECTION` mot en dedikert testdatabase, kjører migreringene i standardskjemaet og starter appen lokalt i Development uten Stripe-hemmeligheter eller e-postutsendelser. Ingen av testene skal bruke produksjonsdatabasen.
-
 ## Nyhetsbrev
 
-Påmelding krever aktivt samtykke og en konfigurert Brevo-avsender (`Email:BrevoApiKey` og `Email:FromAddress`). `PublicBaseUrl` må være butikkens offentlige HTTPS-adresse, slik at velkomst-e-posten inneholder en gyldig avmeldingslenke. Hvis e-posten ikke kan sendes, får kunden en feilmelding og påmeldingen deaktiveres slik at kunden kan prøve igjen.
+Påmelding krever aktivt samtykke og en konfigurert Brevo-avsender. Avmeldingslenken er beskyttet og knyttet til abonnementsversjonen. Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for flyt og personvernvalg.
 
-Eksisterende adresser uten dokumentert samtykke markeres som inaktive ved migreringen og må melde seg på på nytt. En fremtidig utsendelsesfunksjon må bare sende til aktive abonnenter og bruke `NewsletterUnsubscribeToken` til å lage en avmeldingslenke for hver e-post. Lenken er knyttet til abonnementsversjonen og slutter å virke etter avmelding eller ny påmelding. Data Protection-nøklene må bevares for at utsendte lenker skal fortsette å virke.
+## Ressurser
+
+- **[Arkitektur](docs/ARCHITECTURE.md)** – lagdeling, betalingsflyt, datamodell og designvalg
+- **[Testguide](docs/TESTING.md)** – PostgreSQL- og Playwright-tester lokalt og i CI
