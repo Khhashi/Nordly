@@ -7,7 +7,6 @@ using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using Nordly.Infrastructure.Data;
 using Nordly.Web;
-using Npgsql;
 
 namespace Nordly.Tests;
 
@@ -15,8 +14,6 @@ namespace Nordly.Tests;
 [NonParallelizable]
 public sealed class StorefrontBrowserSmokeTests : PageTest
 {
-    private string? _baseConnectionString;
-    private string? _schemaName;
     private Process? _webProcess;
     private string _baseUrl = string.Empty;
     private readonly StringBuilder _serverOutput = new();
@@ -29,10 +26,7 @@ public sealed class StorefrontBrowserSmokeTests : PageTest
         if (string.IsNullOrWhiteSpace(connectionString))
             Assert.Ignore("Set NORDLY_BROWSER_TEST_CONNECTION to run browser smoke tests against a PostgreSQL test database.");
 
-        _baseConnectionString = connectionString;
-        var schemaName = $"nordly_browser_{Guid.NewGuid():N}";
-        _schemaName = schemaName;
-        await CreateSchemaAndMigrateAsync(connectionString, schemaName);
+        await MigrateTestDatabaseAsync(connectionString);
 
         var repositoryRoot = FindRepositoryRoot();
         var configuration = Directory.GetParent(Path.TrimEndingDirectorySeparator(AppContext.BaseDirectory))?.Name
@@ -45,7 +39,6 @@ public sealed class StorefrontBrowserSmokeTests : PageTest
         var port = GetAvailablePort();
         var applicationUrl = $"http://127.0.0.1:{port}";
         _baseUrl = applicationUrl;
-        var scopedConnectionString = CreateSchemaConnectionString(connectionString, schemaName);
         var startInfo = new ProcessStartInfo("dotnet")
         {
             WorkingDirectory = webProjectDirectory,
@@ -58,7 +51,7 @@ public sealed class StorefrontBrowserSmokeTests : PageTest
         startInfo.ArgumentList.Add(applicationUrl);
         startInfo.Environment["ASPNETCORE_ENVIRONMENT"] = "Development";
         startInfo.Environment["DOTNET_ENVIRONMENT"] = "Development";
-        startInfo.Environment["ConnectionStrings__DefaultConnection"] = scopedConnectionString;
+        startInfo.Environment["ConnectionStrings__DefaultConnection"] = connectionString;
         startInfo.Environment["Stripe__SecretKey"] = string.Empty;
         startInfo.Environment["Stripe__WebhookSecret"] = string.Empty;
         startInfo.Environment["Email__BrevoApiKey"] = string.Empty;
@@ -88,9 +81,6 @@ public sealed class StorefrontBrowserSmokeTests : PageTest
 
             _webProcess.Dispose();
         }
-
-        if (_baseConnectionString is not null && _schemaName is not null)
-            await DropSchemaAsync(_baseConnectionString, _schemaName);
     }
 
     [SetUp]
@@ -145,40 +135,13 @@ public sealed class StorefrontBrowserSmokeTests : PageTest
         Assert.That(await Page.GetByText("Betaling kommer snart").IsVisibleAsync(), Is.True);
     }
 
-    private static async Task CreateSchemaAndMigrateAsync(string connectionString, string schemaName)
+    private static async Task MigrateTestDatabaseAsync(string connectionString)
     {
-        await using (var connection = new NpgsqlConnection(connectionString))
-        {
-            await connection.OpenAsync();
-            await using var command = connection.CreateCommand();
-            command.CommandText = $"CREATE SCHEMA \"{schemaName}\"";
-            await command.ExecuteNonQueryAsync();
-        }
-
-        var schemaConnectionString = CreateSchemaConnectionString(connectionString, schemaName);
         var options = new DbContextOptionsBuilder<OrderDbContext>()
-            .UseNpgsql(schemaConnectionString)
+            .UseNpgsql(DatabaseConnectionString.Normalize(connectionString))
             .Options;
         await using var db = new OrderDbContext(options);
         await db.Database.MigrateAsync();
-    }
-
-    private static async Task DropSchemaAsync(string connectionString, string schemaName)
-    {
-        await using var connection = new NpgsqlConnection(connectionString);
-        await connection.OpenAsync();
-        await using var command = connection.CreateCommand();
-        command.CommandText = $"DROP SCHEMA IF EXISTS \"{schemaName}\" CASCADE";
-        await command.ExecuteNonQueryAsync();
-    }
-
-    private static string CreateSchemaConnectionString(string connectionString, string schemaName)
-    {
-        var builder = new NpgsqlConnectionStringBuilder(connectionString)
-        {
-            SearchPath = schemaName
-        };
-        return builder.ConnectionString;
     }
 
     private static string FindRepositoryRoot()

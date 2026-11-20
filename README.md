@@ -106,7 +106,7 @@ Før en ny appversjon rulles ut, kjør den manuelle GitHub Actions-workflowen [P
 
 Den første migreringen er en additiv baseline: den oppretter manglende tabeller og kolonner, men sletter ikke eksisterende data. Dermed kan den brukes både på en tom database og på den eksisterende databasen som tidligere ble opprettet med `EnsureCreated` og oppstarts-SQL.
 
-PostgreSQL-integrasjonstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon. Nettlesertestene bruker den separat angitte `NORDLY_BROWSER_TEST_CONNECTION`, oppretter sitt eget tilfeldige skjema og starter appen lokalt i Development uten Stripe-hemmeligheter eller e-postutsendelser.
+PostgreSQL-integrasjonstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema. Nettlesertestene bruker `NORDLY_BROWSER_TEST_CONNECTION` mot en dedikert testdatabase, kjører migreringene i standardskjemaet og starter appen lokalt i Development uten Stripe-hemmeligheter eller e-postutsendelser. Ingen av testene skal bruke produksjonsdatabasen.
 
 ## Nyhetsbrev
 
