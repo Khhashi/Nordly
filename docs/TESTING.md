@@ -1,4 +1,6 @@
-# Nordly – Tester
+# Nordly – Testguide
+
+**[README](../README.md)** | **[Arkitektur](ARCHITECTURE.md)** | **[Utrulling](DEPLOYMENT.md)**
 
 Denne guiden beskriver hvordan du kjører enhets-, PostgreSQL- og nettlesertestene lokalt. GitHub Actions bruker samme oppsett for pull requests.
 

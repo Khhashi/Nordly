@@ -2,6 +2,8 @@
 
 Dette dokumentet beskriver hvordan Nordly er bygget, og hvorfor. Det er ment for utviklere som vil forstå systemet før de leser koden.
 
+**[README](../README.md)** | **[Testguide](TESTING.md)** | **[Utrulling](DEPLOYMENT.md)**
+
 ## 1. Kontekst og mål
 
 Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stripe og får en ordrebekreftelse på e-post.
@@ -299,7 +301,7 @@ Se [testguiden](TESTING.md) for oppsett, kommandoer og testdatabasekrav.
 ## 11. Begrensninger og videre arbeid
 
 - **Kaldstart:** Gratisplanen kan fortsatt gi kaldstart hvis ping-jobben feiler, tjenesten restartes eller gratisrammen er brukt opp.
-- **Databaseskjema:** Skjemaet versjoneres med EF Core-migreringer. Nye migreringer må brukes før appinstansene startes, slik at alle instanser kjører mot samme skjema.
+- **Databaseskjema:** Skjemaet versjoneres med EF Core-migreringer. Se [utrullingsguiden](DEPLOYMENT.md) før du starter appinstanser med nye migreringer.
 - **Ingen admin:** Ordrer kan bare ses direkte i databasen.
 - **Kundekontoer:** Passordfri innlogging krever konfigurert Brevo API-nøkkel og avsenderadresse (`Email:BrevoApiKey` og `Email:FromAddress`). Utfordringer med engangskoder lagres i PostgreSQL; ordretilgang styres av bekreftet e-postadresse.
 - **Demodata:** Kontoer, ordre og nyhetsbrevopplysninger slettes når de er eldre enn 30 dager. En periodisk bakgrunnstjeneste kjører oppryddingen omtrent hver time; leverandørenes eventuelle egne kopier og logger omfattes ikke av denne oppryddingen.
