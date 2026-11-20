@@ -59,7 +59,7 @@ Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for diagrammer, betalingsflyt og
 
 ## Tester og CI
 
-Automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, betaling, databaseoppgraderinger og at krypteringsnøklene overlever omstart. GitHub Actions bygger løsningen, kjører testene mot PostgreSQL og bygger Docker-imaget på hver pull request.
+Automatiserte enhets- og integrasjonstester i NUnit dekker ordre-, produkt- og fraktregler, handlekurven, `OrderService`, betaling, databaseoppgraderinger og at krypteringsnøklene overlever omstart. Playwright-smoketester bruker Chromium til å kontrollere butikksøk og filtrering, handlekurven og retur fra avbrutt Checkout. GitHub Actions bygger løsningen, kjører testene mot PostgreSQL og bygger Docker-imaget på hver pull request.
 
 ## Arbeidsflyt
 
@@ -67,7 +67,7 @@ Hver oppgave starter som et issue og utvikles på en egen feature-branch. Endrin
 
 ## Kjør lokalt
 
-Krever .NET 8 SDK og Docker.
+Krever .NET 8 SDK og Docker. Nettlesertestene krever også PowerShell 7 (`pwsh`).
 
 ```bash
 docker compose up -d
@@ -84,14 +84,18 @@ dotnet run --project Nordly.Web
 Legg hemmelige verdier i User Secrets eller miljøvariabler, aldri i repoet. Brevo-nøkkel og avsenderadresse må være konfigurert for passordfri innlogging og nyhetsbrev. Uten Brevo kan ordrebekreftelser bruke SMTP når SMTP-innstillinger finnes, men innloggingskoder sendes ikke. Bruk Stripe-testkortet `4242 4242 4242 4242`.
 Appen avviser Stripe-nøkler som ikke er i testmodus (`sk_test_`) i alle miljøer. Produksjonsmiljøet må ha både testnøkkel og webhook-hemmelighet konfigurert.
 
-Kjør testene med `dotnet test`. PostgreSQL-integrasjonstestene blir hoppet over dersom `NORDLY_TEST_MIGRATION_CONNECTION` ikke er satt. Opprett testdatabasen én gang, og kjør testene mot den – aldri mot produksjonsdatabasen:
+Kjør testene med `dotnet test`. PostgreSQL- og nettlesertestene blir hoppet over dersom henholdsvis `NORDLY_TEST_MIGRATION_CONNECTION` og `NORDLY_BROWSER_TEST_CONNECTION` ikke er satt. Opprett testdatabasen én gang, og kjør testene mot den – aldri mot produksjonsdatabasen:
 
 ```bash
 docker compose exec postgres createdb -U postgres nordly_test
 ```
 
 ```bash
-NORDLY_TEST_MIGRATION_CONNECTION="Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres" dotnet test
+dotnet build Nordly.sln
+pwsh Nordly.Tests/bin/Debug/net8.0/playwright.ps1 install chromium
+NORDLY_TEST_MIGRATION_CONNECTION="Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres" \
+NORDLY_BROWSER_TEST_CONNECTION="Host=localhost;Port=5432;Database=nordly_test;Username=postgres;Password=postgres" \
+dotnet test
 ```
 
 ## Databaseskjema og utrulling
@@ -102,7 +106,7 @@ Før en ny appversjon rulles ut, kjør den manuelle GitHub Actions-workflowen [P
 
 Den første migreringen er en additiv baseline: den oppretter manglende tabeller og kolonner, men sletter ikke eksisterende data. Dermed kan den brukes både på en tom database og på den eksisterende databasen som tidligere ble opprettet med `EnsureCreated` og oppstarts-SQL.
 
-PostgreSQL-integrasjonstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon.
+PostgreSQL-integrasjonstestene kjører automatisk i GitHub Actions. Lokalt kan du kjøre dem ved å sette `NORDLY_TEST_MIGRATION_CONNECTION` til en egen testdatabase; testene oppretter og sletter et tilfeldig databaseskjema og skal ikke kjøres mot produksjon. Nettlesertestene bruker den separat angitte `NORDLY_BROWSER_TEST_CONNECTION`, oppretter sitt eget tilfeldige skjema og starter appen lokalt i Development uten Stripe-hemmeligheter eller e-postutsendelser.
 
 ## Nyhetsbrev
 
