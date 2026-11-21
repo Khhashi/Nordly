@@ -31,13 +31,13 @@ public class StorefrontCatalogTests
     }
 
     [Test]
-    public void Catalog_Images_Should_Be_Local_Svg_Files()
+    public void Catalog_Images_Should_Be_Local_Jpeg_Files()
     {
         var images = StorefrontCatalog.Products.Select(product => product.ImageUrl);
 
         Assert.That(images.All(image =>
             image.StartsWith("/images/", StringComparison.Ordinal)
-            && image.EndsWith(".svg", StringComparison.OrdinalIgnoreCase)), Is.True);
+            && image.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)), Is.True);
     }
 
     [Test]

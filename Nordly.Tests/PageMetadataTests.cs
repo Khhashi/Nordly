@@ -19,7 +19,7 @@ public class PageMetadataTests
         Assert.That(html, Does.Contain("rel=\"canonical\""));
         Assert.That(html, Does.Contain("href=\"https://butikk.nordly.no/\""));
         AssertMeta(html, "property", "og:title", "NORDLY – Norsk design til hverdagen");
-        AssertMeta(html, "property", "og:image", "https://butikk.nordly.no/images/products/alba-ceramic-mug.svg");
+        AssertMeta(html, "property", "og:image", "https://butikk.nordly.no/images/products/alba-ceramic-mug.jpg");
         AssertMeta(html, "name", "twitter:card", "summary_large_image");
         Assert.That(html, Does.Not.Contain("<h1"));
     }
@@ -47,7 +47,7 @@ public class PageMetadataTests
 
         var metadata = PageMetadataBuilder.CreateProduct(PublicBaseUrl, product);
 
-        Assert.That(metadata.ImageUrl, Is.EqualTo("https://butikk.nordly.no/images/demo/kitchen-bowl.svg"));
+        Assert.That(metadata.ImageUrl, Is.EqualTo("https://butikk.nordly.no/images/demo/kitchen-bowl.jpg"));
     }
 
     [Test]
