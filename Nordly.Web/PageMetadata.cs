@@ -15,7 +15,7 @@ public sealed record PageMetadata(
 public static class PageMetadataBuilder
 {
     public const string DefaultPublicBaseUrl = "https://ordermanager-8ym2.onrender.com";
-    public const string DefaultImageUrl = "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=1200&q=85";
+    public const string DefaultImageUrl = "/images/demo/product-placeholder.svg";
     public const int MaximumTitleLength = 70;
     public const int MaximumDescriptionLength = 200;
 
@@ -32,7 +32,7 @@ public static class PageMetadataBuilder
             ? $"Utforsk NORDLYs produkter til {categoryName.ToLowerInvariant()}. Praktisk norsk design til hverdagen, valgt med omtanke."
             : isNewFilter ? "Se de nyeste produktene fra NORDLY – praktiske, vakre nyheter til hjemmet og hverdagen."
             : isSaleFilter ? "Se produkter på tilbud hos NORDLY. Finn gode hverdagsfavoritter til oppdaterte priser."
-            : "Praktiske, vakre produkter som gjør hverdagen enklere. Norsk design med omtanke, små serier og rask levering.";
+            : "NORDLY er en butikkdemo med illustrative produkter og priser. Ingen varer selges eller sendes.";
         var imageUrl = products.FirstOrDefault()?.ImageUrl ?? DefaultImageUrl;
         var query = BuildCategoryQuery(category, filter, products.Select(product => product.Category));
 
@@ -60,13 +60,15 @@ public static class PageMetadataBuilder
         string? query = null)
     {
         var safeTitle = LimitText(title, MaximumTitleLength, "NORDLY – Norsk design til hverdagen");
-        var safeDescription = LimitText(description, MaximumDescriptionLength, "Praktiske, vakre produkter som gjør hverdagen enklere. Norsk design med omtanke.");
+        var safeDescription = LimitText(description, MaximumDescriptionLength, "NORDLY er en butikkdemo med illustrative produkter og priser. Ingen varer selges eller sendes.");
+        var resolvedImageUrl = ResolveImageUrl(publicBaseUrl, imageUrl);
+        var defaultImageUrl = ResolveImageUrl(publicBaseUrl, DefaultImageUrl)!;
 
         return new PageMetadata(
             safeTitle,
             safeDescription,
             BuildCanonicalUrl(publicBaseUrl, path, query),
-            IsAbsoluteHttpUrl(imageUrl) ? imageUrl! : DefaultImageUrl,
+            IsAbsoluteHttpUrl(resolvedImageUrl) ? resolvedImageUrl! : defaultImageUrl,
             type == "product" ? "product" : "website",
             price is >= 0m ? price : null);
     }
