@@ -49,23 +49,23 @@ public static class StorefrontCatalog
 
     public static IReadOnlyList<StoreProduct> Products { get; } = new[]
     {
-        StoreProduct.Create("Alba keramikk kopp", "Kjøkken", "En håndlagd kopp til rolige morgener og lange måltider.", 249, "/images/products/alba-ceramic-mug.svg", "Bestselger", specifications: new(Material: "Keramikk", Highlights: new[] { "Håndlaget", "Til rolige morgener og lange måltider" })),
-        StoreProduct.Create("Sora serveringsskål (demo)", "Kjøkken", "Illustrativt demoprodukt; ikke en faktisk vare for salg.", 279, "/images/demo/kitchen-bowl.svg", "Demo"),
-        StoreProduct.Create("Mira kjøkkenhåndkle (demo)", "Kjøkken", "Illustrativt demoprodukt; ikke en faktisk vare for salg.", 149, "/images/demo/kitchen-towel.svg", "Demo"),
-        StoreProduct.Create("Linen hverdagstaske", "Tilbehør", "En robust og avslappet taske til hverdagens små plikter.", 399, "/images/products/linen-everyday-bag.svg", "Ny", specifications: new(Highlights: new[] { "Robust til hverdagens små plikter", "Avslappet stil" })),
-        StoreProduct.Create("Kompakt handlenett", "Tilbehør", "Et lett handlenett til ærender og ekstra plass på farten.", 249, "/images/products/compact-tote.svg", "Ny"),
-        StoreProduct.Create("Flettet skulderveske", "Tilbehør", "En kompakt veske for de viktigste småtingene på farten.", 449, "/images/products/woven-shoulder-bag.svg"),
-        StoreProduct.Create("Kompakt dagstursekk", "Tilbehør", "En kompakt sekk til korte turer og dager på farten.", 699, "/images/products/daypack.svg"),
-        StoreProduct.Create("Onda glassflaske", "Objekter", "En ren glassflaske med en myk, skulpturell form.", 299, "/images/products/glass-bottle.svg", specifications: new(Material: "Glass", Highlights: new[] { "Myk, skulpturell form" })),
-        StoreProduct.Create("Noma skrivebordsbrett", "Kontor", "Hold de små tingene samlet med varmt naturtre.", 549, "/images/products/desk-tray.svg", "Begrenset", specifications: new(Material: "Naturtre", Highlights: new[] { "Samler småting på arbeidsplassen" })),
-        StoreProduct.Create("Kiyo røkelsesholder", "Objekter", "Et rolig keramisk detaljobjekt til siste del av dagen.", 199, "/images/products/incense-holder.svg"),
-        StoreProduct.Create("Forma ullteppe", "Hjem", "Myk tekstur og varme til sofaen.", 699, "/images/products/wool-throw.svg", "-20%", 899, specifications: new(Material: "Ull", Highlights: new[] { "Myk tekstur", "Gir varme til sofaen" })),
-        StoreProduct.Create("Mori notatbok", "Kontor", "En taktil notatbok for lister, skisser og løse idéer.", 179, "/images/products/notebook.svg", "Ny"),
-        StoreProduct.Create("Sora lykt", "Hjem", "Et varmt, dempet lys til lange kvelder.", 329, "/images/products/lantern.svg", "Bestselger"),
-        StoreProduct.Create("Milo reisekrus", "Kjøkken", "Et balansert, lekkasjekontrollert krus for morgenen på farten.", 349, "/images/products/travel-mug.svg"),
-        StoreProduct.Create("Arco leselampe", "Kontor", "Et fokusert lys for sider, skisser og sen arbeidstid.", 799, "/images/products/reading-lamp.svg", "Ny"),
-        StoreProduct.Create("Casa linputt", "Hjem", "Vasket lintekstur i en rolig, hverdagsskapende form.", 299, "/images/products/linen-cushion.svg", "-15%", 349),
-        StoreProduct.Create("Raku oppbevaringsboks", "Objekter", "En liten eikeboks for det som er verdt å ha nærme.", 449, "/images/products/storage-box.svg")
+        StoreProduct.Create("Alba keramikk kopp", "Kjøkken", "En håndlagd kopp til rolige morgener og lange måltider.", 249, "/images/products/alba-ceramic-mug.jpg", "Bestselger", specifications: new(Material: "Keramikk", Highlights: new[] { "Håndlaget", "Til rolige morgener og lange måltider" })),
+        StoreProduct.Create("Sora serveringsskål (demo)", "Kjøkken", "Illustrativt demoprodukt; ikke en faktisk vare for salg.", 279, "/images/demo/kitchen-bowl.jpg", "Demo"),
+        StoreProduct.Create("Mira kjøkkenhåndkle (demo)", "Kjøkken", "Illustrativt demoprodukt; ikke en faktisk vare for salg.", 149, "/images/demo/kitchen-towel.jpg", "Demo"),
+        StoreProduct.Create("Linen hverdagstaske", "Tilbehør", "En robust og avslappet taske til hverdagens små plikter.", 399, "/images/products/linen-everyday-bag.jpg", "Ny", specifications: new(Highlights: new[] { "Robust til hverdagens små plikter", "Avslappet stil" })),
+        StoreProduct.Create("Kompakt handlenett", "Tilbehør", "Et lett handlenett til ærender og ekstra plass på farten.", 249, "/images/products/compact-tote.jpg", "Ny"),
+        StoreProduct.Create("Flettet skulderveske", "Tilbehør", "En kompakt veske for de viktigste småtingene på farten.", 449, "/images/products/woven-shoulder-bag.jpg"),
+        StoreProduct.Create("Kompakt dagstursekk", "Tilbehør", "En kompakt sekk til korte turer og dager på farten.", 699, "/images/products/daypack.jpg"),
+        StoreProduct.Create("Onda glassflaske", "Objekter", "En ren glassflaske med en myk, skulpturell form.", 299, "/images/products/glass-bottle.jpg", specifications: new(Material: "Glass", Highlights: new[] { "Myk, skulpturell form" })),
+        StoreProduct.Create("Noma skrivebordsbrett", "Kontor", "Hold de små tingene samlet med varmt naturtre.", 549, "/images/products/desk-tray.jpg", "Begrenset", specifications: new(Material: "Naturtre", Highlights: new[] { "Samler småting på arbeidsplassen" })),
+        StoreProduct.Create("Kiyo røkelsesholder", "Objekter", "Et rolig keramisk detaljobjekt til siste del av dagen.", 199, "/images/products/incense-holder.jpg"),
+        StoreProduct.Create("Forma ullteppe", "Hjem", "Myk tekstur og varme til sofaen.", 699, "/images/products/wool-throw.jpg", "-20%", 899, specifications: new(Material: "Ull", Highlights: new[] { "Myk tekstur", "Gir varme til sofaen" })),
+        StoreProduct.Create("Mori notatbok", "Kontor", "En taktil notatbok for lister, skisser og løse idéer.", 179, "/images/products/notebook.jpg", "Ny"),
+        StoreProduct.Create("Sora lykt", "Hjem", "Et varmt, dempet lys til lange kvelder.", 329, "/images/products/lantern.jpg", "Bestselger"),
+        StoreProduct.Create("Milo reisekrus", "Kjøkken", "Et balansert, lekkasjekontrollert krus for morgenen på farten.", 349, "/images/products/travel-mug.jpg"),
+        StoreProduct.Create("Arco leselampe", "Kontor", "Et fokusert lys for sider, skisser og sen arbeidstid.", 799, "/images/products/reading-lamp.jpg", "Ny"),
+        StoreProduct.Create("Casa linputt", "Hjem", "Vasket lintekstur i en rolig, hverdagsskapende form.", 299, "/images/products/linen-cushion.jpg", "-15%", 349),
+        StoreProduct.Create("Raku oppbevaringsboks", "Objekter", "En liten eikeboks for det som er verdt å ha nærme.", 449, "/images/products/storage-box.jpg")
     };
 
     public static IReadOnlyList<StoreProduct> RelatedProductsFor(Guid productId, int maximumCount = 4)
