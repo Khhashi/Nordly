@@ -80,3 +80,4 @@ NUnit dekker domeneregler og integrasjon. Playwright med Chromium tester søk, f
 - **[Arkitektur](docs/ARCHITECTURE.md)** – lagdeling, flyter og datamodell
 - **[Testguide](docs/TESTING.md)** – lokal kjøring og CI
 - **[Utrulling](docs/DEPLOYMENT.md)** – migreringer og produksjonssetting
+- **[Bildekilder](docs/IMAGE-SOURCES.md)** – lokale illustrasjoner og bildekilder

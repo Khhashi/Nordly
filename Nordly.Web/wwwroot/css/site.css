@@ -247,7 +247,7 @@ h1 {
 .reset-catalog { background: none; border: 0; cursor: pointer; font: inherit; font-weight: 700; padding: 0.4rem; }
 
 .editorial-panel { border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; margin-top: 5rem; overflow: hidden; }
-.editorial-image { background: url('https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1200&q=85') center / cover; min-height: 370px; }
+.editorial-image { background: url('/images/products/desk-tray.jpg') center / cover, #e6e9df; min-height: 370px; }
 .editorial-copy { align-self: center; padding: 3rem; }
 .editorial-copy h2 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; margin: 0.75rem 0 1.25rem; }
 .editorial-copy p { line-height: 1.65; max-width: 390px; }

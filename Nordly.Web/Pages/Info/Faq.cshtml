@@ -1,27 +1,27 @@
 @page
 @{
     ViewData["Title"] = "Vanlige spørsmål";
-    ViewData["PageMetadata"] = PageMetadataBuilder.Create(Configuration["PublicBaseUrl"], "Vanlige spørsmål – NORDLY", "Finn svar om bestilling, betaling, levering, retur og produkter hos NORDLY. Kontakt kundeservice hvis du trenger mer hjelp.", "/Info/Faq");
+    ViewData["PageMetadata"] = PageMetadataBuilder.Create(Configuration["PublicBaseUrl"], "Vanlige spørsmål – NORDLY demo", "Svar om NORDLY-demoen. Produkter, frakt og retur er eksempler; ingen varer selges eller sendes.", "/Info/Faq");
 }
 
 <div class="info-page faq-page">
     <span class="eyebrow">Hjelp og svar</span>
     <h1>Vanlige spørsmål</h1>
-    <p class="info-lead">Her finner du svar om levering, retur, betaling og produktene våre. Finner du ikke det du leter etter, <a asp-page="/Info/Support">ta kontakt med oss</a>.</p>
+    <p class="info-lead">NORDLY er en demo. Ingen varer selges, sendes eller returneres. Fraktbeløp og vilkår er eksempler. <a asp-page="/Info/Support">Ta kontakt med oss</a> hvis du har spørsmål.</p>
 
     <section class="faq-group" aria-labelledby="faq-delivery-title">
         <h2 id="faq-delivery-title">Levering og retur</h2>
         <details class="faq-item">
             <summary>Hvor lang tid tar leveringen?</summary>
-            <p>Lagervarer sendes innen én virkedag. Normal leveringstid er 2–4 virkedager. Se <a asp-page="/Info/Delivery">leveringsinformasjonen</a> for flere detaljer.</p>
+            <p>Vi sender ikke varer. Tidene på <a asp-page="/Info/Delivery">leveringssiden</a> er bare eksempler.</p>
         </details>
         <details class="faq-item">
             <summary>Når får jeg fri frakt?</summary>
-            <p>Du får fri frakt når varebeløpet er minst 800 kr. For ordre under dette er standard frakt 79 kr. Fraktkostnaden vises i handlekurven før betaling.</p>
+            <p>Handlekurven viser eksempelpriser: 79 kr i frakt eller fri frakt fra 800 kr. Ingen frakt blir belastet.</p>
         </details>
         <details class="faq-item">
             <summary>Hvordan returnerer jeg en vare?</summary>
-            <p>Du har 14 dagers åpent kjøp. Ta kontakt med oss før du sender varen tilbake, så hjelper vi deg videre. Les mer på siden for <a asp-page="/Info/Delivery">levering og retur</a>.</p>
+            <p>Ingen varer sendes eller tas i retur. Returvilkårene på <a asp-page="/Info/Delivery">leveringssiden</a> er kun et eksempel.</p>
         </details>
     </section>
 
@@ -29,7 +29,7 @@
         <h2 id="faq-order-title">Ordre og betaling</h2>
         <details class="faq-item">
             <summary>Hvordan betaler jeg?</summary>
-            <p>Betalingen behandles gjennom Stripe. Prisene er oppgitt i norske kroner og inkluderer merverdiavgift. Les våre <a asp-page="/Info/Terms">vilkår for handel</a>.</p>
+            <p>Checkout bruker Stripe testmodus. Ingen ekte betalinger gjennomføres. Se <a asp-page="/Info/Terms">vilkårene</a> for mer informasjon.</p>
         </details>
         <details class="faq-item">
             <summary>Hvordan vet jeg at bestillingen er bekreftet?</summary>

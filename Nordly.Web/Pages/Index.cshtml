@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<figure class="hero-visual">
-			<img src="@hero.ImageUrl" alt="@hero.Name" fetchpriority="high" />
+			<img src="@hero.ImageUrl" alt="@hero.Name" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" fetchpriority="high" />
 			<a class="hero-product" asp-page="/Products/Details" asp-route-id="@hero.Id">
 				<span>Ukens favoritt</span>
 				<strong>@hero.Name · @hero.Price.ToString("N0") kr <span aria-hidden="true">→</span></strong>
@@ -36,19 +36,19 @@
 		</div>
 		<div class="category-tiles">
 			<a class="category-tile" href="#collection" data-category-link="Kjøkken">
-				<img src="@TileImage("Kjøkken")" alt="" loading="lazy" />
+				<img src="@TileImage("Kjøkken")" alt="" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" loading="lazy" />
 				<span class="tile-label">Kjøkken</span>
 				<strong>For rolige morgener</strong>
 				<span class="tile-arrow" aria-hidden="true">↗</span>
 			</a>
 			<a class="category-tile" href="#collection" data-category-link="Kontor">
-				<img src="@TileImage("Kontor")" alt="" loading="lazy" />
+				<img src="@TileImage("Kontor")" alt="" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" loading="lazy" />
 				<span class="tile-label">Arbeidsplass</span>
 				<strong>Mer ro, mer fokus</strong>
 				<span class="tile-arrow" aria-hidden="true">↗</span>
 			</a>
 			<a class="category-tile" href="#collection" data-category-link="Hjem">
-				<img src="https://images.unsplash.com/photo-1632829882891-5047ccc421bc?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="" loading="lazy" />
+				<img src="/images/products/linen-cushion.jpg" alt="" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" loading="lazy" />
 				<span class="tile-label">Hjem</span>
 				<strong>Et lunere hjem</strong>
 				<span class="tile-arrow" aria-hidden="true">↗</span>
@@ -96,7 +96,7 @@
 		{
 			<article class="product-card" data-price="@product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-category="@product.Category" data-badge="@product.Badge" data-sale="@(product.OriginalPrice is not null ? "true" : "false")" data-search="@product.Name @product.Description">
 				<div class="product-image-wrap">
-					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" loading="lazy" decoding="async" /></a>
+					<a asp-page="/Products/Details" asp-route-id="@product.Id" aria-label="Se detaljer for @product.Name"><img class="product-image" src="@product.ImageUrl" alt="@product.Name" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" loading="lazy" decoding="async" /></a>
 					<span class="product-category">@product.Category</span>
 					@if (product.Badge is not null)
 					{
@@ -136,8 +136,8 @@
 	</div>
 
 	<section class="service-grid" aria-label="NORDLY tjenester">
-		<div class="service-card"><span class="service-icon">✦</span><h3>Fri frakt fra 800 kr</h3><p>Vi pakker ordren din med omtanke og sender den raskt.</p></div>
-		<div class="service-card"><span class="service-icon">↺</span><h3>14 dagers retur</h3><p>Prøv varen hjemme før du bestemmer deg. Enkelt og trygt.</p></div>
+		<div class="service-card"><span class="service-icon">✦</span><h3>Frakt i demoen</h3><p>Fraktbeløp og fri-fraktgrense vises bare som eksempler.</p></div>
+		<div class="service-card"><span class="service-icon">↺</span><h3>Ingen ekte retur</h3><p>Ingen varer selges, sendes eller tas i retur.</p></div>
 		<div class="service-card"><span class="service-icon">♡</span><h3>Hjelp fra mennesker</h3><p>Spør oss om produkter, gaver eller hva som passer deg.</p></div>
 	</section>
 
