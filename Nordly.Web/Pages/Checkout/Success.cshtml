@@ -1,14 +1,14 @@
 @page
 @model SuccessModel
 @{
-    ViewData["Title"] = "Bestillingen er bekreftet";
+    ViewData["Title"] = "Testkjøpet er fullført";
 }
 
 <div class="success-shell">
     <div class="success-mark">✓</div>
-    <span class="eyebrow">Betaling fullført</span>
-    <h1>Takk for bestillingen.</h1>
-    <p>Betalingen er bekreftet, og vi gjør pakken klar med en gang.</p>
+    <span class="eyebrow">Testbetaling fullført</span>
+    <h1>Takk for testkjøpet.</h1>
+    <p>Dette er en demo. Ingen varer selges, pakkes eller sendes.</p>
     @if (Model.FormattedOrderNumber is string orderNumber)
     {
         <span class="confirmation-code">Ordre @orderNumber</span>

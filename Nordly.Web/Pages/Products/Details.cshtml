@@ -24,7 +24,7 @@
         <section class="product-detail-grid">
             <div class="detail-gallery-column" data-product-gallery>
                 <div class="detail-image-panel">
-                    <img id="product-main-image" data-gallery-main src="@productImages[0]" alt="@Model.Product.Name" />
+                    <img id="product-main-image" data-gallery-main src="@productImages[0]" alt="@Model.Product.Name" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" />
                     <span class="detail-image-label">Studio collection / @Model.Product.Category</span>
                 </div>
                 @if (productImages.Count > 1)
@@ -34,7 +34,7 @@
                         {
                             var imageUrl = productImages[imageIndex];
                             <button class="detail-gallery-thumbnail" type="button" data-gallery-thumbnail data-gallery-image="@imageUrl" data-gallery-alt="@Model.Product.Name – bilde @(imageIndex + 1)" aria-controls="product-main-image" aria-label="Vis bilde @(imageIndex + 1) av @productImages.Count" aria-pressed="@(imageIndex == 0 ? "true" : "false")">
-                                <img src="@imageUrl" alt="" loading="lazy" decoding="async" />
+                                <img src="@imageUrl" alt="" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" loading="lazy" decoding="async" />
                             </button>
                         }
                     </div>
@@ -134,7 +134,7 @@
                         <article class="product-card">
                             <div class="product-image-wrap">
                                 <a asp-page="/Products/Details" asp-route-id="@relatedProduct.Id" aria-label="Se detaljer for @relatedProduct.Name">
-                                    <img class="product-image" src="@relatedProduct.ImageUrl" alt="@relatedProduct.Name" loading="lazy" decoding="async" />
+                                    <img class="product-image" src="@relatedProduct.ImageUrl" alt="@relatedProduct.Name" data-fallback-src="@StorefrontCatalog.FallbackImageUrl" loading="lazy" decoding="async" />
                                 </a>
                                 <span class="product-category">@relatedProduct.Category</span>
                                 @if (relatedProduct.Badge is not null)

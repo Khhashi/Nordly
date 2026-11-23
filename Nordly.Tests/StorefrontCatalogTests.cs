@@ -31,6 +31,16 @@ public class StorefrontCatalogTests
     }
 
     [Test]
+    public void Catalog_Images_Should_Be_Local_Jpeg_Files()
+    {
+        var images = StorefrontCatalog.Products.Select(product => product.ImageUrl);
+
+        Assert.That(images.All(image =>
+            image.StartsWith("/images/", StringComparison.Ordinal)
+            && image.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)), Is.True);
+    }
+
+    [Test]
     public void Product_Image_Urls_Should_Start_With_Primary_Image()
     {
         var product = StoreProduct.Create("Produkt", "Kategori", "Beskrivelse", 100, "hovedbilde.jpg");

@@ -1,4 +1,15 @@
 ﻿(() => {
+	const useImageFallback = image => {
+		if (!(image instanceof HTMLImageElement) || !image.dataset.fallbackSrc || image.dataset.imageFallbackApplied === 'true') return;
+		image.dataset.imageFallbackApplied = 'true';
+		image.src = image.dataset.fallbackSrc;
+	};
+
+	document.addEventListener('error', event => useImageFallback(event.target), true);
+	document.querySelectorAll('img[data-fallback-src]').forEach(image => {
+		if (image.complete && image.naturalWidth === 0) useImageFallback(image);
+	});
+
 	document.querySelectorAll('.action-toast').forEach(toast => {
 		const dismiss = () => toast.remove();
 		toast.querySelector('.toast-close')?.addEventListener('click', dismiss);
@@ -28,6 +39,7 @@
 		const mainImage = gallery?.querySelector('[data-gallery-main]');
 		if (!gallery || !mainImage) return;
 
+		delete mainImage.dataset.imageFallbackApplied;
 		mainImage.src = thumbnail.dataset.galleryImage;
 		mainImage.alt = thumbnail.dataset.galleryAlt || mainImage.alt;
 		gallery.querySelectorAll('[data-gallery-thumbnail]').forEach(button => {

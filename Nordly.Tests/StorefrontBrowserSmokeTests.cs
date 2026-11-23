@@ -108,6 +108,32 @@ public sealed class StorefrontBrowserSmokeTests : PageTest
     }
 
     [Test]
+    public async Task Broken_Product_Image_Uses_Local_Fallback_And_Keeps_Alt_Text()
+    {
+        var product = StorefrontCatalog.Products.First();
+        await Page.RouteAsync($"**{product.ImageUrl}", route => route.AbortAsync());
+        await Page.GotoAsync(_baseUrl);
+
+        var image = Page.Locator(".hero-visual img");
+        await Expect(image).ToHaveAttributeAsync("src", StorefrontCatalog.FallbackImageUrl);
+        await Expect(image).ToHaveAttributeAsync("alt", product.Name);
+        Assert.That(await image.EvaluateAsync<int>("image => image.naturalWidth"), Is.GreaterThan(0));
+    }
+
+    [Test]
+    public async Task Shipping_And_Return_Copy_Explains_That_The_Storefront_Is_A_Demo()
+    {
+        await Page.GotoAsync(_baseUrl);
+        await Expect(Page.Locator(".service-grid")).ToContainTextAsync("Ingen varer selges, sendes eller tas i retur.");
+
+        await Page.GotoAsync($"{_baseUrl}/Info/Delivery");
+        await Expect(Page.Locator(".info-lead")).ToContainTextAsync("Dette er en demo.");
+
+        await Page.GotoAsync($"{_baseUrl}/Info/Faq");
+        await Expect(Page.Locator(".info-lead")).ToContainTextAsync("NORDLY er en demo.");
+    }
+
+    [Test]
     public async Task Adding_Product_Updates_Cart_And_Persists_Across_Pages()
     {
         await Page.GotoAsync(_baseUrl);
