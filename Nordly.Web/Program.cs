@@ -149,10 +149,14 @@ app.Use(async (context, next) =>
 });
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapGet("/health", async (OrderDbContext db) =>
-    await db.Database.CanConnectAsync()
+// Lett keep-alive for cron-job.org: ingen database, ingen sesjon. Holder Render våken uten å vekke Neon.
+app.MapGet("/ping", () => Results.Text("ok")).ShortCircuit();
+// Full sjekk som også når databasen. Brukes av Render sin healthCheckPath.
+app.MapGet("/health", async (OrderDbContext db, CancellationToken cancellationToken) =>
+    await db.Database.CanConnectAsync(cancellationToken)
         ? Results.Ok("healthy")
-        : Results.Problem("Database is unavailable.", statusCode: StatusCodes.Status503ServiceUnavailable));
+        : Results.Problem("Database is unavailable.", statusCode: StatusCodes.Status503ServiceUnavailable))
+    .ShortCircuit();
 app.MapPost("/api/stripe/webhook", async (HttpRequest request, CheckoutOrderProcessor processor, IConfiguration configuration) =>
 {
     var webhookSecret = configuration["Stripe:WebhookSecret"];
