@@ -27,6 +27,12 @@ Katalog, priser og tilbud er illustrative. Ingen varer selges eller sendes, og C
   </tr>
 </table>
 
+### Omvisning på mobil
+
+<p align="center">
+  <img src="docs/screenshots/readme/mobil-omvisning.gif" width="240" alt="Nordly på mobil: blar på forsiden, søker etter kopp, filtrerer og sorterer, åpner et produkt, legger to i handlekurven og ser handlekurven" />
+</p>
+
 ## Funksjoner
 
 **For alle**
