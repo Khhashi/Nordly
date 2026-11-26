@@ -32,7 +32,7 @@ Nordly er en nettbutikk der kunden legger varer i handlekurven, betaler med Stri
 | Ikke-funksjonelt | Ingen hemmeligheter i koden, kun miljøvariabler |
 | Ikke-funksjonelt | Webhooks fra Stripe må være signert og verifisert |
 | Ikke-funksjonelt | `/health` viser om appen når databasen, og `/ping` svarer uten å røre databasen |
-| Ikke-funksjonelt | Containeren kjører uten root, og Docker-imaget bygges i CI |
+| Ikke-funksjonelt | Containeren kjører uten root |
 | Ikke-funksjonelt | Nøklene som krypterer cookies og skjemaer overlever omstart |
 
 ## 3. Systemkontekst
@@ -257,7 +257,7 @@ Tokenet beskyttes med ASP.NET Core Data Protection. Avmeldingssiden endrer ikke 
 
 - **NUnit:** Tester domeneregler, handlekurv, ordrebehandling og PostgreSQL-integrasjon. PostgreSQL-testene isolerer databasetilstanden i egne skjemaer.
 - **Playwright:** Chromium tester produktsøk og filtrering, handlekurv gjennom navigasjon og gjenoppretting fra Checkout-retur-URL. Testappen kjører i Development mot en dedikert testdatabase uten Stripe- eller e-posthemmeligheter.
-- **CI:** GitHub Actions kjører NUnit- og nettlesertestene mot PostgreSQL og bygger Docker-imaget.
+- **Tester:** NUnit- og nettlesertestene kjøres lokalt før merge. Render bygger Docker-imaget ved deploy.
 
 Se [testguiden](TESTING.md) for oppsett, kommandoer og testdatabasekrav.
 
