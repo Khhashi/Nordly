@@ -1,6 +1,5 @@
 # Nordly
 
-[![.NET](https://github.com/Khhashi/Nordly/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Khhashi/Nordly/actions/workflows/dotnet.yml)
 ![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?logo=csharp&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
@@ -71,13 +70,13 @@ Legg hemmeligheter i User Secrets eller miljøvariabler, aldri i repoet. Betalin
 
 Se [arkitekturdokumentet](docs/ARCHITECTURE.md) for systemdiagrammer, betalingsflyt og designvalg.
 
-## Tester og CI
+## Tester
 
-NUnit dekker domeneregler og integrasjon. Playwright med Chromium tester søk, filtrering, handlekurv og Checkout-retur. GitHub Actions kjører testene mot PostgreSQL og bygger Docker-imaget på pull requests. Se [testguiden](docs/TESTING.md) for oppsett.
+NUnit dekker domeneregler og integrasjon. Playwright med Chromium tester søk, filtrering, handlekurv og Checkout-retur. Se [testguiden](docs/TESTING.md) for oppsett.
 
 ## Ressurser
 
 - **[Arkitektur](docs/ARCHITECTURE.md)** – lagdeling, flyter og datamodell
-- **[Testguide](docs/TESTING.md)** – lokal kjøring og CI
+- **[Testguide](docs/TESTING.md)** – lokal kjøring
 - **[Utrulling](docs/DEPLOYMENT.md)** – migreringer og produksjonssetting
 - **[Bildekilder](docs/IMAGE-SOURCES.md)** – lokale illustrasjoner og bildekilder

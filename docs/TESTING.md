@@ -2,7 +2,7 @@
 
 **[README](../README.md)** | **[Arkitektur](ARCHITECTURE.md)** | **[Utrulling](DEPLOYMENT.md)**
 
-Denne guiden beskriver hvordan du kjører enhets-, PostgreSQL- og nettlesertestene lokalt. GitHub Actions bruker samme oppsett for pull requests.
+Denne guiden beskriver hvordan du kjører enhets-, PostgreSQL- og nettlesertestene lokalt.
 
 ## Forutsetninger
 
@@ -49,7 +49,3 @@ Bruk bare en dedikert testdatabase, aldri produksjon:
 - `NORDLY_BROWSER_TEST_CONNECTION` brukes av Playwright. Appen kjører migreringene i databasens standardskjema; denne testen deler derfor ikke database med utvikling eller produksjon.
 
 Variablene kan peke på samme `nordly_test`-database. PostgreSQL-integrasjonstestene bruker egne skjemaer, mens nettlesertesten bruker standardskjemaet.
-
-## GitHub Actions
-
-Pull requests kjører NUnit-testene med PostgreSQL 17, installerer Chromium på Ubuntu 24.04 og bygger Docker-imaget. Browser- og PostgreSQL-testene hoppes over lokalt hvis tilhørende databasevariabel ikke er satt.
